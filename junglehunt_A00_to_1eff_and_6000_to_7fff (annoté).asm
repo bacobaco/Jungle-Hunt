@@ -2,21 +2,21 @@
 0A03:6C 00 13    JMP ($1300) =>6000		; Routine permettant de mettre dans ($4C) l'emplacement de la ligne Y ($E6 détermine page 1 ou 2)
 0A06:6C 02 13    JMP ($1302) =>618E
 0A09:6C 04 13    JMP ($1304) =>63C9
-0A0C:6C 06 13    JMP ($1306) =>64EC		; gestion des levels?
+0A0C:6C 06 13    JMP ($1306) =>64EC		; Gestion des registres $D4, $D5, $D6 et $D7 pour le mode JOYSTICK
 0A0F:6C 08 13    JMP ($1308) =>654E		; Gestion de la touche 'ESC' dans le jeu (PAUSE IN GAME)
 0A12:6C 0A 13    JMP ($130A) =>65C6		; Sauvegarde page 0 dans $1c00 et $1f00 dans page 0
 0A15:6C 0C 13    JMP ($130C) =>65D8		; Sauvegarde page 0 dans $1f00 et $1c00 dans page 0
-0A18:6C 0E 13    JMP ($130E) =>6646		; Efface la page graphique 1 ou 2 suivant $E6 (poids fort de la mémoire graphique)
+0A18:6C 0E 13    JMP ($130E) =>6646		; Efface la page graphique 1 ou 2 suivant A sauvegardé dans $E6 (poids fort de la mémoire graphique)
 0A1B:6C 10 13    JMP ($1310) =>65F8
 0A1E:6C 12 13    JMP ($1312) =>65EA
 0A21:6C 14 13    JMP ($1314) =>67DA
-0A24:6C 16 13    JMP ($1316) =>6766		;test a keystroke...
+0A24:6C 16 13    JMP ($1316) =>6766		; On teste toutes les touches + Ecran des options si on est par en cours de partie
 0A27:6C 18 13    JMP ($1318) =>6606
 0A2A:6C 1A 13    JMP ($131A) =>661F
 0A2D:6C 1C 13    JMP ($131C) =>6664
-0A30:6C 1E 13    JMP ($131E) =>672E
+0A30:6C 1E 13    JMP ($131E) =>672E		; On remplit les lignes de X à Y-1, lignes paires avec $00$01 et lignes impaires avec $02$03
 0A33:6C 20 13    JMP ($1320) =>66BE
-0A36:6C 22 13    JMP ($1322) =>6B64
+0A36:6C 22 13    JMP ($1322) =>6B64     
 0A39:6C 40 13    JMP ($1340) =>1400
 0A3C:6C 42 13    JMP ($1342) =>1494
 0A3F:6C 44 13    JMP ($1344) =>1464		;?
@@ -31,7 +31,7 @@
 0A5A:6C 52 13    JMP ($1352) =>15CD
 0A5D:6C 54 13    JMP ($1354) =>17D3		; Responsable de la gestion de l'affichage de l'écran de fin de jeu.
 0A60:6C 56 13    JMP ($1356) =>16C0     ; On recopie la page 1 ou 2 ($1D) dans l'autre page $1C
-0A63:6C 58 13    JMP ($1358) =>1698
+0A63:6C 58 13    JMP ($1358) =>1698		; 0A63 => JAMAIS APPELE ou dans du code level?
 ; Start of code
 ; On reconfigure via ($03F2) le Reset button vers $FAA6=PowerUp
 0A66:A9 A6       LDA #$A6
@@ -41,9 +41,9 @@
 0A70:20 6F FB    JSR $FB6F	;This is the beginning of a machine language subroutine which sets up the power-up location. 
 0A73:20 91 0A    JSR $0A91	; Début du code d'initialisation du jeu avant la boucle principale
 ; boucle principale jeu infinie
-0A76:20 24 0A    JSR $0A24	;Cette subroutine vérifie l'appui d'une touche.
-0A79:20 0D 0B    JSR $0B0D	;Cette subroutine gère probablement des actions spécifiques en fonction des touches appuyées.
-0A7C:20 2B 0B    JSR $0B2B	;Cette subroutine vérifie que $31 est non nul sinon on reset le jeu? début de partie?
+0A76:20 24 0A    JSR $0A24	;<ROUTINE1> vérifie l'appui d'une touche $6766 et position des timers et gère l'écran des options
+0A79:20 0D 0B    JSR $0B0D	;<ROUTINE2> gère probablement des actions spécifiques en fonction des touches appuyées.
+0A7C:20 2B 0B    JSR $0B2B	;<ROUTINE3> vérifie que $31 est non nul sinon on reset le jeu? début de partie?
 0A7F:20 A1 0C    JSR $0CA1	;Cette subroutine gère probablement le choix du joueur (joueur 1 ou 2).
 0A82:20 50 0B    JSR $0B50	;Cette subroutine gère probablement la mise à jour du score du joueur.
 0A85:20 B7 0B    JSR $0BB7	;Cette subroutine gère probablement l'état de la partie.
@@ -59,42 +59,42 @@
 0A9B:C8          INY
 0A9C:D0 FA       BNE $0A98		; On efface toute la page 0
 0A9E:A9 40       LDA #$40		
-0AA0:85 1D       STA $1D        ; Il marche avec $1C si l'un est le poids fort de la page 1 HGR alors l'autre est la page 2
-0AA2:85 E6       STA $E6        ; $E6 est utilisé comme switch pour chaque frame du jeu
-0AA4:20 18 0A    JSR $0A18		; Efface la page graphique 2
+0AA0:85 1D       STA $1D		; Il marche avec $1C si l'un est le poids fort de la page 1 HGR alors l'autre est la page 2
+0AA2:85 E6       STA $E6		; $E6 est utilisé comme switch pour chaque frame du jeu
+0AA4:20 18 0A    JSR $0A18		; Efface la page graphique 1 ou 2 suivant A sauvegardé dans $E6 (poids fort de la mémoire graphique)
 0AA7:A9 20       LDA #$20
-0AA9:85 1C       STA $1C        ; Il marche avec $1D si l'un est le poids fort de la page 1 HGR alors l'autre est la page 2
+0AA9:85 1C       STA $1C		; Il marche avec $1D si l'un est le poids fort de la page 1 HGR alors l'autre est la page 2
 0AAB:85 E6       STA $E6
-0AAD:20 18 0A    JSR $0A18      ; Efface la page graphique 1
+0AAD:20 18 0A    JSR $0A18		; Efface la page graphique 1 ou 2 suivant A sauvegardé dans $E6 (poids fort de la mémoire graphique)
 0AB0:2C 10 C0    BIT $C010		;C010 49168 KBDSTRB      OECG WR   Keyboard Strobe
 0AB3:2C 50 C0    BIT $C050		;C050 49232 TXTCLR       OECG WR   Display Graphics
 0AB6:2C 54 C0    BIT $C054		;C054 49236 TXTPAGE1     OECG WR   Display Page 1
 0AB9:2C 57 C0    BIT $C057		;C057 49239 HIRES        OECG WR   Display HiRes Graphics
 0ABC:2C 52 C0    BIT $C052		;C052 49234 MIXCLR       OECG WR   Display Full Screen
-0ABF:A9 01       LDA #$01       ; Initialise certain registre du jeu:
-0AC1:85 41       STA $41        ; Nombre de joueur au départ égal à 1
-0AC3:85 1F       STA $1F        ; Initialise le level à 1
-0AC5:85 31       STA $31        
+0ABF:A9 01       LDA #$01		; Initialise certain registre du jeu:
+0AC1:85 41       STA $41		; Nombre de joueur au départ égal à 1
+0AC3:85 1F       STA $1F		; Initialise le level à 1
+0AC5:85 31       STA $31		; Flag temporaire pour le prochain JSR
 0AC7:20 2B 0B    JSR $0B2B		; Cette subroutine vérifie que $31 est à 1 pour init les registres/score/timers/difficulté
 0ACA:A9 00       LDA #$00       
-0ACC:85 33       STA $33
+0ACC:85 33       STA $33		; Flag local qui gère les niveaux et les options au sein d'une partie.
 0ACE:85 31       STA $31		; le registre prends maintenant le role du flag en partie ou en option
 0AD0:A9 FF       LDA #$FF
 0AD2:85 3F       STA $3F		; N'est JAMAIS utilisé?
 0AD4:85 2A       STA $2A		; Flag options Joystick=1 ou keyboard=0 (ici on initialise à #FF)
 0AD6:85 3C       STA $3C		
-0AD8:A9 C1       LDA #$C1
-0ADA:85 10       STA $10
-0ADC:A9 DA       LDA #$DA
-0ADE:85 11       STA $11
-0AE0:A9 88       LDA #$88
-0AE2:85 12       STA $12
-0AE4:A9 95       LDA #$95
-0AE6:85 13       STA $13
-0AE8:A9 A0       LDA #$A0
-0AEA:85 14       STA $14
-0AEC:85 15       STA $15
-0AEE:60          RTS
+0AD8:A9 C1       LDA #$C1		; Valeur ASCII 'A'
+0ADA:85 10       STA $10		; Direction du personnage en haut  
+0ADC:A9 DA       LDA #$DA		; Valeur ASCII 'Z'
+0ADE:85 11       STA $11		; Direction vers le bas
+0AE0:A9 88       LDA #$88		; Valeur ASCII '←'
+0AE2:85 12       STA $12		; Direction vers la gauche
+0AE4:A9 95       LDA #$95		; Valeur ASCII '→'
+0AE6:85 13       STA $13		; Direction vers la droite
+0AE8:A9 A0       LDA #$A0		; Valeur ASCII <Space>
+0AEA:85 14       STA $14		; Saut du personnage ou 
+0AEC:85 15       STA $15		; ?
+0AEE:60          RTS				; >>>Fin de l'init on rentre dans la boucle de jeu
 0AEF:A0 99       LDY #$99		; Charge 99 dans Y et 0 dans l'accumulateur
 0AF1:A9 00       LDA #$00
 0AF3:99 00 00    STA $0000,Y	; Permet de mettre 0 dans les registre $99=>$BF soit
@@ -110,20 +110,21 @@
 0B07:85 44       STA $44
 0B09:20 09 0E    JSR $0E09
 0B0C:60          RTS
-;Cette subroutine fait partie de la boucle de jeu
-0B0D:A5 3C       LDA $3C
+;<ROUTINE2> de la boucle principale
+0B0D:A5 3C       LDA $3C		; Si $3C égale à zéro on ne fait rien (vaut #$FF à l'init)
 0B0F:F0 19       BEQ $0B2A
-0B11:A5 1D       LDA $1D
-0B13:20 18 0A    JSR $0A18		; Efface la page graphique 1 ou 2 suivant $E6 (poids fort de la mémoire graphique)
-0B16:A9 01       LDA #$01
-0B18:85 1F       STA $1F
-0B1A:20 29 0E    JSR $0E29
+0B11:A5 1D       LDA $1D		; On charge la page à dessiner A=>#20 ou #40
+0B13:20 18 0A    JSR $0A18		; Efface la page graphique 1 ou 2 suivant A sauvegardé dans $E6 (poids fort de la mémoire graphique)
+0B16:A9 01       LDA #$01		
+0B18:85 1F       STA $1F		; Flag du level en demandé = 1
+0B1A:20 29 0E    JSR $0E29		; On vérifie quel level à charger en $7700 si nouveau level demandé ($1A=0)
 0B1D:20 87 0C    JSR $0C87		; On position $1C=$E6 et $1D sur l'autre page
-0B20:A9 00       LDA #$00
-0B22:85 3A       STA $3A
-0B24:20 24 0E    JSR $0E24
-0B27:20 5A 0A    JSR $0A5A		; 
+0B20:A9 00       LDA #$00		; 
+0B22:85 3A       STA $3A		; Flag Mode Démo/Start?=1, Ecran Acceuil?/Option ou en partie = 0  
+0B24:20 24 0E    JSR $0E24		; On efface $32 (flag=1 alors partie en cours, démo ou pas) et $36 (flag>1 on passe au level suivant)
+0B27:20 5A 0A    JSR $0A5A		; $15CD
 0B2A:60          RTS
+; <Routine3> de la boucle principale
 ; Cette subroutine vérifie que $31 est non nul pour init les registres (= 1 en début de code)
 0B2B:A5 31       LDA $31		; Charge le registre $31
 0B2D:D0 01       BNE $0B30		; Si non nul (ce qui est le cas à l'init du jeu) on reset score et timers (code $0B30)
@@ -145,29 +146,29 @@
 0B4D:85 46       STA $46		; Registre du joueur en cours: Joueur 1 en cours
 0B4F:60          RTS
 ;Cette subroutine gère probablement la mise à jour du score du joueur.
-0B50:A5 32       LDA $32		; on est pas en pause on peut updater le score
-0B52:D0 01       BNE $0B55
+0B50:A5 32       LDA $32
+0B52:D0 01       BNE $0B55		; On est en cours de partie $32=1
 0B54:60          RTS
-0B55:A5 34       LDA $34
-0B57:F0 09       BEQ $0B62
-0B59:85 31       STA $31
+0B55:A5 34       LDA $34		; Flag d'appui sur CTRL-Q (>0)
+0B57:F0 09       BEQ $0B62		; Pas de demande de reset du jeu (CTRL-Q) $34=0
+0B59:85 31       STA $31		; 
 0B5B:A9 00       LDA #$00
-0B5D:85 34       STA $34
-0B5F:4C 71 0B    JMP $0B71
+0B5D:85 34       STA $34		; On efface le flag de reset du jeu
+0B5F:4C 71 0B    JMP $0B71		; 
 0B62:20 A3 0B    JSR $0BA3		; Cette subroutine charge suivant le joueur ($46) le positionnement,avancement, difficulté et level
 0B65:20 48 0D    JSR $0D48		; Cette subroutine gère probablement l'incrémentation du score et des bonus.
 0B68:20 8F 0B    JSR $0B8F		; Cette subroutine sauvegarde dans les registres du joueur le positionnement,avancement, difficulté et level actuel.
-0B6B:A5 35       LDA $35		; Registre flag fin de jeu?
+0B6B:A5 35       LDA $35		; Registre flag fin de jeu si=1?
 0B6D:F0 05       BEQ $0B74
 0B6F:A9 00       LDA #$00
-0B71:85 32       STA $32
+0B71:85 32       STA $32		; Flag=0 "La partie n'est plus en cours"
 0B73:60          RTS
 0B74:A5 36       LDA $36		; Registre flag si >0 passer au level suivant
-0B76:F0 FB       BEQ $0B73
+0B76:F0 FB       BEQ $0B73		; NON on sort
 0B78:A5 1F       LDA $1F		; $36>0 on change de level
 0B7A:C9 04       CMP #$04		; Si on est au level 4
 0B7C:B0 0B       BCS $0B89		; Supérieur ou égale à 4 on se branche plus bas
-0B7E:A5 5A       LDA $5A		; Level inferieur à 4
+0B7E:A5 5A       LDA $5A		; Traitement Level inferieur à 4
 0B80:85 80       STA $80
 0B82:A5 5B       LDA $5B
 0B84:85 81       STA $81
@@ -355,24 +356,24 @@
 0CEC:60          RTS
 0CED:A2 0A       LDX #$0A	
 0CEF:A9 00       LDA #$00
-0CF1:95 60       STA $60,X
+0CF1:95 60       STA $60,X		; On efface les registres $60->$69
 0CF3:CA          DEX
 0CF4:D0 FB       BNE $0CF1
 0CF6:85 31       STA $31
 0CF8:85 2C       STA $2C
 0CFA:20 87 0C    JSR $0C87		; On position $1C=$E6 et $1D sur l'autre page
 0CFD:20 29 0E    JSR $0E29
-0D00:A5 1F       LDA $1F
+0D00:A5 1F       LDA $1F		; Registre Level
 0D02:C9 01       CMP #$01
-0D04:D0 11       BNE $0D17
-0D06:20 00 77    JSR $7700
-0D09:AD A0 13    LDA $13A0
+0D04:D0 11       BNE $0D17		; NON>↓>
+0D06:20 00 77    JSR $7700		; Lancement Level 1
+0D09:AD A0 13    LDA $13A0		; Attitude du joeur en cours
 0D0C:C9 01       CMP #$01
 0D0E:D0 07       BNE $0D17
 0D10:85 2F       STA $2F
 0D12:A9 00       LDA #$00
-0D14:8D A0 13    STA $13A0
-0D17:20 33 0D    JSR $0D33
+0D14:8D A0 13    STA $13A0		; Remise à zéro de l'Attitude du Joueur 
+0D17:20 33 0D    JSR $0D33		;>>Pas level 1>↓>
 0D1A:20 00 77    JSR $7700
 0D1D:A9 01       LDA #$01
 0D1F:85 32       STA $32
@@ -384,10 +385,10 @@
 0D2C:20 60 0A    JSR $0A60      ; On recopie la page 1 ou 2 ($1D) dans l'autre page $1C
 0D2F:20 8F 0B    JSR $0B8F
 0D32:60          RTS
-0D33:A5 1D       LDA $1D
-0D35:20 18 0A    JSR $0A18
-0D38:20 B7 12    JSR $12B7
-0D3B:20 0D 0F    JSR $0F0D
+0D33:A5 1D       LDA $1D		;>>Charge la page à dessiner
+0D35:20 18 0A    JSR $0A18		; Efface la page graphique 1 ou 2 suivant A qui sera sauvegardé dans $E6 (poids fort de la mémoire graphique)
+0D38:20 B7 12    JSR $12B7		; On affiche un bout du décors (lignes vertes $672E) du level 1
+0D3B:20 0D 0F    JSR $0F0D		
 0D3E:20 48 0A    JSR $0A48
 0D41:20 4E 0A    JSR $0A4E
 0D44:20 51 0A    JSR $0A51
@@ -398,11 +399,11 @@
 0D4D:A5 27       LDA $27
 0D4F:6A          ROR
 0D50:90 3C       BCC $0D8E
-0D52:A9 20       LDA #$20
+0D52:A9 20       LDA #$20		
 0D54:85 E6       STA $E6
-0D56:20 0C 0A    JSR $0A0C
-0D59:20 9F 0D    JSR $0D9F
-0D5C:2C 54 C0    BIT $C054
+0D56:20 0C 0A    JSR $0A0C		; =>$64EC Gestion des registres $D4, $D5, $D6 et $D7 pour le mode JOYSTICK
+0D59:20 9F 0D    JSR $0D9F		; Code Level $7700
+0D5C:2C 54 C0    BIT $C054		;C054 49236	TXTPAGE1	OECG	WR	Display Page 1
 0D5F:20 45 0A    JSR $0A45
 0D62:20 39 0A    JSR $0A39
 0D65:A5 2D       LDA $2D
@@ -426,22 +427,23 @@
 0D89:E6 33       INC $33
 0D8B:E6 2C       INC $2C
 0D8D:60          RTS
-0D8E:A9 40       LDA #$40
-0D90:85 E6       STA $E6
-0D92:20 9F 0D    JSR $0D9F
-0D95:2C 55 C0    BIT $C055
+0D8E:A9 40       LDA #$40		; Positionne @HI Page 2
+0D90:85 E6       STA $E6		; Affecte le registre de la page courante
+0D92:20 9F 0D    JSR $0D9F		; Code Level $7700
+0D95:2C 55 C0    BIT $C055		;C055 49237	TXTPAGE2	OECG	WR	If 80STORE Off: Display Page 2
 0D98:20 45 0A    JSR $0A45
 0D9B:20 39 0A    JSR $0A39
 0D9E:60          RTS
-0D9F:20 00 77    JSR $7700
-0DA2:A5 36       LDA $36
-0DA4:F0 04       BEQ $0DAA
+0D9F:20 00 77    JSR $7700		; Code du Level en cours
+0DA2:A5 36       LDA $36		; Flag pour passer niveau suivant
+0DA4:F0 04       BEQ $0DAA		; NON>↓>
 0DA6:A9 05       LDA #$05
 0DA8:85 91       STA $91
-0DAA:20 FD 0E    JSR $0EFD
+0DAA:20 FD 0E    JSR $0EFD		;>>
 0DAD:20 4B 0A    JSR $0A4B
 0DB0:20 51 0A    JSR $0A51
 0DB3:60          RTS
+;
 0DB4:A5 D8       LDA $D8
 0DB6:C9 F5       CMP #$F5
 0DB8:90 04       BCC $0DBE
@@ -488,8 +490,8 @@
 0E08:60          RTS
 0E09:A9 00       LDA #$00
 0E0B:85 1E       STA $1E
-0E0D:85 D6       STA $D6
-0E0F:85 D7       STA $D7
+0E0D:85 D6       STA $D6		; Flag saut demandé si <>0 (bouton 0 ou space)
+0E0F:85 D7       STA $D7		; Bouton 1 Joystick ou timer temps position couché level 3
 0E11:A6 46       LDX $46
 0E13:95 AC       STA $AC,X		; Reset la position/posture du joueur 1 ou suivant le registre $46 dans le level
 0E15:95 AA       STA $AA,X		; Reset l'avancement du joueur dans le level
@@ -500,86 +502,87 @@
 0E20:85 17       STA $17
 0E22:85 18       STA $18
 0E24:85 36       STA $36		; On efface le flag de passage de level
-0E26:85 32       STA $32
+0E26:85 32       STA $32		; Flag Partie en cours (démo ou pas) mis à zéro
 0E28:60          RTS
-0E29:A5 1F       LDA $1F
-0E2B:C9 04       CMP #$04
-0E2D:D0 03       BNE $0E32
+;
+0E29:A5 1F       LDA $1F		; On charge le level prévu (1 à l'init <ROUTINE2>)
+0E2B:C9 04       CMP #$04		; Level 4?
+0E2D:D0 03       BNE $0E32		; NON>↓>
 0E2F:4C A8 0E    JMP $0EA8		; Traitement Level 4
-0E32:C9 03       CMP #$03
-0E34:F0 53       BEQ $0E89
-0E36:C9 02       CMP #$02
-0E38:F0 23       BEQ $0E5D
-0E3A:A5 1A       LDA $1A
-0E3C:C9 01       CMP #$01
-0E3E:F0 0D       BEQ $0E4D
-0E40:A9 01       LDA #$01
-0E42:85 1A       STA $1A
-0E44:A9 03       LDA #$03
+0E32:C9 03       CMP #$03		; >>Level 3?
+0E34:F0 53       BEQ $0E89		; OUI>↓>
+0E36:C9 02       CMP #$02		; Level 2?
+0E38:F0 23       BEQ $0E5D		; OUI>↓>
+0E3A:A5 1A       LDA $1A		; Level prévu est $1F=1 on regarde le level en cours $1A
+0E3C:C9 01       CMP #$01		; Level 1 déjà en cours ? (visiblement passe par ici dès le début pour charger le code level 1?)
+0E3E:F0 0D       BEQ $0E4D		; OUI>↓>
+0E40:A9 01       LDA #$01		; Le level en cours $1A n'été pas encore chargé pourtant $1F=1
+0E42:85 1A       STA $1A		; On met le flag Level en cours à $1A=1 correspond au début de level 1
+0E44:A9 03       LDA #$03		
 0E46:A0 04       LDY #$04
-0E48:A2 77       LDX #$77
-0E4A:20 00 1D    JSR $1D00
-0E4D:A9 00       LDA #$00
-0E4F:85 39       STA $39
-0E51:A9 00       LDA #$00
+0E48:A2 77       LDX #$77		
+0E4A:20 00 1D    JSR $1D00		; Charge du code Level 1 dans la mémoire Buffer=$7700, Track 3 (=>$86FF=>) et 4 (=>$96FF)
+0E4D:A9 00       LDA #$00		; Traitement level 1
+0E4F:85 39       STA $39		; Flag décors en traveling (=1)
+0E51:A9 00       LDA #$00		
 0E53:48          PHA
 0E54:A9 80       LDA #$80
 0E56:A0 00       LDY #$00
 0E58:A2 8C       LDX #$8C
-0E5A:4C C4 0E    JMP $0EC4
-0E5D:A5 1A       LDA $1A		; Charge le numéro de niveau
-0E5F:C9 02       CMP #$02		; Compare avec 2 (niveau 2)
-0E61:F0 16       BEQ $0E79		; Si égal à 2, sauter à la gestion du niveau 2
-0E63:A9 02       LDA #$02		; Sinon, passe le niveau à 2
-0E65:85 1A       STA $1A		; Stocke le numéro du niveau 2
+0E5A:4C C4 0E    JMP $0EC4		; >>
+0E5D:A5 1A       LDA $1A		; Charge le Level en demandé
+0E5F:C9 02       CMP #$02		; Level 2? (déjà comparé précdemment?)
+0E61:F0 16       BEQ $0E79		; OUI>>
+0E63:A9 02       LDA #$02		; On passe le registre $1A du level en cours à 2 (on viens de finir le level 1)
+0E65:85 1A       STA $1A		; On n'était pas en Level 2 il faut chargé du nouveau code
 0E67:A9 05       LDA #$05
 0E69:A0 05       LDY #$05
 0E6B:A2 77       LDX #$77
-0E6D:20 00 1D    JSR $1D00
+0E6D:20 00 1D    JSR $1D00		; Charge du code dans la mémoire Buffer=$7700, Track 5 => code Level 2
 0E70:A9 06       LDA #$06
 0E72:A0 07       LDY #$07
 0E74:A2 7D       LDX #$7D
-0E76:20 00 1D    JSR $1D00
-0E79:A9 FF       LDA #$FF
-0E7B:85 39       STA $39
+0E76:20 00 1D    JSR $1D00		; Charge du code dans la mémoire Buffer=$7D00, Track 6 et 7 => 
+0E79:A9 FF       LDA #$FF		; >>Traitement Level 2 déjà en cours ($1A) pas besoin de chargé du nouveau code
+0E7B:85 39       STA $39		; Flag Traveling ?
 0E7D:A9 00       LDA #$00
 0E7F:48          PHA
 0E80:A9 7D       LDA #$7D
 0E82:A0 1E       LDY #$1E
 0E84:A2 7D       LDX #$7D
-0E86:4C C4 0E    JMP $0EC4
-0E89:A5 1A       LDA $1A		; Charge le numéro du niveau actuel
-0E8B:C9 03       CMP #$03		; Compare avec 3 (niveau 3)
-0E8D:F0 0D       BEQ $0E9C		; Si égal, passer à la gestion du niveau 3
-0E8F:A9 03       LDA #$03		; ?? bizarre on remets la valeur 3...
-0E91:85 1A       STA $1A		; ...dans $1A qui est déjà à 3??
+0E86:4C C4 0E    JMP $0EC4		; >>
+0E89:A5 1A       LDA $1A		; >>On charge le level demandé
+0E8B:C9 03       CMP #$03		; Level 3? déjà en cours
+0E8D:F0 0D       BEQ $0E9C		; OUI>>
+0E8F:A9 03       LDA #$03		; On force à 3
+0E91:85 1A       STA $1A		; Le level en cours
 0E93:A9 08       LDA #$08
 0E95:A0 09       LDY #$09
 0E97:A2 77       LDX #$77
-0E99:20 00 1D    JSR $1D00
+0E99:20 00 1D    JSR $1D00		; Charge du code dans la mémoire Buffer=$7700, Track 8 et 9
 0E9C:A9 FF       LDA #$FF
 0E9E:85 39       STA $39
 0EA0:A9 00       LDA #$00
 0EA2:48          PHA
 0EA3:A9 8C       LDA #$8C
-0EA5:4C C8 0E    JMP $0EC8
+0EA5:4C C8 0E    JMP $0EC8		; >>
 0EA8:A5 1A       LDA $1A		; Charge le numéro du niveau actuel
 0EAA:C9 04       CMP #$04		; Compare avec 4 (niveau 4)
-0EAC:F0 0D       BEQ $0EBB		; Traitement Level 4
-0EAE:A9 04       LDA #$04
-0EB0:85 1A       STA $1A
+0EAC:F0 0D       BEQ $0EBB		; OUI
+0EAE:A9 04       LDA #$04		; On applique le niveau 4 demandé ($1F)
+0EB0:85 1A       STA $1A		
 0EB2:A9 0A       LDA #$0A
 0EB4:A0 0B       LDY #$0B
 0EB6:A2 77       LDX #$77
-0EB8:20 00 1D    JSR $1D00
+0EB8:20 00 1D    JSR $1D00		; Charge du code dans la mémoire Buffer=$7700, Track A et B
 0EBB:A9 00       LDA #$00		; Traitement Level 4
-0EBD:85 39       STA $39
+0EBD:85 39       STA $39		; Flag Traveling (=1) ou pas(=0)
 0EBF:A9 00       LDA #$00
 0EC1:48          PHA
 0EC2:A9 8C       LDA #$8C
-0EC4:86 8B       STX $8B
+0EC4:86 8B       STX $8B		; <<JMP from $0E86
 0EC6:84 8A       STY $8A
-0EC8:85 89       STA $89
+0EC8:85 89       STA $89		; <<JMP from $0E45
 0ECA:68          PLA
 0ECB:85 88       STA $88
 0ECD:A0 00       LDY #$00
@@ -598,7 +601,7 @@
 0EE5:69 02       ADC #$02
 0EE7:85 88       STA $88
 0EE9:A5 89       LDA $89
-0EEB:69 00       ADC #$00
+0EEB:69 00       ADC #$00		; Permet de propager une retenue éventuelle de la précédent addition #$02
 0EED:85 89       STA $89
 0EEF:A5 8A       LDA $8A
 0EF1:18          CLC
@@ -608,25 +611,27 @@
 0EF8:69 00       ADC #$00
 0EFA:85 8B       STA $8B
 0EFC:60          RTS
-0EFD:A5 39       LDA $39
-0EFF:F0 0C       BEQ $0F0D
-0F01:E6 38       INC $38
-0F03:A5 38       LDA $38
-0F05:C9 1C       CMP #$1C
-0F07:90 04       BCC $0F0D
-0F09:A9 00       LDA #$00
-0F0B:85 38       STA $38
+;
+0EFD:A5 39       LDA $39		;Flag pour travelling décors
+0EFF:F0 0C       BEQ $0F0D		;NON>↓>
+0F01:E6 38       INC $38		
+0F03:A5 38       LDA $38		; Incrément de la position du décors en travelling
+0F05:C9 1C       CMP #$1C		; #28
+0F07:90 04       BCC $0F0D		; Inferieur Strictement à #28? OUI>↓>
+0F09:A9 00       LDA #$00		
+0F0B:85 38       STA $38		; Mettre à zéro le position du décors si position supérieur ou égale à #28
+; Gestion du Travelling décors?
 0F0D:A5 1F       LDA $1F
-0F0F:C9 01       CMP #$01
-0F11:F0 0E       BEQ $0F21
-0F13:C9 02       CMP #$02
-0F15:F0 38       BEQ $0F4F
-0F17:C9 03       CMP #$03
-0F19:D0 03       BNE $0F1E
+0F0F:C9 01       CMP #$01		; Level 1? 
+0F11:F0 0E       BEQ $0F21		; OUI>↓>Traitement Level 1
+0F13:C9 02       CMP #$02		; Level 2?
+0F15:F0 38       BEQ $0F4F		; OUI>↓>Traitement Level 1
+0F17:C9 03       CMP #$03		; Vérification Level 1 demandé
+0F19:D0 03       BNE $0F1E		; NON>↓>Traitement Level 1
 0F1B:4C 50 10    JMP $1050
-0F1E:4C 64 10    JMP $1064
-0F21:A5 39       LDA $39
-0F23:F0 0E       BEQ $0F33
+0F1E:4C 64 10    JMP $1064		; Level 4 pas de travelling?>>
+0F21:A5 39       LDA $39		;>> Flag travelling décors
+0F23:F0 0E       BEQ $0F33		;OUI>↓>
 0F25:A5 38       LDA $38
 0F27:18          CLC
 0F28:69 04       ADC #$04
@@ -635,10 +640,10 @@
 0F2E:38          SEC
 0F2F:E9 1C       SBC #$1C
 0F31:85 38       STA $38
-0F33:A5 38       LDA $38
-0F35:29 FE       AND #$FE
+0F33:A5 38       LDA $38		;>> Position du décors
+0F35:29 FE       AND #$FE		; On garde le bit0
 0F37:48          PHA
-0F38:A8          TAY
+0F38:A8          TAY				; bit0 de la position du décors dans Y
 0F39:20 73 10    JSR $1073
 0F3C:A0 B7       LDY #$B7
 0F3E:20 36 0A    JSR $0A36
@@ -777,11 +782,12 @@
 104A:E6 67       INC $67
 104C:20 42 0A    JSR $0A42
 104F:60          RTS
-1050:A5 39       LDA $39
-1052:F0 02       BEQ $1056
-1054:E6 38       INC $38
-1056:A5 38       LDA $38
-1058:29 FE       AND #$FE
+; Traitement Travelling Level 3?
+1050:A5 39       LDA $39		; Flag travelling décors
+1052:F0 02       BEQ $1056		; NON>↓>
+1054:E6 38       INC $38		; On incrémente la position du travaling
+1056:A5 38       LDA $38		;>>
+1058:29 FE       AND #$FE		; On efface uniquement le bit0 de la position travelling
 105A:A8          TAY
 105B:20 73 10    JSR $1073
 105E:A0 28       LDY #$28
@@ -794,7 +800,8 @@
 106D:A0 28       LDY #$28
 106F:20 36 0A    JSR $0A36
 1072:60          RTS
-1073:B1 88       LDA ($88),Y
+;
+1073:B1 88       LDA ($88),Y		; bit0 de la position du décors ($38) dans Y
 1075:85 E8       STA $E8
 1077:C8          INY
 1078:B1 88       LDA ($88),Y
@@ -959,13 +966,13 @@
 11D1:A0 04       LDY #$04
 11D3:86 E5       STX $E5
 11D5:85 DC       STA $DC
-11D7:8C E6 11    STY $11E6
+11D7:8C E6 11    STY $11E6		; Violation du code pour stocker Y
 11DA:A5 84       LDA $84
 11DC:85 80       STA $80
 11DE:A5 85       LDA $85
 11E0:85 81       STA $81
 11E2:20 27 0A    JSR $0A27
-11E5:A9 04       LDA #$04
+11E5:A9 04       LDA #$04		; valeur changeante cf ci dessus
 11E7:85 4A       STA $4A
 11E9:20 2D 0A    JSR $0A2D
 11EC:60          RTS
@@ -1060,33 +1067,35 @@
 12A7:A9 1A       LDA #$1A
 12A9:A0 7E       LDY #$7E
 12AB:60          RTS
-12AC:01 A9       ORA ($A9,X)
-12AE:D6 A0       DEC $A0,X
-12B0:7D 60 A9    ADC $A960,X
-12B3:F0 A0       BEQ $1255
-12B5:7D 60 A5    ADC $A560,X
-12B8:1F                   ???
-12B9:C9 01       CMP #$01
-12BB:F0 01       BEQ $12BE
+12AC:01          ???				; Utilisé comme Registre
+12AD:A9 D6       LDA #$D6
+12AF:A0 7D       LDY #$7D
+12B1:60          RTS
+12B2:A9 F0       LDA #$F0
+12B4:A0 7D       LDY #$7D
+12B6:60          RTS
+12B7:A5 1F       LDA $1F		;>>On vérifie (encore?)
+12B9:C9 01       CMP #$01		; Que l'on a sélectionné au Level 1
+12BB:F0 01       BEQ $12BE		; OUI>>
 12BD:60          RTS
-12BE:A9 00       LDA #$00
-12C0:85 00       STA $00
+12BE:A9 00       LDA #$00		;>>Traitement si Level 1
+12C0:85 00       STA $00		; Lignes Paires sera noires
 12C2:85 01       STA $01
-12C4:A9 2A       LDA #$2A
+12C4:A9 2A       LDA #$2A		; Lignes Impaires seront vertes (#2A #55)
 12C6:85 02       STA $02
 12C8:A9 55       LDA #$55
 12CA:85 03       STA $03
-12CC:A2 B8       LDX #$B8
+12CC:A2 B8       LDX #$B8		; Remplissage de la ligne 184 à 192
 12CE:A0 C0       LDY #$C0
-12D0:20 30 0A    JSR $0A30
-12D3:A9 2A       LDA #$2A
+12D0:20 30 0A    JSR $0A30		;>>JMP $672E>> On remplit les lignes de X à Y-1, lignes paires avec $00$01 et lignes impaires avec $02$03
+12D3:A9 2A       LDA #$2A		; Lignes Impaires seront vertes (#2A #55)
 12D5:85 00       STA $00
 12D7:A9 55       LDA #$55
 12D9:85 01       STA $01
-12DB:A9 00       LDA #$00
+12DB:A9 00       LDA #$00		; Lignes Paires sera noires
 12DD:85 02       STA $02
 12DF:85 03       STA $03
-12E1:A2 10       LDX #$10
+12E1:A2 10       LDX #$10		; Remplissage de la ligne 16 à 27
 12E3:A0 1B       LDY #$1B
 12E5:20 30 0A    JSR $0A30
 12E8:60          RTS
@@ -1204,7 +1213,7 @@
 13A0:02                   ???
 13A1:D2                   ???
 13A2:00          BRK
-13A3:64                   ???
+13A3:64                   ???		; Position du sprite joueur?
 13A4:00          BRK
 13A5:02                   ???
 13A6:D2                   ???
@@ -1283,12 +1292,12 @@
 13FA:D3                   ???
 13FB:C9 C3       CMP #$C3
 13FD:A0 A0       LDY #$A0
-13FF:A0 A5       LDY #$A5
-1401:1B                   ???
-1402:F0 0A       BEQ $140E
-1404:A2 0A       LDX #$0A
+13FF:A0          ???
+1400:A5 1B       LDA $1B		; Option SON activé?
+1402:F0 0A       BEQ $140E		; OUI 
+1404:A2 0A       LDX #$0A		; NON
 1406:A9 00       LDA #$00
-1408:95 60       STA $60,X
+1408:95 60       STA $60,X		; On efface les registres $60->$69
 140A:CA          DEX
 140B:D0 FB       BNE $1408
 140D:60          RTS
@@ -1300,7 +1309,7 @@
 141B:F0 1B       BEQ $1438
 141D:8D 42 14    STA $1442
 1420:BE 4E 14    LDX $144E,Y
-1423:2C 30 C0    BIT $C030
+1423:2C 30 C0    BIT $C030		;C030 48200	SPKR	OECG	R	Toggle Speaker
 1426:CA          DEX
 1427:D0 FA       BNE $1423
 1429:BE 59 14    LDX $1459,Y
@@ -1530,11 +1539,11 @@
 159F:00          BRK
 15A0:6C 00 13    JMP ($1300) =>6000		; Routine permettant de mettre dans ($4C) l'emplacement de la ligne Y ($E6 détermine page 1 ou 2)
 15A3:6C 02 13    JMP ($1302) =>618E
-15A6:6C 06 13    JMP ($1306) =>64EC
-15A9:6C 0E 13    JMP ($130E) =>6646		; Efface la page graphique 1 ou 2 suivant $E6 (poids fort de la mémoire graphique)
+15A6:6C 06 13    JMP ($1306) =>64EC		; Gestion des registre $D4, $D5, $D6 et $D7 pour le mode JOYSTICK
+15A9:6C 0E 13    JMP ($130E) =>6646		; Efface la page graphique 1 ou 2 suivant A sauvegardé dans $E6 (poids fort de la mémoire graphique)
 15AC:6C 10 13    JMP ($1310) =>65F8
 15AF:6C 14 13    JMP ($1314) =>67DA
-15B2:6C 16 13    JMP ($1316) =>6766		; Touche pressée
+15B2:6C 16 13    JMP ($1316) =>6766		; <ROUTINE1>
 15B5:6C 42 13    JMP ($1342) =>1494
 15B8:6C 32 13    JMP ($1332) =>716B
 15BB:6C 34 13    JMP ($1334) =>7287
@@ -1543,17 +1552,18 @@
 15C4:6C 3A 13    JMP ($133A) =>72C3
 15C7:6C 3C 13    JMP ($133C) =>722F
 15CA:6C 3E 13    JMP ($133E) =>7277
+; Semble être l'écran d'acceuil
 15CD:A9 00       LDA #$00
-15CF:85 3C       STA $3C
-15D1:20 B2 15    JSR $15B2
-15D4:A5 31       LDA $31
-15D6:F0 01       BEQ $15D9
+15CF:85 3C       STA $3C		; Flag local=1 si de fin de tempo pour écran option? ou?
+15D1:20 B2 15    JSR $15B2		; <ROUTINE1> Test touche
+15D4:A5 31       LDA $31		; A priori pas en ECRAN OPTIONs...
+15D6:F0 01       BEQ $15D9		;pas en cours d'option>↓>
 15D8:60          RTS
-15D9:A5 1D       LDA $1D
-15DB:A2 2A       LDX #$2A
+15D9:A5 1D       LDA $1D		; Prends la page à dessiner
+15DB:A2 2A       LDX #$2A		
 15DD:A0 55       LDY #$55
-15DF:20 98 16    JSR $1698
-15E2:20 C7 15    JSR $15C7
+15DF:20 98 16    JSR $1698		; Affiche un écran tout vert 
+15E2:20 C7 15    JSR $15C7		; JMP$722F Affiche les bandes haute et basse du texte de l'écran d'acceuil
 15E5:A5 1D       LDA $1D
 15E7:C9 20       CMP #$20
 15E9:D0 06       BNE $15F1
@@ -1569,7 +1579,7 @@
 1600:A9 0C       LDA #$0C
 1602:A0 0D       LDY #$0D
 1604:A6 1D       LDX $1D
-1606:20 00 1D    JSR $1D00
+1606:20 00 1D    JSR $1D00      ; on charge la page graphique $1D avec deux tracks $0c & $0d qui représente le logo "Jungle Hunt"
 1609:A9 00       LDA #$00
 160B:8D 15 17    STA $1715
 160E:A9 64       LDA #$64
@@ -1578,21 +1588,21 @@
 1614:85 DC       STA $DC
 1616:A5 1C       LDA $1C
 1618:85 E6       STA $E6
-161A:A0 78       LDY #$78
-161C:20 A0 15    JSR $15A0
+161A:A0 78       LDY #$78       ; ligne graphique 120
+161C:20 A0 15    JSR $15A0		; JMP$6000>>Récupère la adresse de la ligne graphique Y dans ($4C) (page $E6)
 161F:A5 4C       LDA $4C
 1621:85 84       STA $84
 1623:A5 4D       LDA $4D
 1625:85 85       STA $85
 1627:A5 1D       LDA $1D
 1629:85 E6       STA $E6
-162B:A4 DC       LDY $DC
-162D:20 A0 15    JSR $15A0
-1630:A0 05       LDY #$05
+162B:A4 DC       LDY $DC        ; ligne graphique 20=>
+162D:20 A0 15    JSR $15A0		; JMP$6000>>Récupère la adresse de la ligne graphique Y dans ($4C) (page $E6)
+1630:A0 05       LDY #$05       ; on commence au 5ème octets de la ligne
 1632:B1 4C       LDA ($4C),Y
 1634:91 84       STA ($84),Y
 1636:C8          INY
-1637:C0 23       CPY #$23
+1637:C0 23       CPY #$23       ; on fini au 35ème octet
 1639:90 F7       BCC $1632
 163B:E6 DC       INC $DC
 163D:A5 1C       LDA $1C
@@ -1602,22 +1612,22 @@
 1645:A0 14       LDY #$14
 1647:84 C5       STY $C5
 1649:A4 C5       LDY $C5
-164B:20 A0 15    JSR $15A0
+164B:20 A0 15    JSR $15A0		; JMP$6000>>Récupère la adresse de la ligne graphique Y dans ($4C) (page $E6)
 164E:A5 4C       LDA $4C
 1650:85 86       STA $86
 1652:A5 4D       LDA $4D
 1654:85 87       STA $87
 1656:E6 C5       INC $C5
 1658:A4 C5       LDY $C5
-165A:20 A0 15    JSR $15A0
+165A:20 A0 15    JSR $15A0		; JMP$6000>>Récupère la adresse de la ligne graphique Y dans ($4C) (page $E6)
 165D:A0 05       LDY #$05
 165F:B1 4C       LDA ($4C),Y
 1661:91 86       STA ($86),Y
 1663:C8          INY
 1664:C0 23       CPY #$23
 1666:D0 F7       BNE $165F
-1668:20 B2 15    JSR $15B2
-166B:A5 31       LDA $31
+1668:20 B2 15    JSR $15B2		; <ROUTINE1> touche appuyée dans
+166B:A5 31       LDA $31        ; En options
 166D:05 3C       ORA $3C
 166F:D0 26       BNE $1697
 1671:C6 C4       DEC $C4
@@ -1629,7 +1639,7 @@
 167E:D0 03       BNE $1683
 1680:E6 3A       INC $3A
 1682:60          RTS
-1683:20 B2 15    JSR $15B2
+1683:20 B2 15    JSR $15B2		; <ROUTINE1>
 1686:A5 2A       LDA $2A
 1688:D0 07       BNE $1691
 168A:AD 61 C0    LDA $C061
@@ -1639,24 +1649,25 @@
 1693:05 3C       ORA $3C
 1695:F0 E2       BEQ $1679
 1697:60          RTS
-1698:85 E6       STA $E6
-169A:86 0E       STX $0E
-169C:84 0F       STY $0F
-169E:A9 40       LDA #$40
+; Affiche un écran tout vert
+1698:85 E6       STA $E6		; Prochain écran à afficher
+169A:86 0E       STX $0E		; Sauvegarde de la couleur (verte) octet impaire 
+169C:84 0F       STY $0F		; Sauvegarde de la couleur (verte) paire
+169E:A9 40       LDA #$40	
 16A0:85 4A       STA $4A
-16A2:A4 4A       LDY $4A
-16A4:D0 01       BNE $16A7
+16A2:A4 4A       LDY $4A		; Charge le nb de ligne verte à afficher
+16A4:D0 01       BNE $16A7		;non nul OUI>↓>
 16A6:60          RTS
-16A7:88          DEY
-16A8:20 A0 15    JSR $15A0
-16AB:A0 00       LDY #$00
+16A7:88          DEY				;>> On va a
+16A8:20 A0 15    JSR $15A0		; JMP$6000>>Récupère la adresse de la ligne graphique Y dans ($4C) (page $E6)
+16AB:A0 00       LDY #$00		
 16AD:A5 0E       LDA $0E
 16AF:91 4C       STA ($4C),Y
 16B1:C8          INY
 16B2:A5 0F       LDA $0F
 16B4:91 4C       STA ($4C),Y
 16B6:C8          INY
-16B7:C0 80       CPY #$80
+16B7:C0 80       CPY #$80		; correspond à 3 lignes (remplissage des 3 banks mémoires)
 16B9:90 F2       BCC $16AD
 16BB:C6 4A       DEC $4A
 16BD:4C A2 16    JMP $16A2
@@ -1868,7 +1879,7 @@
 17D5:85 3D       STA $3D
 17D7:85 3E       STA $3E
 17D9:A9 20       LDA #$20
-17DB:85 E6       STA $E6		; Flag écran HGR ou Text #20 ou #40
+17DB:85 E6       STA $E6		; Flag écran Page 1
 17DD:20 CA 15    JSR $15CA
 17E0:2C 54 C0    BIT $C054		; Display HGR#0
 17E3:A2 FF       LDX #$FF
@@ -1885,12 +1896,12 @@
 17F8:85 3D       STA $3D
 17FA:85 3E       STA $3E
 17FC:60          RTS
-17FD:20 B2 15    JSR $15B2		 ;?touche a été pressé pendant l'écran de fin de jeu? (JMP $6766)
+17FD:20 B2 15    JSR $15B2		; <ROUTINE1>
 1800:A5 2A       LDA $2A
 1802:D0 07       BNE $180B
-1804:AD 61 C0    LDA $C061		;	Switch Input 0
-1807:10 02       BPL $180B
-1809:85 31       STA $31
+1804:AD 61 C0    LDA $C061		;Switch Input 0
+1807:10 02       BPL $180B		; bit7=0 (pas de bouton pressé) on va en $180B
+1809:85 31       STA $31		
 180B:A5 31       LDA $31
 180D:05 3C       ORA $3C
 180F:F0 D2       BEQ $17E3
@@ -1905,10 +1916,10 @@
 181F:4C 0B 18    JMP $180B
 1822:A9 00       LDA #$00
 1824:8D 59 03    STA $0359
-1827:AD 00 C0    LDA $C000		;Last Key Pressed (+ 128 if strobe not cleared)
-182A:C9 9B       CMP #$9B
+1827:AD 00 C0    LDA $C000		; Last Key Pressed (+ 128 if strobe not cleared)
+182A:C9 9B       CMP #$9B		; Touche 'ESC'
 182C:D0 10       BNE $183E
-182E:AD 10 C0    LDA $C010		
+182E:AD 10 C0    LDA $C010		;C010 49168	KBDSTRB	OECG	WR	Keyboard Strobe
 1831:68          PLA
 1832:68          PLA
 1833:A9 00       LDA #$00
@@ -1924,9 +1935,10 @@
 184A:85 14       STA $14
 184C:CA          DEX
 184D:BD 03 08    LDA $0803,X
-1850:AA          TAX
+; Table des adresses de caractères du Jeu 
+1850:AA          TAX					; Adresse du bitmap de ESPACE
 1851:18          CLC
-1852:B2                   ???
+1852:B2                   ???		; Adresse de 'A'
 1853:18          CLC
 1854:BA          TSX
 1855:18          CLC
@@ -1975,13 +1987,14 @@
 1899:19 82 19    ORA $1982,Y
 189C:E2                   ???
 189D:19 EA 19    ORA $19EA,Y
-18A0:F2                   ???
-18A1:19 8A 19    ORA $198A,Y
-18A4:8A          TXA
-18A5:19 8A 19    ORA $198A,Y
-18A8:AA          TAX
+18A0:F2                   ???		; Adresse du point central '.'
+18A1:19 8A 19    ORA $198A,Y		; Adresse vers un autre ESPACE (8 brk/#00 at $198A)
+18A4:8A          TXA					; Adresse vers un autre ESPACE (8 brk at $198A)
+18A5:19 8A 19    ORA $198A,Y		; Adresse vers un autre ESPACE (8 brk at $198A)
+18A8:AA          TAX					; Adresse de ESPACE
 18A9:18          CLC
-18AA:00          BRK
+; Mémoire/Table Graphique des Lettres 7 octets par lettre
+18AA:00          BRK					; ESPACE
 18AB:00          BRK
 18AC:00          BRK
 18AD:00          BRK
@@ -1989,8 +2002,7 @@
 18AF:00          BRK
 18B0:00          BRK
 18B1:00          BRK
-; Mémoire Graphique des Lettres
-18B2:0C                   ???		; Liste des lettres 7 octets soit 7 lignes par lettre
+18B2:0C                   ???		; Lettre 'A'
 18B3:1E 33 33    ASL $3333,X
 18B6:3F                   ???
 18B7:33                   ???
@@ -2175,75 +2187,76 @@
 198F:00          BRK
 1990:00          BRK
 1991:00          BRK
-1992:00          BRK
+;; Mémoire/Table Graphique des CHIFFRES et parenthèses et point 
+1992:00          BRK                     ; Chiffre '0'
 1993:3C                   ???
 1994:66 66       ROR $66
 1996:66 66       ROR $66
 1998:3C                   ???
 1999:00          BRK
-199A:00          BRK
+199A:00          BRK                     ; Chiffre '1'
 199B:18          CLC
 199C:1C                   ???
 199D:18          CLC
 199E:18          CLC
 199F:18          CLC
-19A0:7E 00 00    ROR $0000,X
+19A0:7E 00 00    ROR $0000,X            ; Chiffre '2'
 19A3:1C                   ???
 19A4:36 30       ROL $30,X
 19A6:18          CLC
 19A7:0C                   ???
-19A8:7E 00 00    ROR $0000,X
+19A8:7E 00 00    ROR $0000,X            ; Chiffre '3'
 19AB:7E 30 18    ROR $1830,X
 19AE:30 66       BMI $1A16
 19B0:3C                   ???
 19B1:00          BRK
-19B2:00          BRK
+19B2:00          BRK                     ; Chiffre '4'
 19B3:36 36       ROL $36,X
 19B5:36 7E       ROL $7E,X
 19B7:30 30       BMI $19E9
 19B9:00          BRK
-19BA:00          BRK
+19BA:00          BRK                     ; Chiffre '5'
 19BB:7E 06 3E    ROR $3E06,X
 19BE:60          RTS
 19BF:66 3C       ROR $3C
 19C1:00          BRK
-19C2:00          BRK
+19C2:00          BRK                     ; Chiffre '6'
 19C3:1C                   ???
 19C4:06 3E       ASL $3E
 19C6:66 66       ROR $66
 19C8:3C                   ???
 19C9:00          BRK
-19CA:00          BRK
+19CA:00          BRK                     ; Chiffre '7'
 19CB:7E 30 18    ROR $1830,X
 19CE:0C                   ???
 19CF:06 06       ASL $06
 19D1:00          BRK
-19D2:00          BRK
+19D2:00          BRK                     ; Chiffre '8'
 19D3:3C                   ???
 19D4:66 3C       ROR $3C
 19D6:66 66       ROR $66
 19D8:3C                   ???
 19D9:00          BRK
-19DA:00          BRK
+19DA:00          BRK                     ; Chiffre '9'
 19DB:3C                   ???
 19DC:66 66       ROR $66
 19DE:7C                   ???
 19DF:60          RTS
 19E0:3C                   ???
-19E1:00          BRK
+19E1:00          BRK                     ; Parenthèse ouvrante '('
 19E2:0C                   ???
 19E3:06 03       ASL $03
 19E5:03                   ???
 19E6:03                   ???
 19E7:06 0C       ASL $0C
-19E9:00          BRK
+19E9:00          BRK                     ; Parenthèse fermante ')'
 19EA:0C                   ???
 19EB:18          CLC
 19EC:30 30       BMI $1A1E
 19EE:30 18       BMI $1A08
 19F0:0C                   ???
 19F1:00          BRK
-19F2:00          BRK
+19F2:00          BRK                     ; Point central "."
 19F3:00          BRK
 19F4:00          BRK
 19F5:1C                   ???
@@ -2723,53 +2736,55 @@
 1CFD:FF                   ???
 1CFE:00          BRK
 1CFF:00          BRK
-1D00:8E 60 1D    STX $1D60
-1D03:8D 5B 1D    STA $1D5B
-1D06:8C 6D 1D    STY $1D6D
-1D09:20 71 1D    JSR $1D71
-1D0C:A9 0F       LDA #$0F
-1D0E:8D 5C 1D    STA $1D5C
-1D11:AD F7 B7    LDA $B7F7
-1D14:8D 58 1D    STA $1D58
-1D17:8D 66 1D    STA $1D66
-1D1A:AD F8 B7    LDA $B7F8
-1D1D:8D 59 1D    STA $1D59
+; Charge du code de suivant X (Buffer @HI),A (Track Number start),Y (Last Track to Read)
+1D00:8E 60 1D    STX $1D60		; Buffer @HI
+1D03:8D 5B 1D    STA $1D5B		; Track start
+1D06:8C 6D 1D    STY $1D6D		; Last Track to read
+1D09:20 71 1D    JSR $1D71		; Sauvegarde page 0 dans $1f00 et $1c00 dans page 0 (on va utiliser RWTS on remets la page avant le jeu)
+1D0C:A9 0F       LDA #$0F		
+1D0E:8D 5C 1D    STA $1D5C		; Sector start
+1D11:AD F7 B7    LDA $B7F7		; Dernier slot utilisé par le DOS (RWTS)
+1D14:8D 58 1D    STA $1D58		; On applique ce dernier slot utilisé
+1D17:8D 66 1D    STA $1D66		
+1D1A:AD F8 B7    LDA $B7F8		; Dernier drive utilisé par le DOS
+1D1D:8D 59 1D    STA $1D59		; On l'applique ce dernier drive
 1D20:8D 67 1D    STA $1D67
-1D23:A9 00       LDA #$00
-1D25:8D 64 1D    STA $1D64
+1D23:A9 00       LDA #$00		;>>
+1D25:8D 64 1D    STA $1D64		; Code retour positionné à 0
 1D28:A0 57       LDY #$57
 1D2A:A9 1D       LDA #$1D
-1D2C:20 B5 B7    JSR $B7B5
+1D2C:20 B5 B7    JSR $B7B5		; Lecture DISK (table $1D57: Track=($1D5B), BufferHI=($1D60))
 1D2F:EE 60 1D    INC $1D60
-1D32:CE 5C 1D    DEC $1D5C
-1D35:10 08       BPL $1D3F
+1D32:CE 5C 1D    DEC $1D5C		; On décrémente le sector en cours
+1D35:10 08       BPL $1D3F		; Si Postif (N=0/<>"#FF")>↓>
 1D37:A9 0F       LDA #$0F
 1D39:8D 5C 1D    STA $1D5C
 1D3C:EE 5B 1D    INC $1D5B
-1D3F:AD 5B 1D    LDA $1D5B
-1D42:CD 6D 1D    CMP $1D6D
-1D45:90 DC       BCC $1D23
-1D47:F0 02       BEQ $1D4B
-1D49:B0 08       BCS $1D53
-1D4B:AD 5C 1D    LDA $1D5C
-1D4E:CD 6C 1D    CMP $1D6C
-1D51:B0 D0       BCS $1D23
-1D53:20 6E 1D    JSR $1D6E
+1D3F:AD 5B 1D    LDA $1D5B		;>> Charge le Track en cours (incrémenté ou non si fin de lecture des secteurs)
+1D42:CD 6D 1D    CMP $1D6D		; Comparaison avec le Track final à lire
+1D45:90 DC       BCC $1D23		; Si < on continue de lire les secteurs
+1D47:F0 02       BEQ $1D4B		; Si = cas du dernier track à lire >↓>
+1D49:B0 08       BCS $1D53		; Si > arrive au moment du dernier track lu >> on sort
+1D4B:AD 5C 1D    LDA $1D5C		; >> Cas dernier track à lire: Charge le secteur en lecture
+1D4E:CD 6C 1D    CMP $1D6C		; Dernier secteur à lire pour ce dernier track
+1D51:B0 D0       BCS $1D23		; >= On continue de lire tant que le secteur de fin ($1D6C) n'a pas été lu.
+1D53:20 6E 1D    JSR $1D6E	    ; Sauvegarde page 0 dans $1c00 et $1f00 dans page 0
 1D56:60          RTS
-1D57:01 60       ORA ($60,X)
-1D59:01 00       ORA ($00,X)
-1D5B:0E 0F 68    ASL $680F
-1D5E:1D 00 60    ORA $6000,X
+; Table IOB
+1D57:01 60       ORA ($60,X)		; unused, Slot 6
+1D59:01 00       ORA ($00,X)		; Drive 1, tout type de volume 00
+1D5B:0E 0F 68    ASL $680F			; Track number ($1D5B), Sector number ($1D5C), DCT
+1D5E:1D 00 60    ORA $6000,X		; DCT, Buffer $(1D5F)
 1D61:00          BRK
 1D62:00          BRK
-1D63:01 B3       ORA ($B3,X)
-1D65:FE 60 01    INC $0160,X
+1D63:01 B3       ORA ($B3,X)		; Commande DOS READ, ERROR retour
+1D65:FE 60 01    INC $0160,X		; Dernier Volume, slot, drive
+;
 1D68:00          BRK
 1D69:01 EF       ORA ($EF,X)
 1D6B:D8          CLD
-1D6C:00          BRK
-1D6D:0D 6C 0A    ORA $0A6C
-1D70:13                   ???
+1D6C:00 0D       BRK					; 
+1D6E:6C 0A 13    JMP ($130A) =>65C6
 1D71:6C 0C 13    JMP ($130C) =>65D8
 1D74:3C                   ???
 1D75:D4                   ???
@@ -2782,25 +2797,35 @@
 1D7F:9D 3C 0C    STA $0C3C,X
 1D82:F2                   ???
 1D83:0C                   ???
-1D84:AD E9 B7    LDA $B7E9
+
+
+;
+;===============================================================================================================
+; Semble être une copie du début du DOS coldstart ENTRY $9D84 (ici $1D84) jusque $20FF (Chargement depuis BOOT)
+; Bizaremment le copie (exacte du DOS) est interrompu en plein milieux
+; Je pense que le but était de récupérer le code de la routine RWTS et qu'il on pris plus de code ?
+; On remarque que les JMP de ce code copié utilise les JMP du code originel en $9D84...
+;================================================================================================================
+1D84:AD E9 B7    LDA $B7E9		; Slot number from RWTS parlist
 1D87:4A          LSR
 1D88:4A          LSR
 1D89:4A          LSR
-1D8A:4A          LSR
-1D8B:8D 6A AA    STA $AA6A
-1D8E:AD EA B7    LDA $B7EA
-1D91:8D 68 AA    STA $AA68
-1D94:AD 00 E0    LDA $E000
+1D8A:4A          LSR				; On rècupére #6 pour #$60
+1D8B:8D 6A AA    STA $AA6A		; On stocke le slot pour une commande DOS
+1D8E:AD EA B7    LDA $B7EA		; Drive number from RWTS parlist		
+1D91:8D 68 AA    STA $AA68		; On stocke le DRIVE pour une commande DOS
+1D94:AD 00 E0    LDA $E000		; If a LANGUAGE CARD is present, DOS stores a zero on it at $E000 during \
+										;   bootstrap to force the HELLO program on master diskette to reload BASIC
 1D97:49 20       EOR #$20
-1D99:D0 11       BNE $1DAC
+1D99:D0 11       BNE $1DAC		; Pas de carte language? >>
 1D9B:8D B6 AA    STA $AAB6
-1D9E:A2 0A       LDX #$0A
-1DA0:BD 61 9D    LDA $9D61,X
-1DA3:9D 55 9D    STA $9D55,X
-1DA6:CA          DEX
-1DA7:D0 F7       BNE $1DA0
-1DA9:4C BC 9D    JMP $9DBC
-1DAC:A9 40       LDA #$40
+1D9E:A2 0A       LDX #$0A		
+1DA0:BD 61 9D    LDA $9D61,X	; Récupére $9D6B=>$9D62: Image of entry point vector for Integer Basic
+1DA3:9D 55 9D    STA $9D55,X	; This image $9D62=>$9D6B is copied to 9D56 if INTEGER BASIC is made active
+1DA6:CA          DEX				; $9D56-$9D61: Active BASIC entry point vector table. The addresses stored her e\
+1DA7:D0 F7       BNE $1DA0		;	are maintained by DOS such that they apply to current version of BASIC running
+1DA9:4C BC 9D    JMP $9DBC		; Normalement ENTRY point du BASIC est $9D84
+1DAC:A9 40       LDA #$40		>>
 1DAE:8D B6 AA    STA $AAB6
 1DB1:A2 0C       LDX #$0C
 1DB3:BD 6B 9D    LDA $9D6B,X
@@ -2948,237 +2973,233 @@
 1EFA:F0 75       BEQ $1F71
 1EFC:C5 33       CMP $33
 1EFE:F0 27       BEQ $1F27
-1F00:00          BRK
-1F01:00          BRK
-1F02:00          BRK
-1F03:00          BRK
-1F04:00          BRK
-1F05:00          BRK
-1F06:00          BRK
-1F07:00          BRK
-1F08:00          BRK
-1F09:00          BRK
-1F0A:00          BRK
-1F0B:00          BRK
-1F0C:00          BRK
-1F0D:00          BRK
-1F0E:2A          ROL
-1F0F:55 C1       EOR $C1,X
-1F11:DA                   ???
-1F12:88          DEY
-1F13:95 A0       STA $A0,X
-1F15:A0 00       LDY #$00
-1F17:00          BRK
-1F18:00          BRK
-1F19:00          BRK
-1F1A:01 00       ORA ($00,X)
-1F1C:20 40 00    JSR $0040
-1F1F:01 10       ORA ($10,X)
-1F21:00          BRK
-1F22:00          BRK
-1F23:00          BRK
-1F24:00          BRK
-1F25:00          BRK
-1F26:00          BRK
-1F27:00          BRK
-1F28:00          BRK
-1F29:00          BRK
-1F2A:FF                   ???
-1F2B:00          BRK
-1F2C:00          BRK
-1F2D:00          BRK
-1F2E:00          BRK
-1F2F:00          BRK
-1F30:00          BRK
-1F31:00          BRK
-1F32:00          BRK
-1F33:00          BRK
-1F34:00          BRK
-1F35:00          BRK
-1F36:00          BRK
-1F37:00          BRK
-1F38:00          BRK
-1F39:00          BRK
-1F3A:00          BRK
-1F3B:00          BRK
-1F3C:00          BRK
-1F3D:00          BRK
-1F3E:00          BRK
-1F3F:FF                   ???
-1F40:00          BRK
-1F41:01 06       ORA ($06,X)
-1F43:06 01       ASL $01
-1F45:00          BRK
-1F46:01 00       ORA ($00,X)
-1F48:00          BRK
-1F49:00          BRK
-1F4A:00          BRK
-1F4B:00          BRK
-1F4C:D0 3F       BNE $1F8D
-1F4E:00          BRK
-1F4F:00          BRK
-1F50:00          BRK
-1F51:00          BRK
-1F52:00          BRK
-1F53:00          BRK
-1F54:00          BRK
-1F55:00          BRK
-1F56:00          BRK
-1F57:00          BRK
-1F58:00          BRK
-1F59:00          BRK
-1F5A:00          BRK
-1F5B:00          BRK
-1F5C:00          BRK
-1F5D:00          BRK
-1F5E:00          BRK
-1F5F:00          BRK
-1F60:00          BRK
-1F61:00          BRK
-1F62:00          BRK
-1F63:00          BRK
-1F64:00          BRK
-1F65:00          BRK
-1F66:00          BRK
-1F67:00          BRK
-1F68:00          BRK
-1F69:00          BRK
-1F6A:00          BRK
-1F6B:00          BRK
-1F6C:00          BRK
-1F6D:00          BRK
-1F6E:00          BRK
-1F6F:00          BRK
-1F70:00          BRK
-1F71:00          BRK
-1F72:00          BRK
-1F73:00          BRK
-1F74:00          BRK
-1F75:00          BRK
-1F76:00          BRK
-1F77:00          BRK
-1F78:00          BRK
-1F79:00          BRK
-1F7A:00          BRK
-1F7B:00          BRK
-1F7C:00          BRK
-1F7D:00          BRK
-1F7E:00          BRK
-1F7F:00          BRK
-1F80:50 18       BVC $1F9A
-1F82:00          BRK
-1F83:00          BRK
-1F84:B0 75       BCS $1FFB
-1F86:00          BRK
-1F87:00          BRK
-1F88:02                   ???
-1F89:80                   ???
-1F8A:02                   ???
-1F8B:8C 00 00    STY $0000
-1F8E:00          BRK
-1F8F:00          BRK
-1F90:00          BRK
-1F91:00          BRK
-1F92:00          BRK
-1F93:00          BRK
-1F94:00          BRK
-1F95:00          BRK
-1F96:00          BRK
-1F97:00          BRK
-1F98:00          BRK
-1F99:00          BRK
-1F9A:00          BRK
-1F9B:00          BRK
-1F9C:00          BRK
-1F9D:00          BRK
-1F9E:00          BRK
-1F9F:00          BRK
-1FA0:00          BRK
-1FA1:00          BRK
-1FA2:00          BRK
-1FA3:05 00       ORA $00
-1FA5:00          BRK
-1FA6:05 05       ORA $05
-1FA8:00          BRK
-1FA9:00          BRK
-1FAA:00          BRK
-1FAB:00          BRK
-1FAC:00          BRK
-1FAD:00          BRK
-1FAE:00          BRK
-1FAF:00          BRK
-1FB0:00          BRK
-1FB1:00          BRK
-1FB2:00          BRK
-1FB3:00          BRK
-1FB4:00          BRK
-1FB5:00          BRK
-1FB6:00          BRK
-1FB7:00          BRK
-1FB8:00          BRK
-1FB9:00          BRK
-1FBA:00          BRK
-1FBB:00          BRK
-1FBC:00          BRK
-1FBD:00          BRK
-1FBE:00          BRK
-1FBF:00          BRK
-1FC0:00          BRK
-1FC1:00          BRK
-1FC2:00          BRK
-1FC3:00          BRK
-1FC4:00          BRK
-1FC5:00          BRK
-1FC6:00          BRK
-1FC7:10 04       BPL $1FCD
-1FC9:10 04       BPL $1FCF
-1FCB:00          BRK
-1FCC:00          BRK
-1FCD:00          BRK
-1FCE:00          BRK
-1FCF:00          BRK
-1FD0:00          BRK
-1FD1:00          BRK
-1FD2:00          BRK
-1FD3:00          BRK
-1FD4:00          BRK
-1FD5:00          BRK
-1FD6:00          BRK
-1FD7:00          BRK
-1FD8:00          BRK
-1FD9:00          BRK
-1FDA:00          BRK
-1FDB:00          BRK
-1FDC:C0 00       CPY #$00
-1FDE:23                   ???
-1FDF:00          BRK
-1FE0:00          BRK
-1FE1:01 01       ORA ($01,X)
-1FE3:00          BRK
-1FE4:00          BRK
-1FE5:00          BRK
-1FE6:20 00 22    JSR $2200
-1FE9:19 00 00    ORA $0000,Y
-1FEC:00          BRK
-1FED:00          BRK
-1FEE:00          BRK
-1FEF:00          BRK
-1FF0:00          BRK
-1FF1:00          BRK
-1FF2:00          BRK
-1FF3:00          BRK
-1FF4:00          BRK
-1FF5:00          BRK
-1FF6:00          BRK
-1FF7:00          BRK
-1FF8:00          BRK
-1FF9:00          BRK
-1FFA:00          BRK
-1FFB:00          BRK
-1FFC:00          BRK
-1FFD:00          BRK
-1FFE:00          BRK
-1FFF:00          BRK
+1F00:A2 02       LDX #$02
+1F02:8E 52 AA    STX $AA52
+1F05:CD B2 AA    CMP $AAB2
+1F08:D0 19       BNE $1F23
+1F0A:CA          DEX
+1F0B:8E 52 AA    STX $AA52
+1F0E:CA          DEX
+1F0F:8E 5D AA    STX $AA5D
+1F12:AE 5D AA    LDX $AA5D
+1F15:9D 00 02    STA $0200, X
+1F18:E8          INX
+1F19:8E 5D AA    STX $AA5D
+1F1C:C9 8D       CMP #$8D
+1F1E:D0 75       BNE $1F95
+1F20:4C CD 9F    JMP $9FCD
+1F23:C9 8D       CMP #$8D
+1F25:D0 7D       BNE $1FA4
+1F27:A2 00       LDX #$00
+1F29:8E 52 AA    STX $AA52
+1F2C:4C A4 9F    JMP $9FA4
+1F2F:A2 00       LDX #$00
+1F31:8E 52 AA    STX $AA52
+1F34:C9 8D       CMP #$8D
+1F36:F0 07       BEQ $1F3F
+1F38:AD B3 AA    LDA $AAB3
+1F3B:F0 67       BEQ $1FA4
+1F3D:D0 5E       BNE $1F9D
+1F3F:48          PHA
+1F40:38          SEC
+1F41:AD B3 AA    LDA $AAB3
+1F44:D0 03       BNE $1F49
+1F46:20 5E A6    JSR $A65E
+1F49:68          PLA
+1F4A:90 EC       BCC $1F38
+1F4C:AE 5A AA    LDX $AA5A
+1F4F:4C 15 9F    JMP $9F15
+1F52:C9 8D       CMP #$8D
+1F54:D0 05       BNE $1F5B
+1F56:A9 05       LDA #$05
+1F58:8D 52 AA    STA $AA52
+1F5B:20 0E A6    JSR $A60E
+1F5E:4C 99 9F    JMP $9F99
+1F61:CD B2 AA    CMP $AAB2
+1F64:F0 85       BEQ $1EEB
+1F66:C9 8A       CMP #$8A
+1F68:F0 F1       BEQ $1F5B
+1F6A:A2 04       LDX #$04
+1F6C:8E 52 AA    STX $AA52
+1F6F:D0 E1       BNE $1F52
+1F71:A9 00       LDA #$00
+1F73:8D 52 AA    STA $AA52
+1F76:F0 25       BEQ $1F9D
+1F78:A9 00       LDA #$00
+1F7A:8D B7 AA    STA $AAB7
+1F7D:20 51 A8    JSR $A851
+1F80:4C DC A4    JMP $A4DC
+1F83:AD 00 02    LDA $0200
+1F86:CD B2 AA    CMP $AAB2
+1F89:F0 0A       BEQ $1F95
+1F8B:A9 8D       LDA #$8D
+1F8D:8D 00 02    STA $0200
+1F90:A2 00       LDX #$00
+1F92:8E 5A AA    STX $AA5A
+1F95:A9 40       LDA #$40
+1F97:D0 06       BNE $1F9F
+1F99:A9 10       LDA #$10
+1F9B:D0 02       BNE $1F9F
+1F9D:A9 20       LDA #$20
+1F9F:2D 5E AA    AND $AA5E
+1FA2:F0 0F       BEQ $1FB3
+1FA4:20 BA 9F    JSR $9FBA
+1FA7:20 C5 9F    JSR $9FC5
+1FAA:8D 5C AA    STA $AA5C
+1FAD:8C 5B AA    STY $AA5B
+1FB0:8E 5A AA    STX $AA5A
+1FB3:20 51 A8    JSR $A851
+1FB6:AE 59 AA    LDX $AA59
+1FB9:9A          TXS
+1FBA:AD 5C AA    LDA $AA5C
+1FBD:AC 5B AA    LDY $AA5B
+1FC0:AE 5A AA    LDX $AA5A
+1FC3:38          SEC
+1FC4:60          RTS
+1FC5:6C 36 00    JMP ($0036)
+1FC8:A9 8D       LDA #$8D
+1FCA:4C C5 9F    JMP $9FC5
+1FCD:A0 FF       LDY #$FF
+1FCF:8C 5F AA    STY $AA5F
+1FD2:C8          INY
+1FD3:8C 62 AA    STY $AA62
+1FD6:EE 5F AA    INC $AA5F
+1FD9:A2 00       LDX #$00
+1FDB:08          PHP
+1FDC:BD 00 02    LDA $0200, X
+1FDF:CD B2 AA    CMP $AAB2
+1FE2:D0 01       BNE $1FE5
+1FE4:E8          INX
+1FE5:8E 5D AA    STX $AA5D
+1FE8:20 A4 A1    JSR $A1A4
+1FEB:29 7F       AND #$7F
+1FED:59 84 A8    EOR $A884, Y
+1FF0:C8          INY
+1FF1:0A          ASL A
+1FF2:F0 02       BEQ $1FF6
+1FF4:68          PLA
+1FF5:08          PHP
+1FF6:90 F0       BCC $1FE8
+1FF8:28          PLP
+1FF9:F0 20       BEQ $201B
+1FFB:B9 84 A8    LDA $A884, Y
+1FFE:D0 D6       BNE $1FD6
+2000:AD 00 02    LDA $0200
+2003:CD B2 AA    CMP $AAB2
+2006:F0 03       BEQ $200B
+2008:4C A4 9F    JMP $9FA4
+200B:AD 01 02    LDA $0201
+200E:C9 8D       CMP #$8D
+2010:D0 06       BNE $2018
+2012:20 5B A7    JSR $A75B
+2015:4C 95 9F    JMP $9F95
+2018:4C C4 A6    JMP $A6C4
+201B:0E 5F AA    ASL $AA5F
+201E:AC 5F AA    LDY $AA5F
+2021:20 5E A6    JSR $A65E
+2024:90 0C       BCC $2032
+2026:A9 02       LDA #$02
+2028:39 09 A9    AND $A909, Y
+202B:F0 05       BEQ $2032
+202D:A9 0F       LDA #$0F
+202F:4C D2 A6    JMP $A6D2
+2032:C0 06       CPY #$06
+2034:D0 02       BNE $2038
+2036:84 33       STY <PROMPT
+2038:A9 20       LDA #$20
+203A:39 09 A9    AND $A909, Y
+203D:F0 61       BEQ $20A0
+203F:20 95 A0    JSR $A095
+2042:08          PHP
+2043:20 A4 A1    JSR $A1A4
+2046:F0 1E       BEQ $2066
+2048:0A          ASL A
+2049:90 05       BCC $2050
+204B:30 03       BMI $2050
+204D:4C 00 A0    JMP $A000
+2050:6A          ROR A
+2051:4C 59 A0    JMP $A059
+2054:20 93 A1    JSR $A193
+2057:F0 0D       BEQ $2066
+2059:99 75 AA    STA $AA75, Y
+205C:C8          INY
+205D:C0 3C       CPY #$3C
+205F:90 F3       BCC $2054
+2061:20 93 A1    JSR $A193
+2064:D0 FB       BNE $2061
+2066:28          PLP
+2067:D0 0F       BNE $2078
+2069:AC 5F AA    LDY $AA5F
+206C:A9 10       LDA #$10
+206E:39 09 A9    AND $A909, Y
+2071:F0 0C       BEQ $207F
+2073:A0 1E       LDY #$1E
+2075:08          PHP
+2076:D0 CB       BNE $2043
+2078:AD 93 AA    LDA $AA93
+207B:C9 A0       CMP #$A0
+207D:F0 13       BEQ $2092
+207F:AD 75 AA    LDA $AA75
+2082:C9 A0       CMP #$A0
+2084:D0 4B       BNE $20D1
+2086:AC 5F AA    LDY $AA5F
+2089:A9 C0       LDA #$C0
+208B:39 09 A9    AND $A909, Y
+208E:F0 02       BEQ $2092
+2090:10 3F       BPL $20D1
+2092:4C 00 A0    JMP $A000
+2095:A0 3C       LDY #$3C
+2097:A9 A0       LDA #$A0
+2099:99 74 AA    STA $AA74, Y
+209C:88          DEY
+209D:D0 FA       BNE $2099
+209F:60          RTS
+20A0:8D 75 AA    STA $AA75
+20A3:A9 0C       LDA #$0C
+20A5:39 09 A9    AND $A909, Y
+20A8:F0 27       BEQ $20D1
+20AA:20 B9 A1    JSR $A1B9
+20AD:B0 1F       BCS $20CE
+20AF:A8          TAY
+20B0:D0 17       BNE $20C9
+20B2:E0 11       CPX #$11
+20B4:B0 13       BCS $20C9
+20B6:AC 5F AA    LDY $AA5F
+20B9:A9 08       LDA #$08
+20BB:39 09 A9    AND $A909, Y
+20BE:F0 06       BEQ $20C6
+20C0:E0 08       CPX #$08
+20C2:B0 CE       BCS $2092
+20C4:90 0B       BCC $20D1
+20C6:8A          TXA
+20C7:D0 08       BNE $20D1
+20C9:A9 02       LDA #$02
+20CB:4C D2 A6    JMP $A6D2
+20CE:4C C4 A6    JMP $A6C4
+20D1:A9 00       LDA #$00
+20D3:8D 65 AA    STA $AA65
+20D6:8D 74 AA    STA $AA74
+20D9:8D 66 AA    STA $AA66
+20DC:8D 6C AA    STA $AA6C
+20DF:8D 6D AA    STA $AA6D
+20E2:20 DC BF    JSR $BFDC
+20E5:AD 5D AA    LDA $AA5D
+20E8:20 A4 A1    JSR $A1A4
+20EB:D0 1F       BNE $210C
+20ED:C9 8D       CMP #$8D
+20EF:D0 F7       BNE $20E8
+20F1:AE 5F AA    LDX $AA5F
+20F4:AD 65 AA    LDA $AA65
+20F7:1D 0A A9    ORA $A90A, X
+20FA:5D 0A A9    EOR $A90A, X
+20FD:D0 93       BNE $2092
+20FF:AE 00 FF    LDX $FF00
+
+
+;
+; ###########################
+;      MAIN2 $6000=>78FF  
+; ###########################
 ; Routine permettant de mettre dans ($4C) l'emplacement de la ligne Y ($E6 détermine page 1 ou 2)
 6000:B9 0E 60    LDA $600E,Y	; Utilise la table en $600E (192 lignes) le poids faible $4C d'adressage HGR
 6003:85 4C       STA $4C
@@ -4103,21 +4124,22 @@
 64E9:27                   ???
 64EA:27                   ???
 64EB:27                   ???
-64EC:A5 2A       LDA $2A
-64EE:F0 01       BEQ $64F1
-64F0:60          RTS
-64F1:A5 26       LDA $26
+; Gestion des registres $D4, $D5, $D6 et $D7 pour le mode JOYSTICK
+64EC:A5 2A       LDA $2A		; Registre Options KEYBOARD ou JOYSTICK
+64EE:F0 01       BEQ $64F1		; Branchement si JOYSTICK
+64F0:60          RTS				; Retour si Clavier
+64F1:A5 26       LDA $26		; Flag local $26 Paddle 0 et 1 alternativement
 64F3:F0 21       BEQ $6516
 64F5:A2 00       LDX #$00
 64F7:86 26       STX $26
-64F9:20 1E FB    JSR $FB1E
+64F9:20 1E FB    JSR $FB1E		; Read Analog Paddle numéro 0 (X), valeur dans Y
 64FC:98          TYA
-64FD:C9 3C       CMP #$3C
+64FD:C9 3C       CMP #$3C		; Branchement si supérieur ou égale à #60
 64FF:B0 07       BCS $6508
 6501:A9 FF       LDA #$FF
-6503:85 D5       STA $D5
+6503:85 D5       STA $D5		; $D5 registre horizontal (FF GAUCHE, 00 DROIT)		
 6505:4C 37 65    JMP $6537
-6508:C9 BE       CMP #$BE
+6508:C9 BE       CMP #$BE		; Branchement si supérieur ou égale à #190
 650A:B0 05       BCS $6511
 650C:A9 00       LDA #$00
 650E:4C 03 65    JMP $6503
@@ -4125,29 +4147,29 @@
 6513:4C 03 65    JMP $6503
 6516:A2 01       LDX #$01
 6518:86 26       STX $26
-651A:20 1E FB    JSR $FB1E
+651A:20 1E FB    JSR $FB1E		; Read Analog Paddle numéro 1 (X), valeur dans Y
 651D:98          TYA
 651E:C9 3C       CMP #$3C
-6520:B0 07       BCS $6529
+6520:B0 07       BCS $6529		; Branchement si supérieur ou égale à #60
 6522:A9 FF       LDA #$FF
-6524:85 D4       STA $D4
+6524:85 D4       STA $D4		; $D4 registre vertical (FF HAUT, 00 BAS)
 6526:4C 37 65    JMP $6537
 6529:C9 BE       CMP #$BE
-652B:B0 05       BCS $6532
+652B:B0 05       BCS $6532		; Branchement si supérieur ou égale à #190
 652D:A9 00       LDA #$00
 652F:4C 24 65    JMP $6524
 6532:A9 01       LDA #$01
 6534:4C 24 65    JMP $6524
 6537:A0 01       LDY #$01
-6539:AD 61 C0    LDA $C061
+6539:AD 61 C0    LDA $C061		;C061 49249	BUTN0	OECG	R7	Switch Input 0
 653C:30 02       BMI $6540
 653E:A0 00       LDY #$00
-6540:84 D6       STY $D6
+6540:84 D6       STY $D6		; Demande de saut =1 ou pas =0 (Bouton 0) 
 6542:A0 01       LDY #$01
-6544:AD 62 C0    LDA $C062
+6544:AD 62 C0    LDA $C062		;C062 49250	BUTN1	OECG	R7	Switch Input 1
 6547:30 02       BMI $654B
 6549:A0 00       LDY #$00
-654B:84 D7       STY $D7
+654B:84 D7       STY $D7		; Registre Bouton 2 et timer 'couché' en mode KEYBOARD
 654D:60          RTS
 ; Routine concernant la touche 'ESC' permettant de faire une pause et si pause longue un écran noir
 654E:AD 00 C0    LDA $C000		; Load the ASCII code of the last key pressed into the accumulator
@@ -4185,7 +4207,7 @@
 659A:10 FB       BPL $6597		; Branchement si pas de touche pressée => on boucle à l'infini en attendant une touche pressée
 659C:C9 CD       CMP #$CD		; Si 'M' on incrémente registre $36
 659E:D0 BD       BNE $655D		; Autre touche que la touche 'M' => on boucle pour tester une touche 'ESC'
-65A0:E6 36       INC $36		; Registre Flag qui permet de passer au niveau suivant
+65A0:E6 36       INC $36		; Registre Flag qui permet de passer au niveau suivant (touche 'I' et 'M' en pause)
 65A2:A9 C4       LDA #$C4
 65A4:85 5A       STA $5A
 65A6:A9 65       LDA #$65
@@ -4220,6 +4242,7 @@
 65E6:C8          INY
 65E7:D0 F1       BNE $65DA
 65E9:60          RTS
+;
 65EA:18          CLC
 65EB:A5 84       LDA $84
 65ED:69 09       ADC #$09
@@ -4228,6 +4251,7 @@
 65F3:69 00       ADC #$00
 65F5:85 85       STA $85
 65F7:60          RTS
+;
 65F8:18          CLC
 65F9:A5 80       LDA $80
 65FB:69 09       ADC #$09
@@ -4236,6 +4260,7 @@
 6601:69 00       ADC #$00
 6603:85 81       STA $81
 6605:60          RTS
+;
 6606:A0 00       LDY #$00
 6608:B1 80       LDA ($80),Y
 660A:85 4A       STA $4A
@@ -4272,7 +4297,7 @@
 6641:B1 80       LDA ($80),Y
 6643:85 E9       STA $E9
 6645:60          RTS
-; Efface la page graphique 1 ou 2 suivant $E6 (poids fort de la mémoire graphique)
+; Efface la page graphique 1 ou 2 suivant A sauvegardé dans $E6 (poids fort de la mémoire graphique)
 6646:85 E6       STA $E6
 6648:A9 00       LDA #$00
 664A:85 DC       STA $DC
@@ -4398,24 +4423,26 @@
 6728:91 80       STA ($80),Y
 672A:20 F8 65    JSR $65F8
 672D:60          RTS
+; Affiche des points en mémoire graphique page $E6
+; On remplit les lignes de X à Y-1, lignes paires avec $00$01 et lignes impaires avec $02$03
 672E:86 DE       STX $DE
 6730:84 DC       STY $DC
 6732:A4 DE       LDY $DE
 6734:20 00 60    JSR $6000		; Routine permettant de mettre dans ($4C) l'emplacement de la ligne Y ($E6 détermine page 1 ou 2)
 6737:A0 00       LDY #$00
-6739:A5 DE       LDA $DE
-673B:4A          LSR
-673C:B0 11       BCS $674F
-673E:A5 00       LDA $00
-6740:91 4C       STA ($4C),Y
-6742:C8          INY
-6743:A5 01       LDA $01
+6739:A5 DE       LDA $DE		
+673B:4A          LSR				; Logical Shift Right (bit de poids faible qui vient de tomber dans CARRY=>ligne pair ou impair)
+673C:B0 11       BCS $674F		; Carry SET? OUI>↓>Ligne impaire On va remplir avec les octets $02 et $03 la ligne
+673E:A5 00       LDA $00		;>> On rempli avec $00 et $01 toute la ligne paire 
+6740:91 4C       STA ($4C),Y	; Mettre l'octet Y pair, la valeur $00 dans la mémoire de la ligne paire $DE
+6742:C8          INY				; Octets suivant (impaire) sur la ligne paire $DE
+6743:A5 01       LDA $01		; Mettre l'octet Y impair, la valeur $00 dans la mémoire de la ligne paire $DE
 6745:91 4C       STA ($4C),Y
 6747:C8          INY
-6748:C0 28       CPY #$28
-674A:90 F2       BCC $673E
-674C:4C 5D 67    JMP $675D
-674F:A5 02       LDA $02
+6748:C0 28       CPY #$28		; 40 octets de points déjà traité (40*7bit=280)?
+674A:90 F2       BCC $673E		; OUI>↑> strictement inférieur
+674C:4C 5D 67    JMP $675D		; Traitement>↓>On prend la ligne suivante jusqu'à $DC
+674F:A5 02       LDA $02		;>>Traitement ligne impaire
 6751:91 4C       STA ($4C),Y
 6753:C8          INY
 6754:A5 03       LDA $03
@@ -4423,66 +4450,68 @@
 6758:C8          INY
 6759:C0 28       CPY #$28
 675B:90 F2       BCC $674F
-675D:E6 DE       INC $DE
+675D:E6 DE       INC $DE		; Ligne suivante
 675F:A4 DE       LDY $DE
-6761:C4 DC       CPY $DC
-6763:90 CF       BCC $6734
-6765:60          RTS
-; Récupération de la dernière touche appuyée
+6761:C4 DC       CPY $DC		; On a fini de remplir jusqu'à la ligne $DC
+6763:90 CF       BCC $6734		; Inférieur strictement>↑>
+6765:60          RTS		
+; <ROUTINE1> de la boucle pricipale 
+; Récupération de la dernière touche appuyée ou bouton appuyé et positionnement de TIMER
 6766:AD 00 C0    LDA $C000		;C000 49152	KBD	OECG	R	Last Key Pressed (+ 128 if strobe not cleared)
-6769:30 01       BMI $676C	
+6769:30 01       BMI $676C		; oui nouvelle touche pressée	
 676B:60          RTS
-676C:A4 2A       LDY $2A
-676E:F0 47       BEQ $67B7
-6770:A4 32       LDY $32
-6772:F0 57       BEQ $67CB
-6774:C5 10       CMP $10
-6776:D0 07       BNE $677F
-6778:A9 FF       LDA #$FF
-677A:E6 D9       INC $D9
-677C:4C AD 67    JMP $67AD
-677F:C5 11       CMP $11
-6781:D0 0B       BNE $678E
-6783:A9 DC       LDA #$DC
-6785:85 D7       STA $D7
-6787:A9 01       LDA #$01
-6789:E6 D9       INC $D9
-678B:4C AD 67    JMP $67AD
-678E:C5 12       CMP $12
-6790:D0 07       BNE $6799
-6792:A9 FF       LDA #$FF
-6794:E6 D9       INC $D9
-6796:4C B2 67    JMP $67B2
-6799:C5 13       CMP $13
-679B:D0 07       BNE $67A4
-679D:A9 01       LDA #$01
+676C:A4 2A       LDY $2A			
+676E:F0 47       BEQ $67B7		; Aller plus bas au traitement Joystick
+6770:A4 32       LDY $32		; Flag=1 si 'partie en cours' 
+6772:F0 57       BEQ $67CB		; si $32=0 on ne controle que la touche espace cf plus bas >>
+6774:C5 10       CMP $10		; Touche vers le HAUT 'A'
+6776:D0 07       BNE $677F		; non
+6778:A9 FF       LDA #$FF		; On prévoit de mettre FF dans le registre $D4 (vertical&HAUT)
+677A:E6 D9       INC $D9		; ?semble gèrer un timer qui croit sans cesse de 01=>BF qq soit le level?
+677C:4C AD 67    JMP $67AD		; on sort
+677F:C5 11       CMP $11		; Touche vers le BAS 'Z'
+6781:D0 0B       BNE $678E		; non testons l'axe horizontal
+6783:A9 DC       LDA #$DC		
+6785:85 D7       STA $D7		; Timer décroissant utiliser au level 3 pour limiter la position 'coucher'
+6787:A9 01       LDA #$01		; On va mettre 01 dans le registre $D4 (vertical&BAS)
+6789:E6 D9       INC $D9		; ? on retrouve D9 timer croissant de 01=>BF ?
+678B:4C AD 67    JMP $67AD		; on sort
+678E:C5 12       CMP $12		; Touche Flèche de gauche
+6790:D0 07       BNE $6799		; non
+6792:A9 FF       LDA #$FF		; oui '←' appuyée, on va mettre FF dans le registre $D5 (HORIZONTAL&GAUCHE)
+6794:E6 D9       INC $D9		; ? on retrouve D9 timer croissant de 01=>BF ?		
+6796:4C B2 67    JMP $67B2		; On va mettre FF dans $D5 (direction appuyé)
+6799:C5 13       CMP $13		; Touche Flèche de droite
+679B:D0 07       BNE $67A4		; NON
+679D:A9 01       LDA #$01		; On va mettre 01 dans le registre $D5 (HORIZONTAL&DROITE)
 679F:E6 D9       INC $D9
-67A1:4C B2 67    JMP $67B2
-67A4:C5 15       CMP $15
-67A6:D0 0F       BNE $67B7
-67A8:85 D6       STA $D6
-67AA:4C D6 67    JMP $67D6
-67AD:85 D4       STA $D4
-67AF:4C D6 67    JMP $67D6
-67B2:85 D5       STA $D5
-67B4:4C D6 67    JMP $67D6
-67B7:A4 32       LDY $32
-67B9:F0 10       BEQ $67CB
-67BB:C9 91       CMP #$91
-67BD:D0 05       BNE $67C4
-67BF:85 34       STA $34
-67C1:4C D6 67    JMP $67D6
-67C4:C9 8F       CMP #$8F
-67C6:D0 0E       BNE $67D6
-67C8:4C CF 67    JMP $67CF
-67CB:C9 A0       CMP #$A0
-67CD:D0 07       BNE $67D6
-67CF:A9 01       LDA #$01
-67D1:85 31       STA $31
-67D3:20 DA 67    JSR $67DA
+67A1:4C B2 67    JMP $67B2		; Affectation de $D4
+67A4:C5 15       CMP $15		; $15 contient comme $14 le code ascii pour <SPACE>=#A0
+67A6:D0 0F       BNE $67B7		; NON => on va comme pour le traitement avec joystick
+67A8:85 D6       STA $D6		; Registre $D6 vaut #0A si action d'un saut ou sortie de couteau
+67AA:4C D6 67    JMP $67D6		; on sort
+67AD:85 D4       STA $D4		; On met soit 01 (BAS) ou soit FF (HAUT) dans le registre $D4
+67AF:4C D6 67    JMP $67D6		; on sort
+67B2:85 D5       STA $D5		; On met soi01 (DROITE) ou soit FF (GAUCHE) dans le registre $D5
+67B4:4C D6 67    JMP $67D6		; on sort
+; Traitement si $2A=0 (Joystick)
+67B7:A4 32       LDY $32    	; Charge 'Partie en cours'=1?
+67B9:F0 10       BEQ $67CB		; NON: on test uniquement touche espace pour fenetre des options
+67BB:C9 91       CMP #$91		; Touche 'Ctrl-Q' si on est en cours de partie
+67BD:D0 05       BNE $67C4		; NON
+67BF:85 34       STA $34		; On quitte le jeu (en fait on recommence) flag $34=#$91
+67C1:4C D6 67    JMP $67D6		; on sort
+67C4:C9 8F       CMP #$8F		; Touche 'Ctrl-O'
+67C6:D0 0E       BNE $67D6		; On sort si pas appuyé
+67C8:4C CF 67    JMP $67CF		; On retourne directement dans
+67CB:C9 A0       CMP #$A0		; >>Touche appuyée <space>
+67CD:D0 07       BNE $67D6		; si non on sort
+67CF:A9 01       LDA #$01		; On va rentrer dans l'écran des options juste ci dessous
+67D1:85 31       STA $31		; $31 est mis à 1 pendant que l'on présente les options
+67D3:20 DA 67    JSR $67DA		; Routine de l'affichage et gestions des options
 67D6:2C 10 C0    BIT $C010		;C010 49168	KBDSTRB	OECG	WR	Keyboard Strobe
 67D9:60          RTS
-; Affichage de l'Ecran des Options
+; Affichage de l'Ecran des Options (sans les options)
 67DA:A9 00       LDA #$00
 67DC:85 3D       STA $3D
 67DE:85 3E       STA $3E
@@ -4494,7 +4523,7 @@
 67EC:A9 00       LDA #$00
 67EE:85 C3       STA $C3
 67F0:A5 C3       LDA $C3
-67F2:0A          ASL			; Décalage à gauche des bit de A (Carry Flag affecté)
+67F2:0A          ASL				; Décalage à gauche des bit de A (Carry Flag affecté)
 67F3:A8          TAY
 67F4:B9 94 69    LDA $6994,Y	; récupération de l'adresse poids faible 
 67F7:85 80       STA $80
@@ -4552,24 +4581,24 @@
 6861:8A          TXA
 6862:99 9A 04    STA $049A,Y
 6865:A9 20       LDA #$20		; On sélectionne la premiere page graphique $2000
-6867:20 46 66    JSR $6646		; Efface la page graphique 1 ou 2 suivant $E6 (poids fort de la mémoire graphique)
+6867:20 46 66    JSR $6646		; Efface la page graphique 1 ou 2 suivant A sauvegardé dans $E6 (poids fort de la mémoire graphique)
 686A:A9 40       LDA #$40		; On sélectionne la premiere page graphique $4000
-686C:20 46 66    JSR $6646		; Efface la page graphique 1 ou 2 suivant $E6 (poids fort de la mémoire graphique)
+686C:20 46 66    JSR $6646		; Efface la page graphique 1 ou 2 suivant A sauvegardé dans $E6 (poids fort de la mémoire graphique)
 686F:2C 54 C0    BIT $C054		; C054 49236	TXTPAGE1	OECG	WR	Display Page 1
 6872:2C 51 C0    BIT $C051		; C051 49233	TXTSET	OECG	WR	Display Text
-; On affecte la zone texte directement $07xx suivant les flags d'options correspondant aux lettres à afficher
-6875:A0 00       LDY #$00		; Charge
+; On affiche toutes les options directement dans la mémoire écran
+6875:A0 00       LDY #$00
 6877:A5 2A       LDA $2A		; Flag joystick (=0)
-6879:F0 0E       BEQ $6889		; Traitement Joystick
+6879:F0 0E       BEQ $6889		; si oui on va afficher "JOYSTICK"
 687B:B9 63 69    LDA $6963,Y	; Récupération de 8 valeurs en $6963=CB C5 D9 C2 CF C1 D2 C4 = "KEYBOARD"
 687E:99 B1 07    STA $07B1,Y	;  pour les mettre dans la mémoire écran au bonne endroit $07B1
 6881:C8          INY
 6882:C0 08       CPY #$08
 6884:90 F5       BCC $687B		; branchement si strictement inférieur à 8
 6886:4C 94 68    JMP $6894		; On passe le traitement keyboard
-6889:B9 6B 69    LDA $696B,Y	; Traitement Keyboard
+6889:B9 6B 69    LDA $696B,Y	; Traitement Affichage direct dans mem écran le mot "JOYSTICK"
 688C:99 B1 07    STA $07B1,Y	; Récupération de 8 valeurs en $696B=CA CF D9 D3 D4 C9 C3 CB = "JOYSTICK"
-688F:C8          INY			;  pour les mettre dans la mémoire écran au bonne endroit $07B1
+688F:C8          INY				;  pour les mettre dans la mémoire écran au bonne endroit $07B1
 6890:C0 08       CPY #$08
 6892:90 F5       BCC $6889
 6894:A5 5C       LDA $5C		; Récupération du flag de la difficulté de 0 à 2
@@ -4584,7 +4613,7 @@
 68A6:A5 1B       LDA $1B
 68A8:F0 0E       BEQ $68B8
 68AA:B9 76 69    LDA $6976,Y
-68AD:99 C6 07    STA $07C6,Y	; Affiche soit "ON " soit "OFF" pour l'option son
+68AD:99 C6 07    STA $07C6,Y	; Affiche soit "ON " soit "OFF" pour l'option 'SON'
 68B0:C8          INY
 68B1:C0 03       CPY #$03
 68B3:90 F5       BCC $68AA
@@ -4594,7 +4623,7 @@
 68BE:C8          INY
 68BF:C0 03       CPY #$03
 68C1:90 F5       BCC $68B8
-; On va rester dans la page des options pendant un certain après l'appuie sur une touche
+; Traitement des touches pour la sélection des options
 68C3:A2 FF       LDX #$FF		; Boucle de temps 255
 68C5:CA          DEX
 68C6:D0 FD       BNE $68C5
@@ -4604,21 +4633,21 @@
 68CE:A5 3E       LDA $3E
 68D0:C9 20       CMP #$20		; si poids fort égale à #$20 
 68D2:90 0E       BCC $68E2		; si strictement inférieur à 20 on reste sur l'écran des options
-68D4:E6 3C       INC $3C		; sinon on incrément le flag de sorti
+68D4:E6 3C       INC $3C		; on va sortir après qu'aucune activité n'est apparue (incrément le flag de sortie?)
 68D6:A9 00       LDA #$00		
 68D8:85 3E       STA $3E		; on remets le compteur à zéro de la tempo 
-68DA:85 33       STA $33
+68DA:85 33       STA $33		; 
 68DC:85 31       STA $31 		; $31: Flag global qui indique si le jeu est en mode options ou en mode partie.
 68DE:2C 50 C0    BIT $C050		;C050 49232	TXTCLR	OECG	WR	Display Graphics
-68E1:60          RTS
+68E1:60          RTS			; On sort après un temps d'inactivité sur l'écran des options ($3C>0)
 68E2:A5 2A       LDA $2A		; Flag option KEYBOARD ou JOYSTICK=0
 68E4:D0 05       BNE $68EB		; Branchement si Keyboard
-68E6:AD 61 C0    LDA $C061
-68E9:30 5E       BMI $6949
-68EB:AD 00 C0    LDA $C000		; Lecture de la touche
+68E6:AD 61 C0    LDA $C061		; C061 49249	BUTN0	OECG	R7	Switch Input 0
+68E9:30 5E       BMI $6949		; On démarre le jeu si on est en mode Joystick et on a appuyé sur le boutton 0
+68EB:AD 00 C0    LDA $C000		; sinon Lecture de la touche
 68EE:10 D3       BPL $68C3
 68F0:C9 A0       CMP #$A0		; Test de la touche <Espace>
-68F2:F0 55       BEQ $6949		; Sortir démarrer le jeu?
+68F2:F0 55       BEQ $6949		; Sortir pour démarrer le jeu
 68F4:A0 00       LDY #$00
 68F6:84 3E       STY $3E
 68F8:C9 CB       CMP #$CB		; Test de la touche 'K' (#31+bit7)
@@ -4645,7 +4674,7 @@
 6926:A2 00       LDX #$00		; On inverse la position
 6928:A5 1B       LDA $1B		; du registre $1B, flag du son
 692A:D0 02       BNE $692E		; si $1B==#01 on met zéro
-692C:A2 01       LDX #$01		; sinon on met $1b à '1' 
+692C:A2 01       LDX #$01		; sinon on met $1B à '1' 
 692E:86 1B       STX $1B
 6930:4C 43 69    JMP $6943		
 6933:C9 CC       CMP #$CC		; Teste la touche 'L' (#53+bit7) option du level/difficulté
@@ -4657,18 +4686,19 @@
 693F:A9 00       LDA #$00		; sinon on remets le flag à zéro
 6941:85 5C       STA $5C
 6943:2C 10 C0    BIT $C010		; On efface la touche appuyée
-6946:4C 75 68    JMP $6875		; On affecte la zone texte directement $07xx suivant les flags d'options correspondant aux lettres à afficher
+6946:4C 75 68    JMP $6875		; On réaffiche l'écran des options
 6949:2C 50 C0    BIT $C050		;C050 49232	TXTCLR	OECG	WR	Display Graphics
 694C:2C 52 C0    BIT $C052		;C052 49234	MIXCLR	OECG	WR	Display Full Screen
 694F:2C 57 C0    BIT $C057		;C057 49239	HIRES	OECG	WR	Display HiRes Graphics
 6952:2C 10 C0    BIT $C010		;C010 49168	KBDSTRB	OECG	WR	Keyboard Strobe
-6955:A5 1C       LDA $1C		; ??
-6957:C9 20       CMP #$20
-6959:D0 04       BNE $695F
+6955:A5 1C       LDA $1C		; On retourne sur la page $1C à afficher ($1D est la page que l'on desssine)
+6957:C9 20       CMP #$20		; Page 1
+6959:D0 04       BNE $695F		; sinon Page 2
 695B:2C 54 C0    BIT $C054		;C054 49236	TXTPAGE1	OECG	WR	Display Page 1
 695E:60          RTS
-695F:2C 55 C0    BIT $C055		C055 49237	TXTPAGE2	OECG	WR	If 80STORE Off: Display Page 2
+695F:2C 55 C0    BIT $C055		;C055 49237	TXTPAGE2	OECG	WR	If 80STORE Off: Display Page 2
 6962:60          RTS
+;fin de <ROUTINE1>
 6963:CB                   ???
 6964:C5 D9       CMP $D9
 6966:C2                   ???
@@ -5573,24 +5603,26 @@
 7000:6C 00 13    JMP ($1300) =>6000		; Routine permettant de mettre dans ($4C) l'emplacement de la ligne Y ($E6 détermine page 1 ou 2)		
 7003:6C 40 13    JMP ($1340) =>1400
 7006:6C 42 13    JMP ($1342) =>1494
+; Ecriture dans la mêmoire graphique du caractère
 7009:84 DC       STY $DC
 700B:86 DE       STX $DE
 700D:A9 08       LDA #$08
-700F:85 4A       STA $4A
+700F:85 4A       STA $4A			; nb d'octets à récupérer pour un caractère
 7011:A2 00       LDX #$00
 7013:A4 DC       LDY $DC
 7015:20 00 70    JSR $7000
 7018:A4 DE       LDY $DE
-701A:A1 E8       LDA ($E8,X)
-701C:91 4C       STA ($4C),Y
-701E:E6 E8       INC $E8
+701A:A1 E8       LDA ($E8,X)		; Récupèration de la table graphique du caractère
+701C:91 4C       STA ($4C),Y		; Ecriture à l'octets Y 
+701E:E6 E8       INC $E8			
 7020:D0 02       BNE $7024
-7022:E6 E9       INC $E9
+7022:E6 E9       INC $E9			; On se position au prochain octet à récupérer
 7024:E6 DC       INC $DC
-7026:C6 4A       DEC $4A
+7026:C6 4A       DEC $4A			; boucle nb de d'octets à récupérer
 7028:D0 E9       BNE $7013
 702A:60          RTS
-702B:0A          ASL
+; Récupération de l'adresse où se trouve le bitmap du caractères à afficher ($E8)
+702B:0A          ASL				; Shift Left de A 
 702C:A8          TAY
 702D:B1 80       LDA ($80),Y
 702F:85 E8       STA $E8
@@ -5615,7 +5647,7 @@
 704E:E0 00       CPX #$00		; vérifie que l'on a bien testé tout le score
 7050:D0 E7       BNE $7039
 7052:60          RTS
-; Traitement du HighScore on l'ajuste si score Joueur 1 plus élevé
+; Traitement du HighScore on l'ajuste si score Joueur 2 plus élevé
 7053:A2 05       LDX #$05
 7055:CA          DEX
 7056:B5 9E       LDA $9E,X
@@ -5633,17 +5665,17 @@
 706C:D0 E7       BNE $7055
 706E:60          RTS
 ;
-706F:A5 46       LDA $46		;player byte
-7071:C9 02       CMP #$02		;player 2?
-7073:F0 5D       BEQ $70D2		;oui player 2
-7075:A2 00       LDX #$00		;player 1
+706F:A5 46       LDA $46		; Registre du player en cours
+7071:C9 02       CMP #$02		; Player 2?
+7073:F0 5D       BEQ $70D2		;OUI
+7075:A2 00       LDX #$00		; Traitement Player1
 7077:B5 90       LDA $90,X
 7079:18          CLC
 707A:75 99       ADC $99,X
 707C:95 99       STA $99,X
 707E:E8          INX
 707F:E0 03       CPX #$03
-7081:90 F4       BCC $7077
+7081:90 F4       BCC $7077		; Branchement si Inférieur strictement
 7083:A5 9C       LDA $9C
 7085:85 C3       STA $C3
 7087:A2 00       LDX #$00
@@ -5684,7 +5716,7 @@
 70CA:85 A3       STA $A3
 70CC:20 37 70    JSR $7037
 70CF:4C 2C 71    JMP $712C
-70D2:A2 00       LDX #$00		;pour le player 2
+70D2:A2 00       LDX #$00		; Traitement Player 2
 70D4:B5 90       LDA $90,X
 70D6:18          CLC
 70D7:75 9E       ADC $9E,X
@@ -5746,12 +5778,14 @@
 7143:A2 00       LDX #$00
 7145:20 FF 71    JSR $71FF
 7148:60          RTS
-7149:A9 50       LDA #$50		; Charge dans ($80) l'adresse $1850 correspondant à du décors
+;
+7149:A9 50       LDA #$50		; Charge la table des adresses de caractères ($80)
 714B:85 80       STA $80
 714D:A9 18       LDA #$18
 714F:85 81       STA $81
 7151:60          RTS
-7152:20 49 71    JSR $7149
+;
+7152:20 49 71    JSR $7149		;Charge la table des adresses de caractères ($80)
 7155:20 35 71    JSR $7135
 7158:A5 41       LDA $41
 715A:C9 02       CMP #$02
@@ -5775,7 +5809,7 @@
 717E:2C 10 C0    BIT $C010
 7181:A9 00       LDA #$00
 7183:8D FE 71    STA $71FE
-7186:20 49 71    JSR $7149
+7186:20 49 71    JSR $7149		;Charge la table des adresses de caractères ($80)
 7189:A5 CE       LDA $CE
 718B:F0 09       BEQ $7196
 718D:A9 F3       LDA #$F3
@@ -5827,32 +5861,34 @@
 71FB:D0 F7       BNE $71F4
 71FD:60          RTS
 71FE:00          BRK
-71FF:85 84       STA $84
-7201:84 85       STY $85
-7203:8E 2E 72    STX $722E
+;
+71FF:85 84       STA $84		; Adresse des choses à écrire sur l'écran ($84)
+7201:84 85       STY $85		; 
+7203:8E 2E 72    STX $722E		; 
 7206:A0 00       LDY #$00
-7208:8C 0C 72    STY $720C
+7208:8C 0C 72    STY $720C		; On tape direct dans le code pour mettre #00 dans Y (?)
 720B:A0 14       LDY #$14
 720D:B1 84       LDA ($84),Y
 720F:C9 FF       CMP #$FF
 7211:90 01       BCC $7214
 7213:60          RTS
 7214:C8          INY
-7215:8C 0C 72    STY $720C
-7218:20 2B 70    JSR $702B
-721B:AC 0C 72    LDY $720C
+7215:8C 0C 72    STY $720C		; On incrémente Y et on met directe dans le code la valeur
+7218:20 2B 70    JSR $702B		; On récupère dans ($E8) l'adresse du bitmap du caractère A
+721B:AC 0C 72    LDY $720C		; On récupère Y après avoir salement sauvegarder dans le code sa valeur (!)
 721E:B1 84       LDA ($84),Y
 7220:C8          INY
 7221:8C 0C 72    STY $720C
-7224:AC 2E 72    LDY $722E
+7224:AC 2E 72    LDY $722E		; On récupère la valeur de X du début
 7227:AA          TAX
 7228:20 09 70    JSR $7009
 722B:4C 0B 72    JMP $720B
-722E:00          BRK
+722E:00          >REGISTRE MEMOIRE<
+; Bande noire haut et bas de l'écran d'acceuil
 722F:A0 A6       LDY #$A6
 7231:84 4A       STY $4A
 7233:A4 4A       LDY $4A
-7235:C0 C0       CPY #$C0
+7235:C0 C0       CPY #$C0		; Remplir de noir les lignes de 166 à 192
 7237:B0 13       BCS $724C
 7239:20 00 70    JSR $7000
 723C:A0 00       LDY #$00
@@ -5862,9 +5898,9 @@
 7243:C0 28       CPY #$28
 7245:90 F9       BCC $7240
 7247:E6 4A       INC $4A
-7249:4C 33 72    JMP $7233
+7249:4C 33 72    JMP $7233		; Boucle sur les lignes noires du bas
 724C:20 87 72    JSR $7287
-724F:20 49 71    JSR $7149
+724F:20 49 71    JSR $7149		;Charge la table des adresses de caractères ($80)
 7252:A9 5C       LDA #$5C
 7254:A0 75       LDY #$75
 7256:A2 A8       LDX #$A8
@@ -5877,18 +5913,21 @@
 7266:A0 75       LDY #$75
 7268:A2 03       LDX #$03
 726A:20 FF 71    JSR $71FF
+;
 726D:A9 B0       LDA #$B0
 726F:A0 75       LDY #$75
 7271:A2 B8       LDX #$B8
 7273:20 FF 71    JSR $71FF
 7276:60          RTS
-7277:20 49 71    JSR $7149
+;
+7277:20 49 71    JSR $7149		;Charge la table des adresses de caractères ($80)
 727A:20 6D 72    JSR $726D
 727D:A9 F3       LDA #$F3
 727F:A0 75       LDY #$75
 7281:A2 08       LDX #$08
 7283:20 FF 71    JSR $71FF
 7286:60          RTS
+; Rempli les lignes en noires de 0 à 16
 7287:A0 00       LDY #$00
 7289:84 4A       STY $4A
 728B:A4 4A       LDY $4A
@@ -5904,12 +5943,13 @@
 729E:90 F9       BCC $7299
 72A0:E6 4A       INC $4A
 72A2:4C 8B 72    JMP $728B
-72A5:20 49 71    JSR $7149
-72A8:A9 B2       LDA #$B2
+72A5:20 49 71    JSR $7149		;>↑> Charge la table des adresses de caractères ($80)
+72A8:A9 B2       LDA #$B2		; Adresse des écritures à mettre $72B2
 72AA:A0 72       LDY #$72
-72AC:A2 3C       LDX #$3C
+72AC:A2 3C       LDX #$3C		; ligne d'écriture?
 72AE:20 FF 71    JSR $71FF
 72B1:60          RTS
+; Table des choses à écrire sur la page d'acceuil
 72B2:00          BRK
 72B3:14                   ???
 72B4:04                   ???
@@ -6001,7 +6041,7 @@
 736B:20 09 70    JSR $7009
 736E:A5 41       LDA $41		; Charge le nombre de joueurs
 7370:C9 02       CMP #$02		; Vérifie s'il y a deux joueurs
-7372:B0 03       BCS $7377		; Si c'est supérieur à 2, passe à $7377
+7372:B0 03       BCS $7377		; Si c'est supérieur ou égale à 2, passe à $7377
 7374:4C 1A 74    JMP $741A		; Si c'est un seul joueur, saute à $741A
 7377:A9 00       LDA #$00
 7379:85 C3       STA $C3
@@ -6481,6 +6521,9 @@
 76FA:96 96       STX $96,Y
 76FC:96 96       STX $96,Y
 76FE:96 96       STX $96,Y
+
+
+; !! ATTENTION LE CODE ACTUEL $7700 est pour le level 1 chargé au tout début 
 7700:4C 2D 77    JMP $772D
 7703:6C 00 13    JMP ($1300) =>6000		; Routine permettant de mettre dans ($4C) l'emplacement de la ligne Y ($E6 détermine page 1 ou 2)
 7706:6C 02 13    JMP ($1302) =>618E
@@ -6587,11 +6630,13 @@
 77EC:20 AA 78    JSR $78AA
 77EF:20 C6 78    JSR $78C6
 77F2:60          RTS
-77F3:A9 A9       LDA #$A9
+;
+77F3:A9 A9       LDA #$A9		; Charge ($84)=$13A9=01 03 FF
 77F5:85 84       STA $84
 77F7:A9 13       LDA #$13
 77F9:85 85       STA $85
 77FB:60          RTS
+;
 77FC:A0 05       LDY #$05
 77FE:B1 84       LDA ($84),Y
 7800:F0 10       BEQ $7812
@@ -6626,7 +6671,7 @@
 7836:B1 80       LDA ($80),Y
 7838:C9 FF       CMP #$FF
 783A:F0 1F       BEQ $785B
-783C:AE 5C 78    LDX $785C
+783C:AE 5C 78    LDX $785C		; Tape direct dans la mémoire: registre mémoire ci dessous
 783F:F0 05       BEQ $7846
 7841:49 FF       EOR #$FF
 7843:18          CLC
@@ -6642,9 +6687,10 @@
 7856:85 81       STA $81
 7858:4C 34 78    JMP $7834
 785B:60          RTS
-785C:01 A5       ORA ($A5,X)
-785E:C4 10       CPY $10
-7860:06 18       ASL $18
+785C:01          ???				; Mémoire registre
+785D:A5 C4       LDA $C4
+785F:10 06       BPL $7867
+7861:18          CLC
 7862:65 C3       ADC $C3
 7864:B0 06       BCS $786C
 7866:60          RTS
@@ -6723,1010 +6769,3 @@
 78F9:20 24 77    JSR $7724
 78FC:20 24 77    JSR $7724
 78FF:20 24 77    JSR $7724
-7902:20 24 77    JSR $7724
-7905:60          RTS
-7906:A0 08       LDY #$08
-7908:B1 84       LDA ($84),Y
-790A:D0 05       BNE $7911
-790C:A5 27       LDA $27
-790E:6A          ROR
-790F:B0 1F       BCS $7930
-7911:A0 01       LDY #$01
-7913:B1 84       LDA ($84),Y
-7915:C8          INY
-7916:C9 0B       CMP #$0B
-7918:90 06       BCC $7920
-791A:A9 FF       LDA #$FF
-791C:91 84       STA ($84),Y
-791E:A9 0B       LDA #$0B
-7920:C9 01       CMP #$01
-7922:B0 06       BCS $792A
-7924:A9 01       LDA #$01
-7926:91 84       STA ($84),Y
-7928:A9 00       LDA #$00
-792A:18          CLC
-792B:71 84       ADC ($84),Y
-792D:88          DEY
-792E:91 84       STA ($84),Y
-7930:A5 39       LDA $39
-7932:F0 66       BEQ $799A
-7934:A0 04       LDY #$04
-7936:B1 84       LDA ($84),Y
-7938:88          DEY
-7939:18          CLC
-793A:71 84       ADC ($84),Y
-793C:91 84       STA ($84),Y
-793E:C9 01       CMP #$01
-7940:90 04       BCC $7946
-7942:C9 F5       CMP #$F5
-7944:90 14       BCC $795A
-7946:A0 00       LDY #$00
-7948:B1 84       LDA ($84),Y
-794A:F0 0D       BEQ $7959
-794C:A9 00       LDA #$00
-794E:91 84       STA ($84),Y
-7950:A0 03       LDY #$03
-7952:B1 84       LDA ($84),Y
-7954:38          SEC
-7955:E9 23       SBC #$23
-7957:91 84       STA ($84),Y
-7959:60          RTS
-795A:AA          TAX
-795B:A5 2E       LDA $2E
-795D:C9 0A       CMP #$0A
-795F:B0 39       BCS $799A
-7961:8A          TXA
-7962:C9 06       CMP #$06
-7964:B0 34       BCS $799A
-7966:A0 00       LDY #$00
-7968:A5 40       LDA $40
-796A:C9 01       CMP #$01
-796C:90 12       BCC $7980
-796E:AD BB 13    LDA $13BB
-7971:D0 0D       BNE $7980
-7973:A5 A5       LDA $A5
-7975:A6 46       LDX $46
-7977:E0 01       CPX #$01
-7979:F0 02       BEQ $797D
-797B:A5 A9       LDA $A9
-797D:29 01       AND #$01
-797F:A8          TAY
-7980:98          TYA
-7981:18          CLC
-7982:69 01       ADC #$01
-7984:A0 00       LDY #$00
-7986:91 84       STA ($84),Y
-7988:A0 08       LDY #$08
-798A:A5 A6       LDA $A6
-798C:A6 46       LDX $46
-798E:E0 01       CPX #$01
-7990:F0 02       BEQ $7994
-7992:A5 AA       LDA $AA
-7994:6A          ROR
-7995:A9 00       LDA #$00
-7997:2A          ROL
-7998:91 84       STA ($84),Y
-799A:60          RTS
-799B:AD A0 13    LDA $13A0	
-799E:C9 01       CMP #$01
-79A0:D0 03       BNE $79A5
-79A2:4C D0 79    JMP $79D0
-79A5:C9 02       CMP #$02
-79A7:D0 03       BNE $79AC
-79A9:4C E4 79    JMP $79E4
-79AC:C9 03       CMP #$03
-79AE:D0 03       BNE $79B3
-79B0:4C 59 7A    JMP $7A59
-79B3:C9 04       CMP #$04
-79B5:D0 03       BNE $79BA
-79B7:4C 17 7B    JMP $7B17
-79BA:C9 05       CMP #$05
-79BC:D0 03       BNE $79C1
-79BE:4C 97 7B    JMP $7B97
-79C1:C9 06       CMP #$06
-79C3:D0 03       BNE $79C8
-79C5:4C BE 7B    JMP $7BBE
-79C8:C9 07       CMP #$07
-79CA:D0 03       BNE $79CF
-79CC:4C E3 7B    JMP $7BE3
-79CF:60          RTS
-79D0:EE A8 13    INC $13A8
-79D3:F0 05       BEQ $79DA
-79D5:EE A8 13    INC $13A8
-79D8:D0 09       BNE $79E3
-79DA:A9 00       LDA #$00
-79DC:85 D6       STA $D6
-79DE:A9 02       LDA #$02
-79E0:8D A0 13    STA $13A0
-79E3:60          RTS
-79E4:A5 D6       LDA $D6
-79E6:D0 13       BNE $79FB
-79E8:20 10 7C    JSR $7C10
-79EB:AD A0 13    LDA $13A0
-79EE:C9 05       CMP #$05
-79F0:D0 08       BNE $79FA
-79F2:A9 FD       LDA #$FD
-79F4:8D A8 13    STA $13A8
-79F7:4C 16 7A    JMP $7A16
-79FA:60          RTS
-79FB:A9 00       LDA #$00
-79FD:8D A8 13    STA $13A8
-7A00:A5 2E       LDA $2E		; Registre Avancement dans le level du joueur
-7A02:C9 0A       CMP #$0A		
-7A04:90 10       BCC $7A16
-7A06:A9 07       LDA #$07
-7A08:8D A0 13    STA $13A0
-7A0B:A9 FC       LDA #$FC
-7A0D:8D A2 13    STA $13A2
-7A10:A9 01       LDA #$01
-7A12:8D A4 13    STA $13A4
-7A15:60          RTS
-7A16:A9 03       LDA #$03
-7A18:8D A0 13    STA $13A0
-7A1B:A5 40       LDA $40
-7A1D:0A          ASL
-7A1E:85 C4       STA $C4
-7A20:0A          ASL
-7A21:0A          ASL
-7A22:85 C3       STA $C3
-7A24:AD A3 13    LDA $13A3
-7A27:38          SEC
-7A28:E9 19       SBC #$19
-7A2A:18          CLC
-7A2B:65 C4       ADC $C4
-7A2D:C9 46       CMP #$46
-7A2F:B0 02       BCS $7A33
-7A31:A9 46       LDA #$46
-7A33:85 4E       STA $4E
-7A35:AD A1 13    LDA $13A1
-7A38:38          SEC
-7A39:E9 46       SBC #$46
-7A3B:18          CLC
-7A3C:65 C3       ADC $C3
-7A3E:C9 DC       CMP #$DC
-7A40:90 02       BCC $7A44
-7A42:A9 0A       LDA #$0A
-7A44:85 49       STA $49
-7A46:A9 0A       LDA #$0A
-7A48:85 48       STA $48
-7A4A:A9 FB       LDA #$FB
-7A4C:8D A2 13    STA $13A2
-7A4F:A9 FD       LDA #$FD
-7A51:8D A4 13    STA $13A4
-7A54:85 18       STA $18
-7A56:E6 61       INC $61
-7A58:60          RTS
-7A59:20 F3 77    JSR $77F3
-7A5C:A0 00       LDY #$00
-7A5E:B1 84       LDA ($84),Y
-7A60:F0 1E       BEQ $7A80
-7A62:20 34 7D    JSR $7D34
-7A65:8C 17 78    STY $7817
-7A68:20 18 78    JSR $7818
-7A6B:AD A1 13    LDA $13A1
-7A6E:85 DE       STA $DE
-7A70:AD A3 13    LDA $13A3
-7A73:38          SEC
-7A74:E9 18       SBC #$18
-7A76:85 DC       STA $DC
-7A78:A0 00       LDY #$00
-7A7A:B1 80       LDA ($80),Y
-7A7C:C9 FF       CMP #$FF
-7A7E:D0 03       BNE $7A83
-7A80:4C CC 7A    JMP $7ACC
-7A83:C8          INY
-7A84:B1 80       LDA ($80),Y
-7A86:38          SEC
-7A87:E5 DC       SBC $DC
-7A89:30 F5       BMI $7A80
-7A8B:C9 06       CMP #$06
-7A8D:B0 21       BCS $7AB0
-7A8F:88          DEY
-7A90:B1 80       LDA ($80),Y
-7A92:C8          INY
-7A93:AE 5C 78    LDX $785C
-7A96:F0 05       BEQ $7A9D
-7A98:49 FF       EOR #$FF
-7A9A:18          CLC
-7A9B:69 01       ADC #$01
-7A9D:6D 17 78    ADC $7817
-7AA0:38          SEC
-7AA1:E5 DE       SBC $DE
-7AA3:10 07       BPL $7AAC
-7AA5:C9 F6       CMP #$F6
-7AA7:B0 0C       BCS $7AB5
-7AA9:4C B0 7A    JMP $7AB0
-7AAC:C9 08       CMP #$08
-7AAE:90 05       BCC $7AB5
-7AB0:C8          INY
-7AB1:C8          INY
-7AB2:4C 7A 7A    JMP $7A7A
-7AB5:88          DEY
-7AB6:84 C1       STY $C1
-7AB8:A9 04       LDA #$04
-7ABA:8D A0 13    STA $13A0
-7ABD:85 62       STA $62
-7ABF:E6 2E       INC $2E
-7AC1:E6 91       INC $91
-7AC3:A9 00       LDA #$00
-7AC5:85 18       STA $18
-7AC7:85 D6       STA $D6
-7AC9:4C 13 7B    JMP $7B13
-7ACC:AD A3 13    LDA $13A3
-7ACF:C5 4E       CMP $4E
-7AD1:B0 05       BCS $7AD8
-7AD3:A2 00       LDX #$00
-7AD5:8E A4 13    STX $13A4
-7AD8:C9 91       CMP #$91
-7ADA:90 12       BCC $7AEE
-7ADC:A9 05       LDA #$05
-7ADE:8D A0 13    STA $13A0
-7AE1:8D A4 13    STA $13A4
-7AE4:A9 00       LDA #$00
-7AE6:8D A2 13    STA $13A2
-7AE9:85 D6       STA $D6
-7AEB:85 18       STA $18
-7AED:60          RTS
-7AEE:A5 39       LDA $39
-7AF0:F0 07       BEQ $7AF9
-7AF2:A5 49       LDA $49
-7AF4:18          CLC
-7AF5:69 05       ADC #$05
-7AF7:85 49       STA $49
-7AF9:AD A1 13    LDA $13A1
-7AFC:C5 49       CMP $49
-7AFE:B0 05       BCS $7B05
-7B00:A2 03       LDX #$03
-7B02:8E A4 13    STX $13A4
-7B05:C5 48       CMP $48
-7B07:B0 0A       BCS $7B13
-7B09:A9 00       LDA #$00
-7B0B:8D A2 13    STA $13A2
-7B0E:A9 03       LDA #$03
-7B10:8D A4 13    STA $13A4
-7B13:20 2A 7C    JSR $7C2A
-7B16:60          RTS
-7B17:20 10 7C    JSR $7C10
-7B1A:20 F3 77    JSR $77F3
-7B1D:A0 00       LDY #$00
-7B1F:B1 84       LDA ($84),Y
-7B21:C9 02       CMP #$02
-7B23:D0 22       BNE $7B47
-7B25:AD BE 13    LDA $13BE
-7B28:18          CLC
-7B29:69 14       ADC #$14
-7B2B:CD A3 13    CMP $13A3
-7B2E:90 17       BCC $7B47
-7B30:AD A1 13    LDA $13A1
-7B33:38          SEC
-7B34:ED BC 13    SBC $13BC
-7B37:30 07       BMI $7B40
-7B39:C9 14       CMP #$14
-7B3B:B0 0A       BCS $7B47
-7B3D:4C 8C 7B    JMP $7B8C
-7B40:C9 EC       CMP #$EC
-7B42:90 03       BCC $7B47
-7B44:4C 8C 7B    JMP $7B8C
-7B47:20 34 7D    JSR $7D34
-7B4A:8C 17 78    STY $7817
-7B4D:20 18 78    JSR $7818
-7B50:A4 C1       LDY $C1
-7B52:B1 80       LDA ($80),Y
-7B54:AE 5C 78    LDX $785C
-7B57:F0 05       BEQ $7B5E
-7B59:49 FF       EOR #$FF
-7B5B:18          CLC
-7B5C:69 01       ADC #$01
-7B5E:6D 17 78    ADC $7817
-7B61:8D A1 13    STA $13A1
-7B64:C8          INY
-7B65:B1 80       LDA ($80),Y
-7B67:18          CLC
-7B68:69 18       ADC #$18
-7B6A:8D A3 13    STA $13A3
-7B6D:A5 D6       LDA $D6
-7B6F:F0 1A       BEQ $7B8B
-7B71:A0 00       LDY #$00
-7B73:84 C1       STY $C1
-7B75:B9 A9 13    LDA $13A9,Y
-7B78:BE B2 13    LDX $13B2,Y
-7B7B:99 B2 13    STA $13B2,Y
-7B7E:8A          TXA
-7B7F:99 A9 13    STA $13A9,Y
-7B82:C8          INY
-7B83:C0 09       CPY #$09
-7B85:D0 EE       BNE $7B75
-7B87:4C FB 79    JMP $79FB
-7B8A:60          RTS
-7B8B:60          RTS
-7B8C:A9 05       LDA #$05
-7B8E:8D A0 13    STA $13A0
-7B91:8C A2 13    STY $13A2
-7B94:4C 47 7B    JMP $7B47
-7B97:20 2A 7C    JSR $7C2A
-7B9A:AD A3 13    LDA $13A3
-7B9D:C9 AF       CMP #$AF
-7B9F:90 1C       BCC $7BBD
-7BA1:A9 F5       LDA #$F5
-7BA3:8D A8 13    STA $13A8
-7BA6:A9 00       LDA #$00
-7BA8:8D A4 13    STA $13A4
-7BAB:85 D6       STA $D6
-7BAD:A9 06       LDA #$06
-7BAF:8D A0 13    STA $13A0
-7BB2:85 63       STA $63
-7BB4:A5 2E       LDA $2E
-7BB6:F0 02       BEQ $7BBA
-7BB8:C6 2E       DEC $2E
-7BBA:20 27 77    JSR $7727
-7BBD:60          RTS
-7BBE:EE A8 13    INC $13A8
-7BC1:F0 0E       BEQ $7BD1
-7BC3:A2 AA       LDX #$AA
-7BC5:AD A8 13    LDA $13A8
-7BC8:6A          ROR
-7BC9:B0 02       BCS $7BCD
-7BCB:A2 AF       LDX #$AF
-7BCD:8E A3 13    STX $13A3
-7BD0:60          RTS
-7BD1:A6 46       LDX $46
-7BD3:D6 41       DEC $41,X
-7BD5:D0 02       BNE $7BD9
-7BD7:E6 CE       INC $CE
-7BD9:E6 33       INC $33
-7BDB:A9 04       LDA #$04
-7BDD:8D A0 13    STA $13A0
-7BE0:85 2C       STA $2C
-7BE2:60          RTS
-7BE3:20 2A 7C    JSR $7C2A
-7BE6:AD A1 13    LDA $13A1
-7BE9:C9 0A       CMP #$0A
-7BEB:90 08       BCC $7BF5
-7BED:AD A3 13    LDA $13A3
-7BF0:C9 A5       CMP #$A5
-7BF2:B0 01       BCS $7BF5
-7BF4:60          RTS
-7BF5:E6 36       INC $36		; Flag Level suivant
-7BF7:A9 08       LDA #$08		; Posture du Joueur Level 1 a fini de plongé on passe au level suivant
-7BF9:8D A0 13    STA $13A0
-7BFC:60          RTS
-7BFD:20 10 00    JSR $0010
-7C00:10 20       BPL $7C22
-7C02:0A          ASL
-7C03:20 0A 20    JSR $200A
-7C06:0A          ASL
-7C07:20 1A 1D    JSR $1D1A
-7C0A:1A                   ???
-7C0B:1E 1A 20    ASL $201A,X
-7C0E:2A          ROL
-7C0F:FF                   ???
-7C10:A5 27       LDA $27
-7C12:4A          LSR
-7C13:90 14       BCC $7C29
-7C15:EE A8 13    INC $13A8
-7C18:D0 0F       BNE $7C29
-7C1A:A9 00       LDA #$00
-7C1C:8D A2 13    STA $13A2
-7C1F:A9 02       LDA #$02
-7C21:8D A4 13    STA $13A4
-7C24:A9 05       LDA #$05
-7C26:8D A0 13    STA $13A0
-7C29:60          RTS
-7C2A:AD A1 13    LDA $13A1
-7C2D:18          CLC
-7C2E:6D A2 13    ADC $13A2
-7C31:A6 39       LDX $39
-7C33:F0 03       BEQ $7C38
-7C35:18          CLC
-7C36:69 05       ADC #$05
-7C38:8D A1 13    STA $13A1
-7C3B:AD A3 13    LDA $13A3
-7C3E:18          CLC
-7C3F:6D A4 13    ADC $13A4
-7C42:8D A3 13    STA $13A3
-7C45:60          RTS
-7C46:A4 2C       LDY $2C
-7C48:D0 44       BNE $7C8E
-7C4A:C9 01       CMP #$01
-7C4C:F0 1B       BEQ $7C69
-7C4E:C9 02       CMP #$02
-7C50:F0 1E       BEQ $7C70
-7C52:C9 03       CMP #$03
-7C54:F0 1A       BEQ $7C70
-7C56:C9 04       CMP #$04
-7C58:F0 1D       BEQ $7C77
-7C5A:C9 06       CMP #$06
-7C5C:F0 30       BEQ $7C8E
-7C5E:C9 07       CMP #$07
-7C60:F0 33       BEQ $7C95
-7C62:C9 08       CMP #$08
-7C64:F0 2F       BEQ $7C95
-7C66:4C 70 7C    JMP $7C70
-7C69:A9 1E       LDA #$1E
-7C6B:A0 80       LDY #$80
-7C6D:4C 99 7C    JMP $7C99
-7C70:A9 1E       LDA #$1E
-7C72:A0 8C       LDY #$8C
-7C74:4C 99 7C    JMP $7C99
-7C77:A5 33       LDA $33
-7C79:D0 F5       BNE $7C70
-7C7B:AD AB 13    LDA $13AB
-7C7E:10 07       BPL $7C87
-7C80:A9 62       LDA #$62
-7C82:A0 80       LDY #$80
-7C84:4C 99 7C    JMP $7C99
-7C87:A9 52       LDA #$52
-7C89:A0 80       LDY #$80
-7C8B:4C 99 7C    JMP $7C99
-7C8E:A9 2E       LDA #$2E
-7C90:A0 8C       LDY #$8C
-7C92:4C 99 7C    JMP $7C99
-7C95:A9 82       LDA #$82
-7C97:A0 80       LDY #$80
-7C99:85 80       STA $80
-7C9B:84 81       STY $81
-7C9D:60          RTS
-7C9E:20 F3 77    JSR $77F3
-7CA1:A0 00       LDY #$00
-7CA3:B1 84       LDA ($84),Y
-7CA5:C9 02       CMP #$02
-7CA7:F0 0F       BEQ $7CB8
-7CA9:20 0F 77    JSR $770F
-7CAC:B1 84       LDA ($84),Y
-7CAE:C9 02       CMP #$02
-7CB0:F0 06       BEQ $7CB8
-7CB2:A9 00       LDA #$00
-7CB4:8D BB 13    STA $13BB
-7CB7:60          RTS
-7CB8:AD C3 13    LDA $13C3
-7CBB:18          CLC
-7CBC:69 01       ADC #$01
-7CBE:C9 28       CMP #$28
-7CC0:90 19       BCC $7CDB
-7CC2:A5 50       LDA $50
-7CC4:18          CLC
-7CC5:65 51       ADC $51
-7CC7:85 50       STA $50
-7CC9:C9 27       CMP #$27
-7CCB:90 04       BCC $7CD1
-7CCD:A2 FD       LDX #$FD
-7CCF:86 51       STX $51
-7CD1:C9 18       CMP #$18
-7CD3:B0 04       BCS $7CD9
-7CD5:A2 03       LDX #$03
-7CD7:86 51       STX $51
-7CD9:A9 00       LDA #$00
-7CDB:8D C3 13    STA $13C3
-7CDE:A9 01       LDA #$01
-7CE0:8D BB 13    STA $13BB
-7CE3:20 34 7D    JSR $7D34
-7CE6:8C 17 78    STY $7817
-7CE9:20 18 78    JSR $7818
-7CEC:A4 50       LDY $50
-7CEE:B1 80       LDA ($80),Y
-7CF0:AE 5C 78    LDX $785C
-7CF3:F0 07       BEQ $7CFC
-7CF5:49 FF       EOR #$FF
-7CF7:18          CLC
-7CF8:69 01       ADC #$01
-7CFA:E6 67       INC $67
-7CFC:38          SEC
-7CFD:E9 04       SBC #$04
-7CFF:18          CLC
-7D00:6D 17 78    ADC $7817
-7D03:8D BC 13    STA $13BC
-7D06:C8          INY
-7D07:B1 80       LDA ($80),Y
-7D09:18          CLC
-7D0A:69 15       ADC #$15
-7D0C:8D BE 13    STA $13BE
-7D0F:60          RTS
-7D10:20 F3 77    JSR $77F3
-7D13:20 26 7D    JSR $7D26
-7D16:20 0F 77    JSR $770F
-7D19:20 26 7D    JSR $7D26
-7D1C:20 0F 77    JSR $770F
-7D1F:20 68 7D    JSR $7D68
-7D22:20 3F 7D    JSR $7D3F
-7D25:60          RTS
-7D26:A0 00       LDY #$00
-7D28:B1 84       LDA ($84),Y
-7D2A:D0 01       BNE $7D2D
-7D2C:60          RTS
-7D2D:20 34 7D    JSR $7D34
-7D30:20 2F 78    JSR $782F
-7D33:60          RTS
-7D34:C8          INY
-7D35:B1 84       LDA ($84),Y
-7D37:0A          ASL
-7D38:AA          TAX
-7D39:C8          INY
-7D3A:C8          INY
-7D3B:B1 84       LDA ($84),Y
-7D3D:A8          TAY
-7D3E:60          RTS
-7D3F:AD A0 13    LDA $13A0
-7D42:C9 08       CMP #$08
-7D44:F0 21       BEQ $7D67
-7D46:20 46 7C    JSR $7C46
-7D49:AE A1 13    LDX $13A1
-7D4C:20 09 77    JSR $7709
-7D4F:AD A0 13    LDA $13A0
-7D52:C9 01       CMP #$01
-7D54:D0 06       BNE $7D5C
-7D56:20 12 77    JSR $7712
-7D59:4C 5F 7D    JMP $7D5F
-7D5C:20 15 77    JSR $7715
-7D5F:AD A3 13    LDA $13A3
-7D62:85 DC       STA $DC
-7D64:20 1B 77    JSR $771B
-7D67:60          RTS
-7D68:A0 00       LDY #$00
-7D6A:B1 84       LDA ($84),Y
-7D6C:D0 01       BNE $7D6F
-7D6E:60          RTS
-7D6F:C8          INY
-7D70:B1 84       LDA ($84),Y
-7D72:C9 EB       CMP #$EB
-7D74:B0 18       BCS $7D8E
-7D76:AA          TAX
-7D77:C8          INY
-7D78:C8          INY
-7D79:B1 84       LDA ($84),Y
-7D7B:85 DC       STA $DC
-7D7D:A9 72       LDA #$72
-7D7F:85 80       STA $80
-7D81:A9 80       LDA #$80
-7D83:85 81       STA $81
-7D85:20 09 77    JSR $7709
-7D88:20 15 77    JSR $7715
-7D8B:20 1B 77    JSR $771B
-7D8E:60          RTS
-7D8F:AD A0 13    LDA $13A0
-7D92:F0 1E       BEQ $7DB2
-7D94:A9 96       LDA #$96
-7D96:8D 05 7E    STA $7E05
-7D99:A9 01       LDA #$01
-7D9B:8D 0B 7E    STA $7E0B
-7D9E:A9 05       LDA #$05
-7DA0:8D 0E 7E    STA $7E0E
-7DA3:A9 04       LDA #$04
-7DA5:8D F9 7D    STA $7DF9
-7DA8:A9 12       LDA #$12
-7DAA:85 C1       STA $C1
-7DAC:8D 01 7E    STA $7E01
-7DAF:4C CE 7D    JMP $7DCE
-7DB2:A9 41       LDA #$41
-7DB4:8D 05 7E    STA $7E05
-7DB7:A9 00       LDA #$00
-7DB9:8D 0B 7E    STA $7E0B
-7DBC:8D F8 7D    STA $7DF8
-7DBF:A9 AF       LDA #$AF
-7DC1:8D 0E 7E    STA $7E0E
-7DC4:A9 01       LDA #$01
-7DC6:8D F9 7D    STA $7DF9
-7DC9:A9 C8       LDA #$C8
-7DCB:8D 01 7E    STA $7E01
-7DCE:A9 A0       LDA #$A0
-7DD0:85 80       STA $80
-7DD2:A9 13       LDA #$13
-7DD4:85 81       STA $81
-7DD6:A9 F9       LDA #$F9
-7DD8:85 84       STA $84
-7DDA:A9 7D       LDA #$7D
-7DDC:85 85       STA $85
-7DDE:20 1E 77    JSR $771E
-7DE1:20 1E 77    JSR $771E
-7DE4:20 1E 77    JSR $771E
-7DE7:20 1E 77    JSR $771E
-7DEA:A9 00       LDA #$00
-7DEC:8D C3 13    STA $13C3
-7DEF:A9 03       LDA #$03
-7DF1:85 51       STA $51
-7DF3:A9 18       LDA #$18
-7DF5:85 50       STA $50
-7DF7:60          RTS
-7DF8:FF                   ???
-7DF9:01 D2       ORA ($D2,X)
-7DFB:00          BRK
-7DFC:64                   ???
-7DFD:00          BRK
-7DFE:00          BRK
-7DFF:D2                   ???
-7E00:64                   ???
-7E01:C8          INY
-7E02:01 01       ORA ($01,X)
-7E04:01 41       ORA ($41,X)
-7E06:05 00       ORA $00
-7E08:01 41       ORA ($41,X)
-7E0A:00          BRK
-7E0B:00          BRK
-7E0C:03                   ???
-7E0D:01 AF       ORA ($AF,X)
-7E0F:05 00       ORA $00
-7E11:01 C8       ORA ($C8,X)
-7E13:00          BRK
-7E14:00          BRK
-7E15:14                   ???
-7E16:00          BRK
-7E17:64                   ???
-7E18:00          BRK
-7E19:01 14       ORA ($14,X)
-7E1B:64                   ???
-7E1C:00          BRK
-7E1D:06 00       ASL $00
-7E1F:0C                   ???
-7E20:00          BRK
-7E21:18          CLC
-7E22:00          BRK
-7E23:30 00       BMI $7E25
-7E25:60          RTS
-7E26:00          BRK
-7E27:40          RTI
-7E28:01 00       ORA ($00,X)
-7E2A:03                   ???
-7E2B:06 00       ASL $00
-7E2D:0C                   ???
-7E2E:00          BRK
-7E2F:18          CLC
-7E30:00          BRK
-7E31:30 00       BMI $7E33
-7E33:60          RTS
-7E34:00          BRK
-7E35:40          RTI
-7E36:01 00       ORA ($00,X)
-7E38:03                   ???
-7E39:28          PLP
-7E3A:7F                   ???
-7E3B:FD 7E D2    SBC $D27E,X
-7E3E:7E A7 7E    ROR $7EA7,X
-7E41:7C                   ???
-7E42:7E 51 7E    ROR $7E51,X
-7E45:51 7E       EOR ($7E),Y
-7E47:7C                   ???
-7E48:7E A7 7E    ROR $7EA7,X
-7E4B:D2                   ???
-7E4C:7E FD 7E    ROR $7EFD,X
-7E4F:28          PLP
-7E50:7F                   ???
-7E51:05 70       ORA $70
-7E53:04                   ???
-7E54:04                   ???
-7E55:6C 04 03    JMP ($0304)
-7E58:68          PLA
-7E59:03                   ???
-7E5A:02                   ???
-7E5B:65 03       ADC $03
-7E5D:02                   ???
-7E5E:62                   ???
-7E5F:04                   ???
-7E60:02                   ???
-7E61:5E 04 01    LSR $0104,X
-7E64:5A                   ???
-7E65:06 01       ASL $01
-7E67:54                   ???
-7E68:06 01       ASL $01
-7E6A:4E 06 00    LSR $0006
-7E6D:48          PHA
-7E6E:07                   ???
-7E6F:00          BRK
-7E70:41 06       EOR ($06,X)
-7E72:00          BRK
-7E73:3B                   ???
-7E74:07                   ???
-7E75:00          BRK
-7E76:34                   ???
-7E77:04                   ???
-7E78:00          BRK
-7E79:30 08       BMI $7E83
-7E7B:FF                   ???
-7E7C:0E 6F 03    ASL $036F
-7E7F:0C                   ???
-7E80:6C 04 0A    JMP ($0A04)
-7E83:68          PLA
-7E84:03                   ???
-7E85:09 65       ORA #$65
-7E87:03                   ???
-7E88:08          PHP
-7E89:62                   ???
-7E8A:05 07       ORA $07
-7E8C:5D 04 06    EOR $0604,X
-7E8F:59 05 05    EOR $0505,Y
-7E92:54                   ???
-7E93:06 04       ASL $04
-7E95:4E 06 03    LSR $0306
-7E98:48          PHA
-7E99:08          PHP
-7E9A:02                   ???
-7E9B:40          RTI
-7E9C:05 02       ORA $02
-7E9E:3B                   ???
-7E9F:07                   ???
-7EA0:01 34       ORA ($34,X)
-7EA2:04                   ???
-7EA3:00          BRK
-7EA4:30 08       BMI $7EAE
-7EA6:FF                   ???
-7EA7:16 6D       ASL $6D,X
-7EA9:03                   ???
-7EAA:13                   ???
-7EAB:6A          ROR
-7EAC:03                   ???
-7EAD:11 67       ORA ($67),Y
-7EAF:04                   ???
-7EB0:10 63       BPL $7F15
-7EB2:03                   ???
-7EB3:0E 60 03    ASL $0360
-7EB6:0C                   ???
-7EB7:5D 05 0B    EOR $0B05,X
-7EBA:58          CLI
-7EBB:05 09       ORA $09
-7EBD:53                   ???
-7EBE:06 07       ASL $07
-7EC0:4D 06 06    EOR $0606
-7EC3:47                   ???
-7EC4:07                   ???
-7EC5:05 40       ORA $40
-7EC7:05 04       ORA $04
-7EC9:3B                   ???
-7ECA:07                   ???
-7ECB:02                   ???
-7ECC:34                   ???
-7ECD:04                   ???
-7ECE:01 30       ORA ($30,X)
-7ED0:08          PHP
-7ED1:FF                   ???
-7ED2:1E 69 02    ASL $0269,X
-7ED5:1B                   ???
-7ED6:67                   ???
-7ED7:03                   ???
-7ED8:18          CLC
-7ED9:64                   ???
-7EDA:03                   ???
-7EDB:17                   ???
-7EDC:61 03       ADC ($03,X)
-7EDE:15 5E       ORA $5E,X
-7EE0:04                   ???
-7EE1:13                   ???
-7EE2:5A                   ???
-7EE3:03                   ???
-7EE4:11 57       ORA ($57),Y
-7EE6:05 0E       ORA $0E
-7EE8:52                   ???
-7EE9:06 0C       ASL $0C
-7EEB:4C 06 0A    JMP $0A06
-7EEE:46 06       LSR $06
-7EF0:08          PHP
-7EF1:40          RTI
-7EF2:05 06       ORA $06
-7EF4:3B                   ???
-7EF5:07                   ???
-7EF6:04                   ???
-7EF7:34                   ???
-7EF8:04                   ???
-7EF9:02                   ???
-7EFA:30 08       BMI $7F04
-7EFC:FF                   ???
-7EFD:26 65       ROL $65
-7EFF:02                   ???
-7F00:22                   ???
-7F01:63                   ???
-7F02:02                   ???
-7F03:1F                   ???
-7F04:61 03       ADC ($03,X)
-7F06:1C                   ???
-7F07:5E 02 1A    LSR $1A02,X
-7F0A:5C                   ???
-7F0B:04                   ???
-7F0C:18          CLC
-7F0D:58          CLI
-7F0E:05 14       ORA $14
-7F10:53                   ???
-7F11:03                   ???
-7F12:12                   ???
-7F13:50 05       BVC $7F1A
-7F15:10 4B       BPL $7F62
-7F17:06 0D       ASL $0D
-7F19:45 06       EOR $06
-7F1B:0A          ASL
-7F1C:3F                   ???
-7F1D:05 08       ORA $08
-7F1F:3A                   ???
-7F20:06 05       ASL $05
-7F22:34                   ???
-7F23:06 02       ASL $02
-7F25:2E 06 FF    ROL $FF06
-7F28:2C 5F 01    BIT $015F
-7F2B:28          PLP
-7F2C:5E 01 24    LSR $2401,X
-7F2F:5D 02 21    EOR $2102,X
-7F32:5B                   ???
-7F33:02                   ???
-7F34:1E 59 03    ASL $0359,X
-7F37:1B                   ???
-7F38:56 03       LSR $03,X
-7F3A:18          CLC
-7F3B:53                   ???
-7F3C:05 15       ORA $15
-7F3E:4E 05 12    LSR $1205
-7F41:49 05       EOR #$05
-7F43:0F                   ???
-7F44:44                   ???
-7F45:05 0B       ORA $0B
-7F47:3F                   ???
-7F48:05 08       ORA $08
-7F4A:3A                   ???
-7F4B:06 05       ASL $05
-7F4D:34                   ???
-7F4E:06 02       ASL $02
-7F50:2E 06 FF    ROL $FF06
-7F53:02                   ???
-7F54:BB                   ???
-7F55:5A                   ???
-7F56:30 5F       BMI $7FB7
-7F58:EE 3D A8    INC $A83D
-7F5B:60          RTS
-7F5C:00          BRK
-7F5D:00          BRK
-7F5E:00          BRK
-7F5F:00          BRK
-7F60:00          BRK
-7F61:00          BRK
-7F62:00          BRK
-7F63:00          BRK
-7F64:00          BRK
-7F65:00          BRK
-7F66:00          BRK
-7F67:00          BRK
-7F68:00          BRK
-7F69:00          BRK
-7F6A:00          BRK
-7F6B:00          BRK
-7F6C:00          BRK
-7F6D:00          BRK
-7F6E:00          BRK
-7F6F:00          BRK
-7F70:00          BRK
-7F71:00          BRK
-7F72:00          BRK
-7F73:00          BRK
-7F74:00          BRK
-7F75:00          BRK
-7F76:00          BRK
-7F77:00          BRK
-7F78:00          BRK
-7F79:00          BRK
-7F7A:00          BRK
-7F7B:00          BRK
-7F7C:00          BRK
-7F7D:00          BRK
-7F7E:00          BRK
-7F7F:00          BRK
-7F80:00          BRK
-7F81:00          BRK
-7F82:00          BRK
-7F83:00          BRK
-7F84:00          BRK
-7F85:00          BRK
-7F86:00          BRK
-7F87:00          BRK
-7F88:00          BRK
-7F89:00          BRK
-7F8A:00          BRK
-7F8B:00          BRK
-7F8C:00          BRK
-7F8D:00          BRK
-7F8E:00          BRK
-7F8F:00          BRK
-7F90:00          BRK
-7F91:00          BRK
-7F92:00          BRK
-7F93:00          BRK
-7F94:00          BRK
-7F95:00          BRK
-7F96:00          BRK
-7F97:00          BRK
-7F98:00          BRK
-7F99:00          BRK
-7F9A:00          BRK
-7F9B:00          BRK
-7F9C:00          BRK
-7F9D:00          BRK
-7F9E:00          BRK
-7F9F:00          BRK
-7FA0:00          BRK
-7FA1:00          BRK
-7FA2:00          BRK
-7FA3:00          BRK
-7FA4:00          BRK
-7FA5:00          BRK
-7FA6:00          BRK
-7FA7:00          BRK
-7FA8:00          BRK
-7FA9:00          BRK
-7FAA:00          BRK
-7FAB:00          BRK
-7FAC:00          BRK
-7FAD:00          BRK
-7FAE:00          BRK
-7FAF:00          BRK
-7FB0:00          BRK
-7FB1:00          BRK
-7FB2:00          BRK
-7FB3:00          BRK
-7FB4:00          BRK
-7FB5:00          BRK
-7FB6:00          BRK
-7FB7:00          BRK
-7FB8:00          BRK
-7FB9:00          BRK
-7FBA:00          BRK
-7FBB:00          BRK
-7FBC:00          BRK
-7FBD:00          BRK
-7FBE:00          BRK
-7FBF:00          BRK
-7FC0:00          BRK
-7FC1:00          BRK
-7FC2:00          BRK
-7FC3:00          BRK
-7FC4:00          BRK
-7FC5:00          BRK
-7FC6:00          BRK
-7FC7:00          BRK
-7FC8:00          BRK
-7FC9:00          BRK
-7FCA:00          BRK
-7FCB:00          BRK
-7FCC:00          BRK
-7FCD:00          BRK
-7FCE:00          BRK
-7FCF:00          BRK
-7FD0:00          BRK
-7FD1:00          BRK
-7FD2:00          BRK
-7FD3:00          BRK
-7FD4:00          BRK
-7FD5:00          BRK
-7FD6:00          BRK
-7FD7:00          BRK
-7FD8:00          BRK
-7FD9:00          BRK
-7FDA:00          BRK
-7FDB:00          BRK
-7FDC:00          BRK
-7FDD:00          BRK
-7FDE:00          BRK
-7FDF:00          BRK
-7FE0:00          BRK
-7FE1:00          BRK
-7FE2:00          BRK
-7FE3:00          BRK
-7FE4:00          BRK
-7FE5:00          BRK
-7FE6:00          BRK
-7FE7:00          BRK
-7FE8:00          BRK
-7FE9:00          BRK
-7FEA:00          BRK
-7FEB:00          BRK
-7FEC:00          BRK
-7FED:00          BRK
-7FEE:00          BRK
-7FEF:00          BRK
-7FF0:00          BRK
-7FF1:00          BRK
-7FF2:00          BRK
-7FF3:00          BRK
-7FF4:00          BRK
-7FF5:00          BRK
-7FF6:00          BRK
-7FF7:00          BRK
-7FF8:00          BRK
-7FF9:00          BRK
-7FFA:00          BRK
-7FFB:00          BRK
-7FFC:00          BRK
-7FFD:00          BRK
-7FFE:00          BRK
-7FFF:00          BRK
