@@ -1,6 +1,6 @@
 # Apple ][ Code Reverse Engineering 
 ## Jungle Hunt GAME
 
-**Annotated code GAME** (use .asm and MADS 2.1.5 for colored code)
+**Annotated code GAME**
 
-**Liste of famous game registers and memory**
+**List of Game registers and memory map**

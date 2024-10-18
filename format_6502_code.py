@@ -30,4 +30,6 @@ def format_asm_code(input_file, output_file):
                 formatted_line = f"{address}:{opcodes_str}{' ' * spaces_needed}{instruction}\n"
                 
                 outfile.write(formatted_line)
-format_asm_code('6000-78FF.txt', 'output.txt')
+                
+filein="7700-96ff.txt"                
+format_asm_code(filein, "format_"+filein)
