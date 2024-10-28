@@ -1,0 +1,6546 @@
+; ###########################################################################################
+; # CODE CHARGE pour le LEVEL 2 ($7700=>$9CFF)
+; #  $7700=>$86FF (track 5 directement depuis la disquette) 
+; #  puis $7D00=>$9CFF (track 6&7) qui va détruire une partie du chargement précédent
+; #  
+; ###########################################################################################
+;
+7700:4C 30 77    JMP $7730
+7703:6C 00 13    JMP ($1300)
+7706:6C 04 13    JMP ($1304)
+7709:6C 10 13    JMP ($1310)
+770C:6C 12 13    JMP ($1312)
+770F:6C 18 13    JMP ($1318)
+7712:6C 1A 13    JMP ($131A)
+7715:6C 1C 13    JMP ($131C)
+7718:6C 1E 13    JMP ($131E)
+771B:6C 20 13    JMP ($1320) =>66BE		;?affichage du sprite du joueur?
+771E:6C 24 13    JMP ($1324) =>6C69
+7721:6C 26 13    JMP ($1326)
+7724:6C 28 13    JMP ($1328)
+7727:6C 2A 13    JMP ($132A)
+772A:6C 2C 13    JMP ($132C)
+772D:6C 44 13    JMP ($1344)
+7730:AD A0 13    LDA $13A0
+7733:C9 02       CMP #$02
+7735:F0 02       BEQ $7739
+7737:E6 CB       INC $CB
+7739:A5 33       LDA $33
+773B:F0 03       BEQ $7740
+773D:4C 33 7C    JMP $7C33
+7740:A2 FE       LDX #$FE
+7742:A5 D5       LDA $D5
+7744:C9 FF       CMP #$FF
+7746:F0 02       BEQ $774A
+7748:A2 01       LDX #$01
+774A:8E A2 13    STX $13A2
+774D:A5 D4       LDA $D4
+774F:8D A4 13    STA $13A4
+7752:20 B6 7C    JSR $7CB6
+7755:20 2D 79    JSR $792D
+7758:20 0C 77    JSR $770C
+775B:20 2D 79    JSR $792D
+775E:20 0C 77    JSR $770C
+7761:20 E5 78    JSR $78E5
+7764:20 A6 7C    JSR $7CA6
+7767:20 B6 7C    JSR $7CB6
+776A:20 39 7A    JSR $7A39
+776D:20 0C 77    JSR $770C
+7770:20 39 7A    JSR $7A39
+7773:20 0C 77    JSR $770C
+7776:20 B1 79    JSR $79B1
+7779:20 56 79    JSR $7956
+777C:20 B8 77    JSR $77B8
+777F:20 FF 7A    JSR $7AFF
+7782:20 B6 7C    JSR $7CB6
+7785:A9 00       LDA #$00
+7787:85 CC       STA $CC
+7789:20 8C 7B    JSR $7B8C
+778C:20 0C 77    JSR $770C
+778F:20 8C 7B    JSR $7B8C
+7792:20 0C 77    JSR $770C
+7795:20 E6 7B    JSR $7BE6
+7798:A5 36       LDA $36
+779A:F0 08       BEQ $77A4
+779C:A9 A5       LDA #$A5
+779E:85 5A       STA $5A
+77A0:A9 77       LDA #$77
+77A2:85 5B       STA $5B
+77A4:60          RTS
+77A5:20 10 00    JSR $0010
+77A8:10 20       BPL $77CA
+77AA:0A          ASL
+77AB:20 0A 20    JSR $200A
+77AE:0A          ASL
+77AF:20 1A 1D    JSR $1D1A
+77B2:1A                   ???
+77B3:1E 1A 20    ASL $201A,X
+77B6:2A          ROL
+77B7:FF                   ???
+77B8:AD A0 13    LDA $13A0
+77BB:C9 02       CMP #$02
+77BD:D0 03       BNE $77C2
+77BF:4C 93 78    JMP $7893
+77C2:20 B6 7C    JSR $7CB6
+77C5:A0 00       LDY #$00
+77C7:84 C3       STY $C3
+77C9:A5 CC       LDA $CC
+77CB:D0 0D       BNE $77DA
+77CD:A9 F9       LDA #$F9
+77CF:85 C4       STA $C4
+77D1:A9 1E       LDA #$1E
+77D3:A0 07       LDY #$07
+77D5:A2 FB       LDX #$FB
+77D7:4C E4 77    JMP $77E4
+77DA:A9 F9       LDA #$F9
+77DC:85 C4       STA $C4
+77DE:A9 23       LDA #$23
+77E0:A0 09       LDY #$09
+77E2:A2 FA       LDX #$FA
+77E4:85 C5       STA $C5
+77E6:84 C6       STY $C6
+77E8:86 DC       STX $DC
+77EA:A0 00       LDY #$00
+77EC:B1 84       LDA ($84),Y
+77EE:C9 01       CMP #$01
+77F0:D0 30       BNE $7822
+77F2:C8          INY
+77F3:AD A1 13    LDA $13A1
+77F6:38          SEC
+77F7:F1 84       SBC ($84),Y
+77F9:C5 C4       CMP $C4
+77FB:B0 04       BCS $7801
+77FD:C5 C5       CMP $C5
+77FF:B0 21       BCS $7822
+7801:C8          INY
+7802:C8          INY
+7803:B1 84       LDA ($84),Y
+7805:38          SEC
+7806:ED A3 13    SBC $13A3
+7809:30 13       BMI $781E
+780B:C5 C6       CMP $C6
+780D:B0 13       BCS $7822
+780F:A9 00       LDA #$00
+7811:85 17       STA $17
+7813:A9 02       LDA #$02
+7815:8D A0 13    STA $13A0
+7818:20 2A 77    JSR $772A
+781B:4C 93 78    JMP $7893
+781E:C5 DC       CMP $DC
+7820:B0 ED       BCS $780F
+7822:A5 C3       LDA $C3
+7824:D0 08       BNE $782E
+7826:20 0C 77    JSR $770C
+7829:E6 C3       INC $C3
+782B:4C EA 77    JMP $77EA
+782E:A5 17       LDA $17
+7830:F0 61       BEQ $7893
+7832:20 B6 7C    JSR $7CB6
+7835:A0 00       LDY #$00
+7837:84 C3       STY $C3
+7839:A0 00       LDY #$00
+783B:B1 84       LDA ($84),Y
+783D:C9 01       CMP #$01
+783F:D0 46       BNE $7887
+7841:C8          INY
+7842:AD A1 13    LDA $13A1
+7845:38          SEC
+7846:F1 84       SBC ($84),Y
+7848:30 3D       BMI $7887
+784A:C9 0F       CMP #$0F
+784C:90 39       BCC $7887
+784E:C9 22       CMP #$22
+7850:B0 35       BCS $7887
+7852:C8          INY
+7853:C8          INY
+7854:AD A3 13    LDA $13A3
+7857:38          SEC
+7858:F1 84       SBC ($84),Y
+785A:30 2B       BMI $7887
+785C:C9 04       CMP #$04
+785E:90 27       BCC $7887
+7860:C9 09       CMP #$09
+7862:B0 23       BCS $7887
+7864:A0 02       LDY #$02
+7866:B1 84       LDA ($84),Y
+7868:A2 04       LDX #$04
+786A:C9 03       CMP #$03
+786C:F0 08       BEQ $7876
+786E:A2 03       LDX #$03
+7870:A5 CC       LDA $CC
+7872:D0 02       BNE $7876
+7874:A2 02       LDX #$02
+7876:A0 00       LDY #$00
+7878:8A          TXA
+7879:91 84       STA ($84),Y
+787B:CA          DEX
+787C:86 91       STX $91
+787E:A0 08       LDY #$08
+7880:A9 DC       LDA #$DC
+7882:91 84       STA ($84),Y
+7884:4C 93 78    JMP $7893
+7887:A5 C3       LDA $C3
+7889:D0 08       BNE $7893
+788B:E6 C3       INC $C3
+788D:20 0C 77    JSR $770C
+7890:4C 39 78    JMP $7839
+7893:A5 45       LDA $45
+7895:D0 1E       BNE $78B5
+7897:A5 2E       LDA $2E
+7899:C9 0C       CMP #$0C
+789B:90 18       BCC $78B5
+789D:20 B6 7C    JSR $7CB6
+78A0:A0 00       LDY #$00
+78A2:B1 84       LDA ($84),Y
+78A4:D0 0F       BNE $78B5
+78A6:20 0C 77    JSR $770C
+78A9:B1 84       LDA ($84),Y
+78AB:D0 08       BNE $78B5
+78AD:A5 38       LDA $38
+78AF:85 C0       STA $C0
+78B1:A9 01       LDA #$01
+78B3:85 45       STA $45
+78B5:AD A0 13    LDA $13A0
+78B8:C9 02       CMP #$02
+78BA:D0 28       BNE $78E4
+78BC:AD A3 13    LDA $13A3
+78BF:C9 71       CMP #$71
+78C1:B0 21       BCS $78E4
+78C3:A5 2E       LDA $2E
+78C5:C9 05       CMP #$05
+78C7:90 02       BCC $78CB
+78C9:E9 03       SBC #$03
+78CB:85 2E       STA $2E
+78CD:A9 F0       LDA #$F0
+78CF:8D A8 13    STA $13A8
+78D2:85 2C       STA $2C
+78D4:A9 00       LDA #$00
+78D6:85 17       STA $17
+78D8:85 D6       STA $D6
+78DA:A6 46       LDX $46
+78DC:D6 41       DEC $41,X
+78DE:D0 02       BNE $78E2
+78E0:E6 CE       INC $CE
+78E2:E6 33       INC $33
+78E4:60          RTS
+78E5:A9 FF       LDA #$FF
+78E7:85 CD       STA $CD
+78E9:20 2D 79    JSR $792D
+78EC:A9 00       LDA #$00
+78EE:85 CD       STA $CD
+78F0:60          RTS
+78F1:A4 DC       LDY $DC
+78F3:20 03 77    JSR $7703
+78F6:A5 DC       LDA $DC
+78F8:6A          ROR
+78F9:90 06       BCC $7901
+78FB:A9 80       LDA #$80
+78FD:A8          TAY
+78FE:4C 05 79    JMP $7905
+7901:A9 D5       LDA #$D5
+7903:A0 AA       LDY #$AA
+7905:85 00       STA $00
+7907:84 01       STY $01
+7909:A5 4B       LDA $4B
+790B:85 C3       STA $C3
+790D:A5 E5       LDA $E5
+790F:A8          TAY
+7910:6A          ROR
+7911:90 05       BCC $7918
+7913:A5 01       LDA $01
+7915:4C 1A 79    JMP $791A
+7918:A5 00       LDA $00
+791A:C0 28       CPY #$28
+791C:B0 02       BCS $7920
+791E:91 4C       STA ($4C),Y
+7920:C8          INY
+7921:98          TYA
+7922:C6 C3       DEC $C3
+7924:D0 EA       BNE $7910
+7926:C6 DC       DEC $DC
+7928:C6 4A       DEC $4A
+792A:D0 C5       BNE $78F1
+792C:60          RTS
+792D:A0 05       LDY #$05
+792F:B1 84       LDA ($84),Y
+7931:C9 00       CMP #$00
+7933:D0 01       BNE $7936
+7935:60          RTS
+7936:C8          INY
+7937:B1 84       LDA ($84),Y
+7939:AA          TAX
+793A:20 06 77    JSR $7706
+793D:C8          INY
+793E:B1 84       LDA ($84),Y
+7940:85 DC       STA $DC
+7942:A5 CD       LDA $CD
+7944:F0 06       BEQ $794C
+7946:20 F2 7B    JSR $7BF2
+7949:4C 4F 79    JMP $794F
+794C:20 03 7C    JSR $7C03
+794F:20 12 77    JSR $7712
+7952:20 F1 78    JSR $78F1
+7955:60          RTS
+7956:AD A0 13    LDA $13A0
+7959:C9 02       CMP #$02
+795B:F0 04       BEQ $7961
+795D:A5 45       LDA $45
+795F:F0 09       BEQ $796A
+7961:CE A3 13    DEC $13A3
+7964:AD A3 13    LDA $13A3
+7967:4C 79 79    JMP $7979
+796A:A5 27       LDA $27
+796C:AD A3 13    LDA $13A3
+796F:18          CLC
+7970:6D A4 13    ADC $13A4
+7973:C9 AF       CMP #$AF
+7975:90 02       BCC $7979
+7977:A9 AF       LDA #$AF
+7979:C9 70       CMP #$70
+797B:B0 02       BCS $797F
+797D:A9 70       LDA #$70
+797F:8D A3 13    STA $13A3
+7982:AD A0 13    LDA $13A0
+7985:C9 02       CMP #$02
+7987:F0 1A       BEQ $79A3
+7989:A5 45       LDA $45
+798B:D0 17       BNE $79A4
+798D:AD A1 13    LDA $13A1
+7990:18          CLC
+7991:6D A2 13    ADC $13A2
+7994:C9 E6       CMP #$E6
+7996:90 02       BCC $799A
+7998:A9 E6       LDA #$E6
+799A:C9 64       CMP #$64
+799C:B0 02       BCS $79A0
+799E:A9 64       LDA #$64
+79A0:8D A1 13    STA $13A1
+79A3:60          RTS
+79A4:AD A1 13    LDA $13A1
+79A7:38          SEC
+79A8:E9 01       SBC #$01
+79AA:C9 15       CMP #$15
+79AC:B0 F2       BCS $79A0
+79AE:85 36       STA $36
+79B0:60          RTS
+79B1:A0 00       LDY #$00
+79B3:84 C3       STY $C3
+79B5:B1 84       LDA ($84),Y
+79B7:D0 2D       BNE $79E6
+79B9:A5 27       LDA $27
+79BB:6A          ROR
+79BC:90 F2       BCC $79B0
+79BE:A0 08       LDY #$08
+79C0:B1 84       LDA ($84),Y
+79C2:18          CLC
+79C3:69 01       ADC #$01
+79C5:91 84       STA ($84),Y
+79C7:F0 0B       BEQ $79D4
+79C9:A6 40       LDX $40
+79CB:F0 E3       BEQ $79B0
+79CD:18          CLC
+79CE:69 01       ADC #$01
+79D0:91 84       STA ($84),Y
+79D2:D0 DC       BNE $79B0
+79D4:A0 00       LDY #$00
+79D6:A9 01       LDA #$01
+79D8:91 84       STA ($84),Y
+79DA:C8          INY
+79DB:A9 6E       LDA #$6E
+79DD:91 84       STA ($84),Y
+79DF:C8          INY
+79E0:C8          INY
+79E1:A9 B4       LDA #$B4
+79E3:91 84       STA ($84),Y
+79E5:60          RTS
+79E6:E6 66       INC $66
+79E8:A0 01       LDY #$01
+79EA:B1 84       LDA ($84),Y
+79EC:C8          INY
+79ED:18          CLC
+79EE:71 84       ADC ($84),Y
+79F0:88          DEY
+79F1:91 84       STA ($84),Y
+79F3:38          SEC
+79F4:ED A1 13    SBC $13A1
+79F7:C9 24       CMP #$24
+79F9:90 04       BCC $79FF
+79FB:C9 F8       CMP #$F8
+79FD:90 02       BCC $7A01
+79FF:E6 C3       INC $C3
+7A01:C8          INY
+7A02:C8          INY
+7A03:B1 84       LDA ($84),Y
+7A05:C8          INY
+7A06:18          CLC
+7A07:71 84       ADC ($84),Y
+7A09:88          DEY
+7A0A:91 84       STA ($84),Y
+7A0C:C9 6E       CMP #$6E
+7A0E:B0 0A       BCS $7A1A
+7A10:A9 00       LDA #$00
+7A12:A8          TAY
+7A13:91 84       STA ($84),Y
+7A15:A0 08       LDY #$08
+7A17:91 84       STA ($84),Y
+7A19:60          RTS
+7A1A:A6 C3       LDX $C3
+7A1C:F0 1A       BEQ $7A38
+7A1E:38          SEC
+7A1F:ED A3 13    SBC $13A3
+7A22:C9 04       CMP #$04
+7A24:90 04       BCC $7A2A
+7A26:C9 FD       CMP #$FD
+7A28:90 0E       BCC $7A38
+7A2A:A0 02       LDY #$02
+7A2C:B1 84       LDA ($84),Y
+7A2E:8D A2 13    STA $13A2
+7A31:A0 04       LDY #$04
+7A33:B1 84       LDA ($84),Y
+7A35:8D A4 13    STA $13A4
+7A38:60          RTS
+7A39:A0 00       LDY #$00
+7A3B:B1 84       LDA ($84),Y
+7A3D:D0 37       BNE $7A76
+7A3F:A0 08       LDY #$08
+7A41:B1 84       LDA ($84),Y
+7A43:18          CLC
+7A44:69 02       ADC #$02
+7A46:91 84       STA ($84),Y
+7A48:B0 01       BCS $7A4B
+7A4A:60          RTS
+7A4B:A5 2E       LDA $2E
+7A4D:C9 0C       CMP #$0C
+7A4F:B0 F9       BCS $7A4A
+7A51:A0 00       LDY #$00
+7A53:A9 01       LDA #$01
+7A55:91 84       STA ($84),Y
+7A57:A5 27       LDA $27
+7A59:29 03       AND #$03
+7A5B:D0 02       BNE $7A5F
+7A5D:A9 01       LDA #$01
+7A5F:C9 03       CMP #$03
+7A61:90 06       BCC $7A69
+7A63:A6 40       LDX $40
+7A65:D0 02       BNE $7A69
+7A67:A9 02       LDA #$02
+7A69:A0 02       LDY #$02
+7A6B:91 84       STA ($84),Y
+7A6D:E6 2E       INC $2E
+7A6F:A0 01       LDY #$01
+7A71:A9 01       LDA #$01
+7A73:91 84       STA ($84),Y
+7A75:88          DEY
+7A76:C8          INY
+7A77:B1 84       LDA ($84),Y
+7A79:C8          INY
+7A7A:18          CLC
+7A7B:71 84       ADC ($84),Y
+7A7D:88          DEY
+7A7E:91 84       STA ($84),Y
+7A80:C9 FA       CMP #$FA
+7A82:90 19       BCC $7A9D
+7A84:A0 00       LDY #$00
+7A86:98          TYA
+7A87:91 84       STA ($84),Y
+7A89:A0 08       LDY #$08
+7A8B:A5 A6       LDA $A6
+7A8D:A6 46       LDX $46
+7A8F:E0 01       CPX #$01
+7A91:F0 02       BEQ $7A95
+7A93:A5 AA       LDA $AA
+7A95:0A          ASL
+7A96:0A          ASL
+7A97:0A          ASL
+7A98:69 50       ADC #$50
+7A9A:91 84       STA ($84),Y
+7A9C:60          RTS
+7A9D:A5 27       LDA $27
+7A9F:6A          ROR
+7AA0:90 4E       BCC $7AF0
+7AA2:A0 00       LDY #$00
+7AA4:B1 84       LDA ($84),Y
+7AA6:C9 02       CMP #$02
+7AA8:B0 47       BCS $7AF1
+7AAA:A0 02       LDY #$02
+7AAC:B1 84       LDA ($84),Y
+7AAE:C9 03       CMP #$03
+7AB0:D0 17       BNE $7AC9
+7AB2:A2 00       LDX #$00
+7AB4:C8          INY
+7AB5:B1 84       LDA ($84),Y
+7AB7:CD A3 13    CMP $13A3
+7ABA:F0 09       BEQ $7AC5
+7ABC:90 05       BCC $7AC3
+7ABE:A2 FF       LDX #$FF
+7AC0:4C C5 7A    JMP $7AC5
+7AC3:A2 01       LDX #$01
+7AC5:C8          INY
+7AC6:8A          TXA
+7AC7:91 84       STA ($84),Y
+7AC9:A0 03       LDY #$03
+7ACB:B1 84       LDA ($84),Y
+7ACD:C8          INY
+7ACE:18          CLC
+7ACF:71 84       ADC ($84),Y
+7AD1:88          DEY
+7AD2:91 84       STA ($84),Y
+7AD4:A2 FF       LDX #$FF
+7AD6:C9 AF       CMP #$AF
+7AD8:B0 11       BCS $7AEB
+7ADA:A2 01       LDX #$01
+7ADC:C9 6E       CMP #$6E
+7ADE:90 0B       BCC $7AEB
+7AE0:C9 8C       CMP #$8C
+7AE2:D0 0C       BNE $7AF0
+7AE4:CD A3 13    CMP $13A3
+7AE7:90 02       BCC $7AEB
+7AE9:A2 FF       LDX #$FF
+7AEB:8A          TXA
+7AEC:A0 04       LDY #$04
+7AEE:91 84       STA ($84),Y
+7AF0:60          RTS
+7AF1:A0 08       LDY #$08
+7AF3:B1 84       LDA ($84),Y
+7AF5:18          CLC
+7AF6:69 01       ADC #$01
+7AF8:91 84       STA ($84),Y
+7AFA:D0 F4       BNE $7AF0
+7AFC:4C 84 7A    JMP $7A84
+7AFF:AE A1 13    LDX $13A1
+7B02:86 DE       STX $DE
+7B04:20 06 77    JSR $7706
+7B07:AD A3 13    LDA $13A3
+7B0A:29 FE       AND #$FE
+7B0C:A8          TAY
+7B0D:84 DC       STY $DC
+7B0F:20 2A 7B    JSR $7B2A
+7B12:20 12 77    JSR $7712
+7B15:20 15 77    JSR $7715
+7B18:60          RTS
+7B19:A5 29       LDA $29
+7B1B:29 FE       AND #$FE
+7B1D:A8          TAY
+7B1E:B1 86       LDA ($86),Y
+7B20:48          PHA
+7B21:C8          INY
+7B22:B1 86       LDA ($86),Y
+7B24:85 87       STA $87
+7B26:68          PLA
+7B27:85 86       STA $86
+7B29:60          RTS
+7B2A:AD A0 13    LDA $13A0
+7B2D:C9 02       CMP #$02
+7B2F:F0 4B       BEQ $7B7C
+7B31:A5 D6       LDA $D6
+7B33:D0 0E       BNE $7B43
+7B35:A9 F0       LDA #$F0
+7B37:8D A8 13    STA $13A8
+7B3A:A9 00       LDA #$00
+7B3C:85 17       STA $17
+7B3E:85 D6       STA $D6
+7B40:4C 54 7B    JMP $7B54
+7B43:85 17       STA $17
+7B45:E6 65       INC $65
+7B47:AD A8 13    LDA $13A8
+7B4A:C9 FF       CMP #$FF
+7B4C:F0 EC       BEQ $7B3A
+7B4E:EE A8 13    INC $13A8
+7B51:4C 83 7B    JMP $7B83
+7B54:A5 CB       LDA $CB
+7B56:4A          LSR
+7B57:29 03       AND #$03
+7B59:C9 03       CMP #$03
+7B5B:F0 18       BEQ $7B75
+7B5D:A6 4F       LDX $4F
+7B5F:D0 02       BNE $7B63
+7B61:E6 64       INC $64
+7B63:C9 02       CMP #$02
+7B65:F0 07       BEQ $7B6E
+7B67:A9 3C       LDA #$3C
+7B69:A0 7D       LDY #$7D
+7B6B:4C 87 7B    JMP $7B87
+7B6E:A9 4C       LDA #$4C
+7B70:A0 7D       LDY #$7D
+7B72:4C 87 7B    JMP $7B87
+7B75:A9 5C       LDA #$5C
+7B77:A0 7D       LDY #$7D
+7B79:4C 87 7B    JMP $7B87
+7B7C:A9 A0       LDA #$A0
+7B7E:A0 7E       LDY #$7E
+7B80:4C 87 7B    JMP $7B87
+7B83:A9 6C       LDA #$6C
+7B85:A0 7D       LDY #$7D
+7B87:85 80       STA $80
+7B89:84 81       STY $81
+7B8B:60          RTS
+7B8C:A0 00       LDY #$00
+7B8E:85 C3       STA $C3
+7B90:B1 84       LDA ($84),Y
+7B92:D0 01       BNE $7B95
+7B94:60          RTS
+7B95:85 C3       STA $C3
+7B97:C8          INY
+7B98:B1 84       LDA ($84),Y
+7B9A:AA          TAX
+7B9B:C8          INY
+7B9C:C8          INY
+7B9D:B1 84       LDA ($84),Y
+7B9F:85 DC       STA $DC
+7BA1:20 06 77    JSR $7706
+7BA4:A5 CD       LDA $CD
+7BA6:F0 06       BEQ $7BAE
+7BA8:20 F2 7B    JSR $7BF2
+7BAB:4C B7 7B    JMP $7BB7
+7BAE:A5 C3       LDA $C3
+7BB0:C9 02       CMP #$02
+7BB2:B0 0D       BCS $7BC1
+7BB4:20 03 7C    JSR $7C03
+7BB7:20 12 77    JSR $7712
+7BBA:20 19 7B    JSR $7B19
+7BBD:20 21 77    JSR $7721
+7BC0:60          RTS
+7BC1:C9 04       CMP #$04
+7BC3:F0 12       BEQ $7BD7
+7BC5:C9 03       CMP #$03
+7BC7:F0 07       BEQ $7BD0
+7BC9:A9 2E       LDA #$2E
+7BCB:A0 7E       LDY #$7E
+7BCD:4C DB 7B    JMP $7BDB
+7BD0:A9 54       LDA #$54
+7BD2:A0 7E       LDY #$7E
+7BD4:4C DB 7B    JMP $7BDB
+7BD7:A9 7A       LDA #$7A
+7BD9:A0 7E       LDY #$7E
+7BDB:85 80       STA $80
+7BDD:84 81       STY $81
+7BDF:20 0F 77    JSR $770F
+7BE2:20 1B 77    JSR $771B		; JMP$66BE ?affichage du sprite du joueur?
+7BE5:60          RTS
+7BE6:A9 FF       LDA #$FF
+7BE8:85 CD       STA $CD
+7BEA:20 8C 7B    JSR $7B8C
+7BED:A9 00       LDA #$00
+7BEF:85 CD       STA $CD
+7BF1:60          RTS
+7BF2:A9 B8       LDA #$B8
+7BF4:85 80       STA $80
+7BF6:A9 7D       LDA #$7D
+7BF8:85 81       STA $81
+7BFA:A9 C8       LDA #$C8
+7BFC:85 86       STA $86
+7BFE:A9 7D       LDA #$7D
+7C00:85 87       STA $87
+7C02:60          RTS
+7C03:A5 27       LDA $27
+7C05:4A          LSR
+7C06:4A          LSR
+7C07:4A          LSR
+7C08:4A          LSR
+7C09:29 03       AND #$03
+7C0B:C9 03       CMP #$03
+7C0D:F0 0F       BEQ $7C1E
+7C0F:A9 9C       LDA #$9C
+7C11:85 86       STA $86
+7C13:A9 7D       LDA #$7D
+7C15:85 87       STA $87
+7C17:A9 7C       LDA #$7C
+7C19:A0 7D       LDY #$7D
+7C1B:4C 2E 7C    JMP $7C2E
+7C1E:A9 AA       LDA #$AA
+7C20:85 86       STA $86
+7C22:A9 7D       LDA #$7D
+7C24:85 87       STA $87
+7C26:A9 01       LDA #$01
+7C28:85 CC       STA $CC
+7C2A:A9 8C       LDA #$8C
+7C2C:A0 7D       LDY #$7D
+7C2E:85 80       STA $80
+7C30:84 81       STY $81
+7C32:60          RTS
+7C33:A9 D5       LDA #$D5
+7C35:85 00       STA $00
+7C37:85 02       STA $02
+7C39:A9 AA       LDA #$AA
+7C3B:85 01       STA $01
+7C3D:85 03       STA $03
+7C3F:A2 10       LDX #$10
+7C41:A0 64       LDY #$64
+7C43:20 18 77    JSR $7718
+7C46:A9 80       LDA #$80
+7C48:85 02       STA $02
+7C4A:85 03       STA $03
+7C4C:A2 64       LDX #$64
+7C4E:A0 AA       LDY #$AA
+7C50:20 18 77    JSR $7718
+7C53:A9 AA       LDA #$AA
+7C55:85 00       STA $00
+7C57:A9 D5       LDA #$D5
+7C59:85 01       STA $01
+7C5B:A9 2A       LDA #$2A
+7C5D:85 02       STA $02
+7C5F:A9 55       LDA #$55
+7C61:85 03       STA $03
+7C63:A2 B8       LDX #$B8
+7C65:A0 C0       LDY #$C0
+7C67:20 18 77    JSR $7718
+7C6A:20 BF 7C    JSR $7CBF
+7C6D:A9 82       LDA #$82
+7C6F:85 84       STA $84
+7C71:A9 7C       LDA #$7C
+7C73:85 85       STA $85
+7C75:20 1E 77    JSR $771E
+7C78:20 1E 77    JSR $771E
+7C7B:20 1E 77    JSR $771E
+7C7E:20 1E 77    JSR $771E
+7C81:60          RTS
+7C82:01 C8       ORA ($C8,X)
+7C84:00          BRK
+7C85:70 00       BVS $7C87
+7C87:00          BRK
+7C88:C8          INY
+7C89:70 00       BVS $7C8B
+7C8B:00          BRK
+7C8C:00          BRK
+7C8D:01 78       ORA ($78,X)
+7C8F:FF                   ???
+7C90:01 00       ORA ($00,X)
+7C92:78          SEI
+7C93:E6 00       INC $00
+7C95:01 01       ORA ($01,X)
+7C97:8D 01 00    STA $0001
+7C9A:06 8C       ASL $8C
+7C9C:05 00       ORA $00
+7C9E:3C                   ???
+7C9F:01 5A       ORA ($5A,X)
+7CA1:FF                   ???
+7CA2:00          BRK
+7CA3:3C                   ???
+7CA4:5A                   ???
+7CA5:00          BRK
+7CA6:20 BF 7C    JSR $7CBF
+7CA9:20 27 77    JSR $7727
+7CAC:20 27 77    JSR $7727
+7CAF:20 27 77    JSR $7727
+7CB2:20 27 77    JSR $7727
+7CB5:60          RTS
+7CB6:A9 A9       LDA #$A9
+7CB8:85 84       STA $84
+7CBA:A9 13       LDA #$13
+7CBC:85 85       STA $85
+7CBE:60          RTS
+7CBF:A9 A0       LDA #$A0
+7CC1:85 80       STA $80
+7CC3:A9 13       LDA #$13
+7CC5:85 81       STA $81
+7CC7:60          RTS
+7CC8:50 C9       BVC $7C93
+7CCA:27                   ???
+7CCB:90 04       BCC $7CD1
+7CCD:A2 FD       LDX #$FD
+7CCF:86 51       STX $51
+7CD1:C9 18       CMP #$18
+7CD3:B0 04       BCS $7CD9
+7CD5:A2 03       LDX #$03
+7CD7:86 51       STX $51
+7CD9:A9 00       LDA #$00
+7CDB:8D C3 13    STA $13C3
+7CDE:A9 01       LDA #$01
+7CE0:8D BB 13    STA $13BB
+7CE3:20 34 7D    JSR $7D34
+7CE6:8C 17 78    STY $7817
+7CE9:20 18 78    JSR $7818
+7CEC:A4 50       LDY $50
+7CEE:B1 80       LDA ($80),Y
+7CF0:AE 5C 78    LDX $785C
+7CF3:F0 07       BEQ $7CFC
+7CF5:49 FF       EOR #$FF
+7CF7:18          CLC
+7CF8:69 01       ADC #$01
+7CFA:E6 67       INC $67
+7CFC:38          SEC
+7CFD:E9 04       SBC #$04
+7CFF:18          CLC
+7D00:10 04       BPL $7D06
+7D02:8E 91 CE    STX $CE91
+7D05:91 0E       STA ($0E),Y
+7D07:92                   ???
+7D08:4E 92 8E    LSR $8E92
+7D0B:92                   ???
+7D0C:CE 92 0E    DEC $0E92
+7D0F:93                   ???
+7D10:4E 93 8E    LSR $8E93
+7D13:93                   ???
+7D14:CE 93 0E    DEC $0E93
+7D17:94 4E       STY $4E,X
+7D19:94 8E       STY $8E,X
+7D1B:94 CE       STY $CE,X
+7D1D:94 06       STY $06,X
+7D1F:04                   ???
+7D20:0E 95 26    ASL $2695
+7D23:95 3E       STA $3E,X
+7D25:95 56       STA $56,X
+7D27:95 6E       STA $6E,X
+7D29:95 86       STA $86,X
+7D2B:95 9E       STA $9E,X
+7D2D:95 B6       STA $B6,X
+7D2F:95 CE       STA $CE,X
+7D31:95 E6       STA $E6,X
+7D33:95 FE       STA $FE,X
+7D35:95 16       STA $16,X
+7D37:96 2E       STX $2E,Y
+7D39:96 46       STX $46,Y
+7D3B:96 0E       STX $0E,Y
+7D3D:07                   ???
+7D3E:A8          TAY
+7D3F:80                   ???
+7D40:0A          ASL
+7D41:81 6C       STA ($6C,X)
+7D43:81 CE       STA ($CE,X)
+7D45:81 30       STA ($30,X)
+7D47:82                   ???
+7D48:92                   ???
+7D49:82                   ???
+7D4A:F4                   ???
+7D4B:82                   ???
+7D4C:0E 07 56    ASL $5607
+7D4F:83                   ???
+7D50:B8          CLV
+7D51:83                   ???
+7D52:1A                   ???
+7D53:84 7C       STY $7C
+7D55:84 DE       STY $DE
+7D57:84 40       STY $40
+7D59:85 A2       STA $A2
+7D5B:85 0E       STA $0E
+7D5D:07                   ???
+7D5E:04                   ???
+7D5F:86 66       STX $66
+7D61:86 C8       STX $C8
+7D63:86 2A       STX $2A
+7D65:87                   ???
+7D66:8C 87 EE    STY $EE87
+7D69:87                   ???
+7D6A:50 88       BVC $7CF4
+7D6C:0E 07 60    ASL $6007
+7D6F:8B                   ???
+7D70:D0 8B       BNE $7CFD
+7D72:32                   ???
+7D73:8C 94 8C    STY $8C94
+7D76:F6 8C       INC $8C,X
+7D78:58          CLI
+7D79:8D BA 8D    STA $8DBA
+7D7C:09 07       ORA #$07
+7D7E:5E 96 9D    LSR $9D96,X
+7D81:96 DC       STX $DC,Y
+7D83:96 1B       STX $1B,Y
+7D85:97                   ???
+7D86:5A                   ???
+7D87:97                   ???
+7D88:99 97 D8    STA $D897,Y
+7D8B:97                   ???
+7D8C:09 07       ORA #$07
+7D8E:17                   ???
+7D8F:98          TYA
+7D90:56 98       LSR $98,X
+7D92:95 98       STA $98,X
+7D94:D4                   ???
+7D95:98          TYA
+7D96:13                   ???
+7D97:99 52 99    STA $9952,Y
+7D9A:91 99       STA ($99),Y
+7D9C:D5 8F       CMP $8F,X
+7D9E:14                   ???
+7D9F:90 53       BCC $7DF4
+7DA1:90 92       BCC $7D35
+7DA3:90 D1       BCC $7D76
+7DA5:90 10       BCC $7DB7
+7DA7:91 4F       STA ($4F),Y
+7DA9:91 1C       STA ($1C),Y
+7DAB:8E 5B 8E    STX $8E5B
+7DAE:9A          TXS
+7DAF:8E D9 8E    STX $8ED9
+7DB2:18          CLC
+7DB3:8F                   ???
+7DB4:57                   ???
+7DB5:8F                   ???
+7DB6:96 8F       STX $8F,Y
+7DB8:0C                   ???
+7DB9:03                   ???
+7DBA:B0 7E       BCS $7E3A
+7DBC:D4                   ???
+7DBD:7E F8 7E    ROR $7EF8,X
+7DC0:1C                   ???
+7DC1:7F                   ???
+7DC2:40          RTI
+7DC3:7F                   ???
+7DC4:64                   ???
+7DC5:7F                   ???
+7DC6:88          DEY
+7DC7:7F                   ???
+7DC8:AC 7F D0    LDY $D07F
+7DCB:7F                   ???
+7DCC:F4                   ???
+7DCD:7F                   ???
+7DCE:18          CLC
+7DCF:80                   ???
+7DD0:3C                   ???
+7DD1:80                   ???
+7DD2:60          RTS
+7DD3:80                   ???
+7DD4:84 80       STY $80
+7DD6:06 04       ASL $04
+7DD8:80                   ???
+7DD9:BA          TSX
+7DDA:F7                   ???
+7DDB:AE D5 EE    LDX $EED5
+7DDE:DD BB 80    CMP $80BB,X
+7DE1:BA          TSX
+7DE2:F7                   ???
+7DE3:AE D5 EE    LDX $EED5
+7DE6:DD BB 80    CMP $80BB,X
+7DE9:BA          TSX
+7DEA:F7                   ???
+7DEB:AE D5 EE    LDX $EED5
+7DEE:DD BB 06    CMP $06BB,X
+7DF1:03                   ???
+7DF2:80                   ???
+7DF3:DD BB AA    CMP $AABB,X
+7DF6:F7                   ???
+7DF7:AE 80 DD    LDX $DD80
+7DFA:BB                   ???
+7DFB:AA          TAX
+7DFC:F7                   ???
+7DFD:AE 80 DD    LDX $DD80
+7E00:BB                   ???
+7E01:AA          TAX
+7E02:F7                   ???
+7E03:AE 06 01    LDX $0106
+7E06:DD F7 DD    CMP $DDF7,X
+7E09:F7                   ???
+7E0A:DD F7 06    CMP $06F7,X
+7E0D:02                   ???
+7E0E:DD BB F7    CMP $F7BB,X
+7E11:EE DD BB    INC $BBDD
+7E14:F7                   ???
+7E15:EE DD BB    INC $BBDD
+7E18:F7                   ???
+7E19:EE 06 03    INC $0306
+7E1C:DD BB F7    CMP $F7BB,X
+7E1F:F7                   ???
+7E20:EE DD DD    INC $DDDD
+7E23:BB                   ???
+7E24:F7                   ???
+7E25:F7                   ???
+7E26:EE DD DD    INC $DDDD
+7E29:BB                   ???
+7E2A:F7                   ???
+7E2B:F7                   ???
+7E2C:EE DD 09    INC $09DD
+7E2F:04
+;Sprite Level2 "100"pts pour croco tué 4octets sur 9 lignes soit 24octets
+7E30:FE F0 C0    INC $C0F0,X
+7E33:83                   ???
+7E34:98          TYA
+7E35:D8          CLD
+7E36:E1 86       SBC ($86,X)
+7E38:98          TYA
+7E39:8C B3 8C    STY $8CB3
+7E3C:98          TYA
+7E3D:8C B3 8C    STY $8CB3
+7E40:98          TYA
+7E41:8C B3 8C    STY $8CB3
+7E44:98          TYA
+7E45:8C B3 8C    STY $8CB3
+7E48:9E                   ???
+7E49:8C B3 8C    STY $8CB3
+7E4C:9C                   ???
+7E4D:D8          CLD
+7E4E:E1 86       SBC ($86,X)
+7E50:98          TYA
+7E51:F0 C0       BEQ $7E13
+; fin du sprite "100"
+;
+7E53:83                   ???
+7E54:09 04       ORA #$04
+; Sprite "200"pts pour avoir tué un croco 4octets sur 9 lignes (soit 24octets)
+7E56:FE F0 C0    INC $C0F0,X
+7E59:83                   ???
+7E5A:86 D8       STX $D8
+7E5C:E1 86       SBC ($86,X)
+7E5E:8C 8C B3    STY $B38C
+7E61:8C 98 8C    STY $8C98
+7E64:B3                   ???
+7E65:8C B0 8C    STY $8CB0
+7E68:B3                   ???
+7E69:8C E0 8C    STY $8CE0
+7E6C:B3                   ???
+7E6D:8C E6 8C    STY $8CE6
+7E70:B3                   ???
+7E71:8C B6 D8    STY $D8B6
+7E74:E1 86       SBC ($86,X)
+7E76:9C                   ???
+7E77:F0 C0       BEQ $7E39
+7E79:83  
+;fin sprite '200'
+7E7A:09 04       ORA #$04
+; sprite "300"pts par croco tué, 4octets*9lignes soit 0x24 octets
+7E7C:9C     
+7E7D:F0 C0       BEQ $7E3F
+7E7F:83                   ???
+7E80:F6 D8       INC $D8,X
+7E82:E1 86       SBC ($86,X)
+7E84:E0 8C       CPX #$8C
+7E86:B3                   ???
+7E87:8C E0 8C    STY $8CE0
+7E8A:B3                   ???
+7E8B:8C B0 8C    STY $8CB0
+7E8E:B3                   ???
+7E8F:8C 9C 8C    STY $8C9C
+7E92:B3                   ???
+7E93:8C B0 8C    STY $8CB0
+7E96:B3                   ???
+7E97:8C E0 D8    STY $D8E0
+7E9A:E1 86       SBC ($86,X)
+7E9C:FE F0 C0    INC $C0F0,X
+7E9F:83                   ???
+; fin sprite "300"
+7EA0:0E 07 B2    ASL $B207
+7EA3:88          DEY
+7EA4:14                   ???
+7EA5:89                   ???
+7EA6:76 89       ROR $89,X
+7EA8:D8          CLD
+7EA9:89                   ???
+7EAA:3A                   ???
+7EAB:8A          TXA
+7EAC:9C                   ???
+7EAD:8A          TXA
+7EAE:FE 8A 
+;10 Sprites de bulles dans l'eau level2, soit 3octets*12lignes=0x24octets par sprite
+7EB0:E0
+7EB1:B8          CLV
+7EB2:80                   ???
+7EB3:F0 B1       BEQ $7E66
+7EB5:80                   ???
+7EB6:E0 BF       CPX #$BF
+7EB8:80                   ???
+7EB9:E0 8F       CPX #$8F
+7EBB:80                   ???
+7EBC:80                   ???
+7EBD:86 80       STX $80
+7EBF:80                   ???
+7EC0:80                   ???
+7EC1:80                   ???
+7EC2:B8          CLV
+7EC3:E0 81       CPX #$81
+7EC5:FE F0 81    INC $81F0,X
+7EC8:BC B0 80    LDY $80B0,X
+7ECB:FC                   ???
+7ECC:F1 81       SBC ($81),Y
+7ECE:FE E0 80    INC $80E0,X
+7ED1:9C                   ???
+7ED2:80                   ???
+7ED3:80                   ???
+;bulles (2)
+7ED4:80                   ???
+7ED5:E3                   ???
+7ED6:81 C0       STA ($C0,X)
+7ED8:C7                   ???
+7ED9:81 80       STA ($80,X)
+7EDB:FF                   ???
+7EDC:81 80       STA ($80,X)
+7EDE:BF                   ???
+7EDF:80                   ???
+7EE0:80                   ???
+7EE1:98          TYA
+7EE2:80                   ???
+7EE3:80                   ???
+7EE4:80                   ???
+7EE5:80                   ???
+7EE6:E0 81       CPX #$81
+7EE8:87                   ???
+7EE9:F8          SED
+7EEA:C3                   ???
+7EEB:87                   ???
+7EEC:F0 C3       BEQ $7EB1
+7EEE:87                   ???
+7EEF:F0 C7       BEQ $7EB8
+7EF1:87                   ???
+7EF2:F8          SED
+7EF3:83                   ???
+7EF4:83                   ???
+7EF5:F0 80       BEQ $7E77
+7EF7:80                   ???
+;bulles (3)
+7EF8:80                   ???
+7EF9:8C 87 80    STY $8087
+7EFC:9E                   ???
+7EFD:86 80       STX $80
+7EFF:FC                   ???
+7F00:87                   ???
+7F01:80                   ???
+7F02:FC                   ???
+7F03:81 80       STA ($80,X)
+7F05:E0 80       CPX #$80
+7F07:80                   ???
+7F08:80                   ???
+7F09:80                   ???
+7F0A:80                   ???
+7F0B:87                   ???
+7F0C:9C                   ???
+7F0D:E0 8F       CPX #$8F
+7F0F:9E                   ???
+7F10:C0 87       CPY #$87
+7F12:86 C0       STX $C0
+7F14:9F                   ???
+7F15:9E                   ???
+7F16:E0 8F       CPX #$8F
+7F18:8C C0 83    STY $83C0
+7F1B:80                   ???
+;bulles (4)
+7F1C:80                   ???
+7F1D:B6 80       LDX $80,Y
+7F1F:80                   ???
+7F20:9E                   ???
+7F21:80                   ???
+7F22:80                   ???
+7F23:8E 98 80    STX $8098
+7F26:9B                   ???
+7F27:B8          CLV
+7F28:80                   ???
+7F29:8C BE 80    STY $80BE
+7F2C:80                   ???
+7F2D:9C                   ???
+7F2E:80                   ???
+7F2F:98          TYA
+7F30:B8          CLV
+7F31:80                   ???
+7F32:BF                   ???
+7F33:9C                   ???
+7F34:80                   ???
+7F35:FE BC 80    INC $80BC,X
+7F38:FF                   ???
+7F39:B0 80       BCS $7EBB
+7F3B:BE 80 80    LDX $8080,Y
+7F3E:8C 80 
+;bulles (5)
+7F40:D8 
+7F41:80                   ???
+7F42:80                   ???
+7F43:F8          SED
+7F44:80                   ???
+7F45:80                   ???
+7F46:B8          CLV
+7F47:E0 80       CPX #$80
+7F49:EC E0 81    CPX $81E0
+7F4C:B0 F8       BCS $7F46
+7F4E:81 80       STA ($80,X)
+7F50:F0 80       BEQ $7ED2
+7F52:E0 E0       CPX #$E0
+7F54:81 FC       STA ($FC,X)
+7F56:F1 80       SBC ($80),Y
+7F58:F8          SED
+7F59:F3                   ???
+7F5A:81 FC       STA ($FC,X)
+7F5C:C3                   ???
+7F5D:81 F8       STA ($F8,X)
+7F5F:81 80       STA ($80,X)
+7F61:B0 80       BCS $7EE3
+7F63:80                   ???
+;bulles (6)
+7F64:80                   ???
+7F65:C0 81       CPY #$81
+7F67:80                   ???
+7F68:E0 87       CPX #$87
+7F6A:80                   ???
+7F6B:F8          SED
+7F6C:87                   ???
+7F6D:80                   ???
+7F6E:F0 8F       BEQ $7EFF
+7F70:80                   ???
+7F71:C0 81       CPY #$81
+7F73:F0 81       BEQ $7EF6
+7F75:80                   ???
+7F76:E0 81       CPX #$81
+7F78:9C                   ???
+7F79:F0 83       BEQ $7EFE
+7F7B:8E E0 C3    STX $C3E0
+7F7E:87                   ???
+7F7F:E0 80       CPX #$80
+7F81:9F                   ???
+7F82:80                   ???
+7F83:C0 8F       CPY #$8F
+7F85:80                   ???
+7F86:80                   ???
+7F87:86
+;bulles (7)
+7F88:80
+7F89:80                   ???
+7F8A:86 80       STX $80
+7F8C:80                   ???
+7F8D:9F                   ???
+7F8E:80                   ???
+7F8F:E0 9F       CPX #$9F
+7F91:80                   ???
+7F92:C0 BF       CPY #$BF
+7F94:80                   ???
+7F95:80                   ???
+7F96:86 C0       STX $C0
+7F98:87                   ???
+7F99:80                   ???
+7F9A:80                   ???
+7F9B:87                   ???
+7F9C:F0 C0       BEQ $7F5E
+7F9E:8F                   ???
+7F9F:B8          CLV
+7FA0:80                   ???
+7FA1:8F                   ???
+7FA2:9E                   ???
+7FA3:80                   ???
+7FA4:83                   ???
+7FA5:FC                   ???
+7FA6:80                   ???
+7FA7:80                   ???
+7FA8:BE 80 80    LDX $8080,Y
+7FAB:98          TYA
+;bulles éclatées (8)
+7FAC:10 45       BPL $7FF3
+7FAE:00          BRK
+7FAF:08          PHP
+7FB0:4A          LSR
+7FB1:00          BRK
+7FB2:10 40       BPL $7FF4
+7FB4:00          BRK
+7FB5:10 10       BPL $7FC7
+7FB7:00          BRK
+7FB8:00          BRK
+7FB9:09 00       ORA #$00
+7FBB:00          BRK
+7FBC:00          BRK
+7FBD:00          BRK
+7FBE:44                   ???
+7FBF:10 02       BPL $7FC3
+7FC1:01 09       ORA ($09,X)
+7FC3:02                   ???
+7FC4:42                   ???
+7FC5:48          PHA
+7FC6:00          BRK
+7FC7:02                   ???
+7FC8:0A          ASL
+7FC9:02                   ???
+7FCA:01 11       ORA ($11,X)
+7FCC:01 22       ORA ($22,X)
+7FCE:00          BRK
+7FCF:00          BRK
+; Bulles éclatées (9)
+7FD0:40          RTI
+7FD1:14                   ???
+7FD2:02                   ???
+7FD3:20 28 02    JSR $0228
+7FD6:40          RTI
+7FD7:00          BRK
+7FD8:02                   ???
+7FD9:40          RTI
+7FDA:40          RTI
+7FDB:00          BRK
+7FDC:00          BRK
+7FDD:24 00       BIT $00
+7FDF:00          BRK
+7FE0:00          BRK
+7FE1:00          BRK
+7FE2:10 42       BPL $8026
+7FE4:08          PHP
+7FE5:04                   ???
+7FE6:24 08       BIT $08
+7FE8:08          PHP
+7FE9:22                   ???
+7FEA:02                   ???
+7FEB:08          PHP
+7FEC:28          PLP
+7FED:08          PHP
+7FEE:04                   ???
+7FEF:44                   ???
+7FF0:04                   ???
+7FF1:08          PHP
+7FF2:01 00       ORA ($00,X)
+; Bulles éclatées (10)
+7FF4:00          BRK
+7FF5:52                   ???
+7FF6:08          PHP
+7FF7:00          BRK
+7FF8:21 09       AND ($09,X)
+7FFA:00          BRK
+7FFB:02                   ???
+7FFC:08          PHP
+7FFD:00          BRK
+7FFE:02                   ???
+7FFF:02                   ???
+8000:00          BRK
+8001:10 01       BPL $8004
+8003:00          BRK
+8004:00          BRK
+8005:00          BRK
+8006:40          RTI
+8007:08          PHP
+8008:22                   ???
+8009:10 10       BPL $801B
+800B:21 20       AND ($20,X)
+800D:08          PHP
+800E:09 20       ORA #$20
+8010:20 21 10    JSR $1021
+8013:10 12       BPL $8027
+8015:20 04 00    JSR $0004
+; Bulles éclatées (11)
+8018:00          BRK
+8019:49 00       EOR #$00
+801B:00          BRK
+801C:21 00       AND ($00,X)
+801E:00          BRK
+801F:11 24       ORA ($24),Y
+8021:40          RTI
+8022:24 44       BIT $44
+8024:00          BRK
+8025:12                   ???
+8026:41 00       EOR ($00,X)
+8028:00          BRK
+8029:22                   ???
+802A:00          BRK
+802B:24 44       BIT $44
+802D:40          RTI
+802E:40          RTI
+802F:22                   ???
+8030:00          BRK
+8031:01 43       ORA ($43,X)
+8033:40          RTI
+8034:00          BRK
+8035:49 00       EOR #$00
+8037:41 00       EOR ($00,X)
+8039:00          BRK
+803A:12                   ???
+803B:00          BRK
+; Bulles éclatées (12)
+803C:24 02       BIT $02
+803E:00          BRK
+803F:04                   ???
+8040:01 00       ORA ($00,X)
+8042:44                   ???
+8043:10 01       BPL $8046
+8045:12                   ???
+8046:11 02       ORA ($02),Y
+8048:48          PHA
+8049:04                   ???
+804A:02                   ???
+804B:00          BRK
+804C:08          PHP
+804D:01 10       ORA ($10,X)
+804F:11 02       ORA ($02),Y
+8051:02                   ???
+8052:0A          ASL
+8053:01 04       ORA ($04,X)
+8055:0C                   ???
+8056:02                   ???
+8057:02                   ???
+8058:24 02       BIT $02
+805A:04                   ???
+805B:02                   ???
+805C:00          BRK
+805D:48          PHA
+805E:00          BRK
+805F:00          BRK
+; Bulles éclatées (13)
+8060:00          BRK
+8061:20 02 00    JSR $0002
+8064:10 08       BPL $806E
+8066:00          BRK
+8067:04                   ???
+8068:08          PHP
+8069:00          BRK
+806A:08          PHP
+806B:10 00       BPL $806D
+806D:20 02 08    JSR $0802
+8070:02                   ???
+8071:00          BRK
+8072:10 02       BPL $8076
+8074:22                   ???
+8075:08          PHP
+8076:04                   ???
+8077:11 10       ORA ($10),Y
+8079:24 08       BIT $08
+807B:10 41       BPL $80BE
+807D:20 00 20    JSR $2000
+8080:10 00       BPL $8082
+8082:00          BRK
+8083:09
+; Bulles éclatées (14)
+8084:00
+8085:00          BRK
+8086:09 00       ORA #$00
+8088:40          RTI
+8089:20 00 10    JSR $1000
+808C:20 00 20    JSR $2000
+808F:40          RTI
+8090:00          BRK
+8091:00          BRK
+8092:09 20       ORA #$20
+8094:08          PHP
+8095:00          BRK
+8096:40          RTI
+8097:08          PHP
+8098:08          PHP
+8099:20 10 44    JSR $4410
+809C:40          RTI
+809D:10 21       BPL $80C0
+809F:40          RTI
+80A0:04                   ???
+80A1:02                   ???
+80A2:00          BRK
+80A3:00          BRK
+80A4:41 00       EOR ($00,X)
+80A6:00          BRK
+80A7:24
+; fin des bulles
+; Sprites du nageur 14 lignes * 7 octets = 0x62 par sprites
+80A8:D5
+80A9:AA          TAX
+80AA:D5 AA       CMP $AA,X
+80AC:D5 AA       CMP $AA,X
+80AE:D5 80       CMP $80,X
+80B0:80                   ???
+80B1:80                   ???
+80B2:80                   ???
+80B3:80                   ???
+80B4:80                   ???
+80B5:80                   ???
+80B6:A5 FF       LDA $FF
+80B8:D4                   ???
+80B9:EA          NOP
+80BA:D3                   ???
+80BB:AA          TAX
+80BC:D5 A0       CMP $A0,X
+80BE:FF                   ???
+80BF:81 FC       STA ($FC,X)
+80C1:83                   ???
+80C2:87                   ???
+80C3:80                   ???
+80C4:D5 CA       CMP $CA,X
+80C6:D5 FF       CMP $FF,X
+80C8:8B                   ???
+80C9:A7                   ???
+80CA:D5 80       CMP $80,X
+80CC:F4                   ???
+80CD:BF                   ???
+80CE:9F                   ???
+80CF:A0 87       LDY #$87
+80D1:80                   ???
+80D2:95 D5       STA $D5,X
+80D4:BF                   ???
+80D5:AF                   ???
+80D6:95 A7       STA $A7,X
+80D8:D5 80       CMP $80,X
+80DA:95 BF       STA $BF,X
+80DC:9F                   ???
+80DD:80                   ???
+80DE:80                   ???
+80DF:80                   ???
+80E0:E5 FF       SBC $FF
+80E2:BB                   ???
+80E3:FF                   ???
+80E4:93                   ???
+80E5:A7                   ???
+80E6:D5 80       CMP $80,X
+80E8:DB                   ???
+80E9:C1 FF       CMP ($FF,X)
+80EB:8B                   ???
+80EC:87                   ???
+80ED:80                   ???
+80EE:D5 FE       CMP $FE,X
+80F0:D4                   ???
+80F1:FA                   ???
+80F2:A3                   ???
+80F3:A7                   ???
+80F4:D5 80       CMP $80,X
+80F6:80                   ???
+80F7:80                   ???
+80F8:80                   ???
+80F9:80                   ???
+80FA:87                   ???
+80FB:80                   ???
+80FC:D5 AA       CMP $AA,X
+80FE:D5 AA       CMP $AA,X
+8100:D5 AA       CMP $AA,X
+8102:D5 80       CMP $80,X
+8104:80                   ???
+8105:80                   ???
+8106:80                   ???
+8107:80                   ???
+8108:80                   ???
+8109:80                   ???
+; ===================================> nageur (2)
+810A:D5 AA       CMP $AA,X
+810C:D5 AA       CMP $AA,X
+810E:D5 AA       CMP $AA,X
+8110:D5 80       CMP $80,X
+8112:80                   ???
+8113:80                   ???
+8114:80                   ???
+8115:80                   ???
+8116:80                   ???
+8117:80                   ???
+8118:95 FD       STA $FD,X
+811A:D3                   ???
+811B:AA          TAX
+811C:CF                   ???
+811D:AA          TAX
+811E:D5 80       CMP $80,X
+8120:FD 87 F0    SBC $F087,X
+8123:8F                   ???
+8124:9C                   ???
+8125:80                   ???
+8126:D5 AA       CMP $AA,X
+8128:D6 FE       DEC $FE,X
+812A:AF                   ???
+812B:9C                   ???
+812C:D5 80       CMP $80,X
+812E:D0 FF       BNE $812F
+8130:FD 80 9D    SBC $9D80,X
+8133:80                   ???
+8134:D5 D4       CMP $D4,X
+8136:FE BD D5    INC $D5BD,X
+8139:9C                   ???
+813A:D5 80       CMP $80,X
+813C:D4                   ???
+813D:FC                   ???
+813E:FD 80 80    SBC $8080,X
+8141:80                   ???
+8142:95 FF       STA $FF,X
+8144:EF                   ???
+8145:FD CF 9C    SBC $9CCF,X
+8148:D5 80       CMP $80,X
+814A:EC 86 FE    CPX $FE86
+814D:AF                   ???
+814E:9C                   ???
+814F:80                   ???
+8150:D5 FA       CMP $FA,X
+8152:D3                   ???
+8153:EA          NOP
+8154:8F                   ???
+8155:9D D5 80    STA $80D5,X
+8158:80                   ???
+8159:80                   ???
+815A:80                   ???
+815B:80                   ???
+815C:9C                   ???
+815D:80                   ???
+815E:D5 AA       CMP $AA,X
+8160:D5 AA       CMP $AA,X
+8162:D5 AA       CMP $AA,X
+8164:D5 80       CMP $80,X
+8166:80                   ???
+8167:80                   ???
+8168:80                   ???
+8169:80                   ???
+816A:80                   ???
+816B:80                   ???
+; ==================================> nageur (3)
+816C:D5 AA       CMP $AA,X
+816E:D5 AA       CMP $AA,X
+8170:D5 AA       CMP $AA,X
+8172:D5 80       CMP $80,X
+8174:80                   ???
+8175:80                   ???
+8176:80                   ???
+8177:80                   ???
+8178:80                   ???
+8179:80                   ???
+817A:D5 F4       CMP $F4,X
+817C:CF                   ???
+817D:AA          TAX
+817E:BD AA D5    LDA $D5AA,X
+8181:80                   ???
+8182:F4                   ???
+8183:9F                   ???
+8184:C0 BF       CPY #$BF
+8186:F0 80       BEQ $8108
+8188:D5 AA       CMP $AA,X
+818A:D9 FA BF    CMP $BFFA,Y
+818D:F1 D4       SBC ($D4),Y
+818F:80                   ???
+8190:C0 FE       CPY #$FE
+8192:F7                   ???
+8193:83                   ???
+8194:F4                   ???
+8195:80                   ???
+8196:D5 D2       CMP $D2,X
+8198:FA                   ???
+8199:F7                   ???
+819A:D5 F2       CMP $F2,X
+819C:D4                   ???
+819D:80                   ???
+819E:D0 F2       BNE $8192
+81A0:F7                   ???
+81A1:83                   ???
+81A2:80                   ???
+81A3:80                   ???
+81A4:D5 FC       CMP $FC,X
+81A6:BF                   ???
+81A7:F7                   ???
+81A8:BF                   ???
+81A9:F2                   ???
+81AA:D4                   ???
+81AB:80                   ???
+81AC:B0 9B       BCS $8149
+81AE:F8          SED
+81AF:BF                   ???
+81B0:F1 80       SBC ($80),Y
+81B2:D5 EA       CMP $EA,X
+81B4:CF                   ???
+81B5:AA          TAX
+81B6:BF                   ???
+81B7:F4                   ???
+81B8:D4                   ???
+81B9:80                   ???
+81BA:80                   ???
+81BB:80                   ???
+81BC:80                   ???
+81BD:80                   ???
+81BE:F0 80       BEQ $8140
+81C0:D5 AA       CMP $AA,X
+81C2:D5 AA       CMP $AA,X
+81C4:D5 AA       CMP $AA,X
+81C6:D5 80       CMP $80,X
+81C8:80                   ???
+81C9:80                   ???
+81CA:80                   ???
+81CB:80                   ???
+81CC:80                   ???
+81CD:80                   ???
+; ==================================> nageur (4)
+81CE:D5 AA       CMP $AA,X
+81D0:D5 AA       CMP $AA,X
+81D2:D5 AA       CMP $AA,X
+81D4:D5 80       CMP $80,X
+81D6:80                   ???
+81D7:80                   ???
+81D8:80                   ???
+81D9:80                   ???
+81DA:80                   ???
+81DB:80                   ???
+81DC:D5 D2       CMP $D2,X
+81DE:BF                   ???
+81DF:AA          TAX
+81E0:F5 A9       SBC $A9,X
+81E2:D5 80       CMP $80,X
+81E4:D0 FF       BNE $81E5
+81E6:80                   ???
+81E7:FE C1 83    INC $83C1,X
+81EA:D5 AA       CMP $AA,X
+81EC:E5 EA       SBC $EA
+81EE:FF                   ???
+81EF:C5 D3       CMP $D3
+81F1:80                   ???
+81F2:80                   ???
+81F3:FA                   ???
+81F4:DF                   ???
+81F5:8F                   ???
+81F6:D0 83       BNE $817B
+81F8:D5 CA       CMP $CA,X
+81FA:EA          NOP
+81FB:DF                   ???
+81FC:D7                   ???
+81FD:CA          DEX
+81FE:D3                   ???
+81FF:80                   ???
+8200:C0 CA       CPY #$CA
+8202:DF                   ???
+8203:8F                   ???
+8204:80                   ???
+8205:80                   ???
+8206:D5 E2       CMP $E2,X
+8208:FF                   ???
+8209:DD FF C9    CMP $C9FF,X
+820C:D3                   ???
+820D:80                   ???
+820E:C0 ED       CPY #$ED
+8210:E0 FF       CPX #$FF
+8212:C5 83       CMP $83
+8214:D5 AA       CMP $AA,X
+8216:BF                   ???
+8217:AA          TAX
+8218:FD D1 D3    SBC $D3D1,X
+821B:80                   ???
+821C:80                   ???
+821D:80                   ???
+821E:80                   ???
+821F:80                   ???
+8220:C0 83       CPY #$83
+8222:D5 AA       CMP $AA,X
+8224:D5 AA       CMP $AA,X
+8226:D5 AA       CMP $AA,X
+8228:D5 80       CMP $80,X
+822A:80                   ???
+822B:80                   ???
+822C:80                   ???
+822D:80                   ???
+822E:80                   ???
+822F:80                   ???
+; ==================================> nageur (5)
+8230:AA          TAX
+8231:D5 AA       CMP $AA,X
+8233:D5 AA       CMP $AA,X
+8235:D5 AA       CMP $AA,X
+8237:80                   ???
+8238:80                   ???
+8239:80                   ???
+823A:80                   ???
+823B:80                   ???
+823C:80                   ???
+823D:80                   ???
+823E:CA          DEX
+823F:FE A9 D5    INC $D5A9,X
+8242:A7                   ???
+8243:D5 AA       CMP $AA,X
+8245:C0 FE       CPY #$FE
+8247:83                   ???
+8248:F8          SED
+8249:87                   ???
+824A:8E 80 AA    STX $AA80
+824D:95 AB       STA $AB,X
+824F:FF                   ???
+8250:97                   ???
+8251:CE AA 80    DEC $80AA
+8254:E8          INX
+8255:FF                   ???
+8256:BE C0 8E    LDX $8EC0,Y
+8259:80                   ???
+825A:AA          TAX
+825B:AA          TAX
+825C:FF                   ???
+825D:DE AA CE    DEC $CEAA,X
+8260:AA          TAX
+8261:80                   ???
+8262:AA          TAX
+8263:FE BE 80    INC $80BE,X
+8266:80                   ???
+8267:80                   ???
+8268:CA          DEX
+8269:FF                   ???
+826A:F7                   ???
+826B:FE A7 CE    INC $CEA7,X
+826E:AA          TAX
+826F:80                   ???
+8270:B6 83       LDX $83,Y
+8272:FF                   ???
+8273:97                   ???
+8274:8E 80 AA    STX $AA80
+8277:FD A9 F5    SBC $F5A9,X
+827A:C7                   ???
+827B:CE AA 80    DEC $80AA
+827E:80                   ???
+827F:80                   ???
+8280:80                   ???
+8281:80                   ???
+8282:8E 80 AA    STX $AA80
+8285:D5 AA       CMP $AA,X
+8287:D5 AA       CMP $AA,X
+8289:D5 AA       CMP $AA,X
+828B:80                   ???
+828C:80                   ???
+828D:80                   ???
+828E:80                   ???
+828F:80                   ???
+8290:80                   ???
+8291:80                   ???
+; ==================================> nageur (6)
+8292:AA          TAX
+8293:D5 AA       CMP $AA,X
+8295:D5 AA       CMP $AA,X
+8297:D5 AA       CMP $AA,X
+8299:80                   ???
+829A:80                   ???
+829B:80                   ???
+829C:80                   ???
+829D:80                   ???
+829E:80                   ???
+829F:80                   ???
+82A0:AA          TAX
+82A1:FA                   ???
+82A2:A7                   ???
+82A3:D5 9E       CMP $9E,X
+82A5:D5 AA       CMP $AA,X
+82A7:80                   ???
+82A8:FA                   ???
+82A9:8F                   ???
+82AA:E0 9F       CPX #$9F
+82AC:B8          CLV
+82AD:80                   ???
+82AE:AA          TAX
+82AF:D5 AC       CMP $AC,X
+82B1:FD DF B8    SBC $B8DF,X
+82B4:AA          TAX
+82B5:80                   ???
+82B6:A0 FF       LDY #$FF
+82B8:FB                   ???
+82B9:81 BA       STA ($BA,X)
+82BB:80                   ???
+82BC:AA          TAX
+82BD:A9 FD       LDA #$FD
+82BF:FB                   ???
+82C0:AA          TAX
+82C1:B9 AA 80    LDA $80AA,Y
+82C4:A8          TAY
+82C5:F9 FB 81    SBC $81FB,Y
+82C8:80                   ???
+82C9:80                   ???
+82CA:AA          TAX
+82CB:FE DF FB    INC $FBDF,X
+82CE:9F                   ???
+82CF:B9 AA 80    LDA $80AA,Y
+82D2:D8          CLD
+82D3:8D FC DF    STA $DFFC
+82D6:B8          CLV
+82D7:80                   ???
+82D8:AA          TAX
+82D9:F5 A7       SBC $A7,X
+82DB:D5 9F       CMP $9F,X
+82DD:BA          TSX
+82DE:AA          TAX
+82DF:80                   ???
+82E0:80                   ???
+82E1:80                   ???
+82E2:80                   ???
+82E3:80                   ???
+82E4:B8          CLV
+82E5:80                   ???
+82E6:AA          TAX
+82E7:D5 AA       CMP $AA,X
+82E9:D5 AA       CMP $AA,X
+82EB:D5 AA       CMP $AA,X
+82ED:80                   ???
+82EE:80                   ???
+82EF:80                   ???
+82F0:80                   ???
+82F1:80                   ???
+82F2:80                   ???
+82F3:80                   ???
+; ==================================> nageur (7)
+82F4:AA          TAX
+82F5:D5 AA       CMP $AA,X
+82F7:D5 AA       CMP $AA,X
+82F9:D5 AA       CMP $AA,X
+82FB:80                   ???
+82FC:80                   ???
+82FD:80                   ???
+82FE:80                   ???
+82FF:80                   ???
+8300:80                   ???
+8301:80                   ???
+8302:AA          TAX
+8303:E9 9F       SBC #$9F
+8305:D5 FA       CMP $FA,X
+8307:D4                   ???
+8308:AA          TAX
+8309:80                   ???
+830A:E8          INX
+830B:BF                   ???
+830C:80                   ???
+830D:FF                   ???
+830E:E0 81       CPX #$81
+8310:AA          TAX
+8311:D5 B2       CMP $B2,X
+8313:F5 FF       SBC $FF,X
+8315:E2                   ???
+8316:A9 80       LDA #$80
+8318:80                   ???
+8319:FD EF 87    SBC $87EF,X
+831C:E8          INX
+831D:81 AA       STA ($AA,X)
+831F:A5 F5       LDA $F5
+8321:EF                   ???
+8322:AB                   ???
+8323:E5 A9       SBC $A9
+8325:80                   ???
+8326:A0 E5       LDY #$E5
+8328:EF                   ???
+8329:87                   ???
+832A:80                   ???
+832B:80                   ???
+832C:AA          TAX
+832D:F9 FF EE    SBC $EEFF,Y
+8330:FF                   ???
+8331:E4 A9       CPX $A9
+8333:80                   ???
+8334:E0 B6       CPX #$B6
+8336:F0 FF       BEQ $8337
+8338:E2                   ???
+8339:81 AA       STA ($AA,X)
+833B:D5 9F       CMP $9F,X
+833D:D5 FE       CMP $FE,X
+833F:E8          INX
+8340:A9 80       LDA #$80
+8342:80                   ???
+8343:80                   ???
+8344:80                   ???
+8345:80                   ???
+8346:E0 81       CPX #$81
+8348:AA          TAX
+8349:D5 AA       CMP $AA,X
+834B:D5 AA       CMP $AA,X
+834D:D5 AA       CMP $AA,X
+834F:80                   ???
+8350:80                   ???
+8351:80                   ???
+8352:80                   ???
+8353:80                   ???
+8354:80                   ???
+8355:80                   ???
+; ==================================> nageur (8)
+8356:D5 AA       CMP $AA,X
+8358:D5 AA       CMP $AA,X
+835A:D5 AA       CMP $AA,X
+835C:D5 80       CMP $80,X
+835E:80                   ???
+835F:80                   ???
+8360:80                   ???
+8361:80                   ???
+8362:80                   ???
+8363:80                   ???
+8364:95 FD       STA $FD,X
+8366:D5 F2       CMP $F2,X
+8368:93                   ???
+8369:A7                   ???
+836A:D5 80       CMP $80,X
+836C:FD 83 FE    SBC $FE83,X
+836F:83                   ???
+8370:87                   ???
+8371:80                   ???
+8372:D5 AA       CMP $AA,X
+8374:D3                   ???
+8375:FF                   ???
+8376:AB                   ???
+8377:A7                   ???
+8378:D5 80       CMP $80,X
+837A:C0 BF       CPY #$BF
+837C:9F                   ???
+837D:80                   ???
+837E:80                   ???
+837F:80                   ???
+8380:D5 F4       CMP $F4,X
+8382:BF                   ???
+8383:FF                   ???
+8384:93                   ???
+8385:A7                   ???
+8386:D5 80       CMP $80,X
+8388:D5 BF       CMP $BF,X
+838A:FF                   ???
+838B:83                   ???
+838C:87                   ???
+838D:80                   ???
+838E:95 95       STA $95,X
+8390:BF                   ???
+8391:FF                   ???
+8392:AB                   ???
+8393:A7                   ???
+8394:D5 E0       CMP $E0,X
+8396:FF                   ???
+8397:C7                   ???
+8398:87                   ???
+8399:80                   ???
+839A:80                   ???
+839B:80                   ???
+839C:9D DB D5    STA $D5DB,X
+839F:AA          TAX
+83A0:D5 AA       CMP $AA,X
+83A2:D5 F0       CMP $F0,X
+83A4:FE 80 80    INC $8080,X
+83A7:80                   ???
+83A8:80                   ???
+83A9:80                   ???
+83AA:D5 AA       CMP $AA,X
+83AC:D5 AA       CMP $AA,X
+83AE:D5 AA       CMP $AA,X
+83B0:D5 80       CMP $80,X
+83B2:80                   ???
+83B3:80                   ???
+83B4:80                   ???
+83B5:80                   ???
+83B6:80                   ???
+83B7:80                   ???
+; ==================================> nageur (9)
+83B8:D5 AA       CMP $AA,X
+83BA:D5 AA       CMP $AA,X
+83BC:D5 AA       CMP $AA,X
+83BE:D5 80       CMP $80,X
+83C0:80                   ???
+83C1:80                   ???
+83C2:80                   ???
+83C3:80                   ???
+83C4:80                   ???
+83C5:80                   ???
+83C6:D5 F4       CMP $F4,X
+83C8:D7                   ???
+83C9:CA          DEX
+83CA:CF                   ???
+83CB:9C                   ???
+83CC:D5 80       CMP $80,X
+83CE:F4                   ???
+83CF:8F                   ???
+83D0:F8          SED
+83D1:8F                   ???
+83D2:9C                   ???
+83D3:80                   ???
+83D4:D5 AA       CMP $AA,X
+83D6:CD FE AF    CMP $AFFE
+83D9:9D D5 80    STA $80D5,X
+83DC:80                   ???
+83DD:FE FD 80    INC $80FD,X
+83E0:80                   ???
+83E1:80                   ???
+83E2:D5 D2       CMP $D2,X
+83E4:FF                   ???
+83E5:FD CF 9C    SBC $9CCF,X
+83E8:D5 80       CMP $80,X
+83EA:D4                   ???
+83EB:FE FD 8F    INC $8FFD,X
+83EE:9C                   ???
+83EF:80                   ???
+83F0:D5 D4       CMP $D4,X
+83F2:FC                   ???
+83F3:FD AF 9D    SBC $9DAF,X
+83F6:D5 80       CMP $80,X
+83F8:FF                   ???
+83F9:9F                   ???
+83FA:9E                   ???
+83FB:80                   ???
+83FC:80                   ???
+83FD:80                   ???
+83FE:F5 EC       SBC $EC,X
+8400:D6 AA       DEC $AA,X
+8402:D5 AA       CMP $AA,X
+8404:D5 C0       CMP $C0,X
+8406:FB                   ???
+8407:83                   ???
+8408:80                   ???
+8409:80                   ???
+840A:80                   ???
+840B:80                   ???
+840C:D5 AA       CMP $AA,X
+840E:D5 AA       CMP $AA,X
+8410:D5 AA       CMP $AA,X
+8412:D5 80       CMP $80,X
+8414:80                   ???
+8415:80                   ???
+8416:80                   ???
+8417:80                   ???
+8418:80                   ???
+8419:80                   ???
+; ==================================> nageur (10)
+841A:D5 AA       CMP $AA,X
+841C:D5 AA       CMP $AA,X
+841E:D5 AA       CMP $AA,X
+8420:D5 80       CMP $80,X
+8422:80                   ???
+8423:80                   ???
+8424:80                   ???
+8425:80                   ???
+8426:80                   ???
+8427:80                   ???
+8428:D5 D2       CMP $D2,X
+842A:DF                   ???
+842B:AA          TAX
+842C:BE F2 D4    LDX $D4F2,Y
+842F:80                   ???
+8430:D0 BF       BNE $83F1
+8432:E0 BF       CPX #$BF
+8434:F0 80       BEQ $83B6
+8436:D5 AA       CMP $AA,X
+8438:B5 FA       LDA $FA,X
+843A:BF                   ???
+843B:F5 D4       SBC $D4,X
+843D:80                   ???
+843E:80                   ???
+843F:F8          SED
+8440:F7                   ???
+8441:83                   ???
+8442:80                   ???
+8443:80                   ???
+8444:D5 CA       CMP $CA,X
+8446:FE F7 BF    INC $BFF7,X
+8449:F2                   ???
+844A:D4                   ???
+844B:80                   ???
+844C:D0 FA       BNE $8448
+844E:F7                   ???
+844F:BF                   ???
+8450:F0 80       BEQ $83D2
+8452:D5 D2       CMP $D2,X
+8454:F2                   ???
+8455:F7                   ???
+8456:BF                   ???
+8457:F5 D4       SBC $D4,X
+8459:80                   ???
+845A:FC                   ???
+845B:FF                   ???
+845C:F8          SED
+845D:80                   ???
+845E:80                   ???
+845F:80                   ???
+8460:D5 B3       CMP $B3,X
+8462:DB                   ???
+8463:AA          TAX
+8464:D5 AA       CMP $AA,X
+8466:D5 80       CMP $80,X
+8468:EE 8F 80    INC $808F
+846B:80                   ???
+846C:80                   ???
+846D:80                   ???
+846E:D5 AA       CMP $AA,X
+8470:D5 AA       CMP $AA,X
+8472:D5 AA       CMP $AA,X
+8474:D5 80       CMP $80,X
+8476:80                   ???
+8477:80                   ???
+8478:80                   ???
+8479:80                   ???
+847A:80                   ???
+847B:80                   ???
+; ==================================> nageur (11)
+847C:D5 AA       CMP $AA,X
+847E:D5 AA       CMP $AA,X
+8480:D5 AA       CMP $AA,X
+8482:D5 80       CMP $80,X
+8484:80                   ???
+8485:80                   ???
+8486:80                   ???
+8487:80                   ???
+8488:80                   ???
+8489:80                   ???
+848A:D5 CA       CMP $CA,X
+848C:FE AA F9    INC $F9AA,X
+848F:C9 D3       CMP #$D3
+8491:80                   ???
+8492:C0 FE       CPY #$FE
+8494:81 FF       STA ($FF,X)
+8496:C1 83       CMP ($83,X)
+8498:D5 AA       CMP $AA,X
+849A:D5 C9       CMP $C9,X
+849C:FF                   ???
+849D:D5 D3       CMP $D3,X
+849F:80                   ???
+84A0:80                   ???
+84A1:E0 DF       CPX #$DF
+84A3:8F                   ???
+84A4:80                   ???
+84A5:80                   ???
+84A6:D5 AA       CMP $AA,X
+84A8:FA                   ???
+84A9:DF                   ???
+84AA:FF                   ???
+84AB:C9 D3       CMP #$D3
+84AD:80                   ???
+84AE:C0 EA       CPY #$EA
+84B0:DF                   ???
+84B1:FF                   ???
+84B2:C1 83       CMP ($83,X)
+84B4:D5 CA       CMP $CA,X
+84B6:CA          DEX
+84B7:DF                   ???
+84B8:FF                   ???
+84B9:D5 D3       CMP $D3,X
+84BB:80                   ???
+84BC:F0 FF       BEQ $84BD
+84BE:E3                   ???
+84BF:83                   ???
+84C0:80                   ???
+84C1:80                   ???
+84C2:D5 CE       CMP $CE,X
+84C4:ED AA D5    SBC $D5AA
+84C7:AA          TAX
+84C8:D5 80       CMP $80,X
+84CA:B8          CLV
+84CB:BF                   ???
+84CC:80                   ???
+84CD:80                   ???
+84CE:80                   ???
+84CF:80                   ???
+84D0:D5 AA       CMP $AA,X
+84D2:D5 AA       CMP $AA,X
+84D4:D5 AA       CMP $AA,X
+84D6:D5 80       CMP $80,X
+84D8:80                   ???
+84D9:80                   ???
+84DA:80                   ???
+84DB:80                   ???
+84DC:80                   ???
+84DD:80                   ???
+; ==================================> nageur (12)
+84DE:AA          TAX
+84DF:D5 AA       CMP $AA,X
+84E1:D5 AA       CMP $AA,X
+84E3:D5 AA       CMP $AA,X
+84E5:80                   ???
+84E6:80                   ???
+84E7:80                   ???
+84E8:80                   ???
+84E9:80                   ???
+84EA:80                   ???
+84EB:80                   ???
+84EC:AA          TAX
+84ED:FA                   ???
+84EE:AB                   ???
+84EF:E5 A7       SBC $A7
+84F1:CE AA 80    DEC $80AA
+84F4:FA                   ???
+84F5:87                   ???
+84F6:FC                   ???
+84F7:87                   ???
+84F8:8E 80 AA    STX $AA80
+84FB:D5 A6       CMP $A6,X
+84FD:FF                   ???
+84FE:D7                   ???
+84FF:CE AA 80    DEC $80AA
+8502:80                   ???
+8503:FF                   ???
+8504:BE 80 80    LDX $8080,Y
+8507:80                   ???
+8508:AA          TAX
+8509:E9 FF       SBC #$FF
+850B:FE A7 CE    INC $CEA7,X
+850E:AA          TAX
+850F:80                   ???
+8510:AA          TAX
+8511:FF                   ???
+8512:FE 87 8E    INC $8E87,X
+8515:80                   ???
+8516:AA          TAX
+8517:AA          TAX
+8518:FE FE D7    INC $D7FE,X
+851B:CE AA C0    DEC $C0AA
+851E:FF                   ???
+851F:8F                   ???
+8520:8F                   ???
+8521:80                   ???
+8522:80                   ???
+8523:80                   ???
+8524:BA          TSX
+8525:B6 AB       LDX $AB,Y
+8527:D5 AA       CMP $AA,X
+8529:D5 AA       CMP $AA,X
+852B:E0 FD       CPX #$FD
+852D:81 80       STA ($80,X)
+852F:80                   ???
+8530:80                   ???
+8531:80                   ???
+8532:AA          TAX
+8533:D5 AA       CMP $AA,X
+8535:D5 AA       CMP $AA,X
+8537:D5 AA       CMP $AA,X
+8539:80                   ???
+853A:80                   ???
+853B:80                   ???
+853C:80                   ???
+853D:80                   ???
+853E:80                   ???
+853F:80                   ???
+; ==================================> nageur (13)
+8540:AA          TAX
+8541:D5 AA       CMP $AA,X
+8543:D5 AA       CMP $AA,X
+8545:D5 AA       CMP $AA,X
+8547:80                   ???
+8548:80                   ???
+8549:80                   ???
+854A:80                   ???
+854B:80                   ???
+854C:80                   ???
+854D:80                   ???
+854E:AA          TAX
+854F:E9 AF       SBC #$AF
+8551:95 9F       STA $9F,X
+8553:B9 AA 80    LDA $80AA,Y
+8556:E8          INX
+8557:9F                   ???
+8558:F0 9F       BEQ $84F9
+855A:B8          CLV
+855B:80                   ???
+855C:AA          TAX
+855D:D5 9A       CMP $9A,X
+855F:FD DF BA    SBC $BADF,X
+8562:AA          TAX
+8563:80                   ???
+8564:80                   ???
+8565:FC                   ???
+8566:FB                   ???
+8567:81 80       STA ($80,X)
+8569:80                   ???
+856A:AA          TAX
+856B:A5 FF       LDA $FF
+856D:FB                   ???
+856E:9F                   ???
+856F:B9 AA 80    LDA $80AA,Y
+8572:A8          TAY
+8573:FD FB 9F    SBC $9FFB,X
+8576:B8          CLV
+8577:80                   ???
+8578:AA          TAX
+8579:A9 F9       LDA #$F9
+857B:FB                   ???
+857C:DF                   ???
+857D:BA          TSX
+857E:AA          TAX
+857F:80                   ???
+8580:FE BF BC    INC $BCBF,X
+8583:80                   ???
+8584:80                   ???
+8585:80                   ???
+8586:EA          NOP
+8587:D9 AD D5    CMP $D5AD,Y
+858A:AA          TAX
+858B:D5 AA       CMP $AA,X
+858D:80                   ???
+858E:F7                   ???
+858F:87                   ???
+8590:80                   ???
+8591:80                   ???
+8592:80                   ???
+8593:80                   ???
+8594:AA          TAX
+8595:D5 AA       CMP $AA,X
+8597:D5 AA       CMP $AA,X
+8599:D5 AA       CMP $AA,X
+859B:80                   ???
+859C:80                   ???
+859D:80                   ???
+859E:80                   ???
+859F:80                   ???
+85A0:80                   ???
+85A1:80                   ???
+; ==================================> nageur (14)
+85A2:AA          TAX
+85A3:D5 AA       CMP $AA,X
+85A5:D5 AA       CMP $AA,X
+85A7:D5 AA       CMP $AA,X
+85A9:80                   ???
+85AA:80                   ???
+85AB:80                   ???
+85AC:80                   ???
+85AD:80                   ???
+85AE:80                   ???
+85AF:80                   ???
+85B0:AA          TAX
+85B1:A5 BF       LDA $BF
+85B3:D5 FC       CMP $FC,X
+85B5:E4 A9       CPX $A9
+85B7:80                   ???
+85B8:A0 FF       LDY #$FF
+85BA:C0 FF       CPY #$FF
+85BC:E0 81       CPX #$81
+85BE:AA          TAX
+85BF:D5 EA       CMP $EA,X
+85C1:F4                   ???
+85C2:FF                   ???
+85C3:EA          NOP
+85C4:A9 80       LDA #$80
+85C6:80                   ???
+85C7:F0 EF       BEQ $85B8
+85C9:87                   ???
+85CA:80                   ???
+85CB:80                   ???
+85CC:AA          TAX
+85CD:95 FD       STA $FD,X
+85CF:EF                   ???
+85D0:FF                   ???
+85D1:E4 A9       CPX $A9
+85D3:80                   ???
+85D4:A0 F5       LDY #$F5
+85D6:EF                   ???
+85D7:FF                   ???
+85D8:E0 81       CPX #$81
+85DA:AA          TAX
+85DB:A5 E5       LDA $E5
+85DD:EF                   ???
+85DE:FF                   ???
+85DF:EA          NOP
+85E0:A9 80       LDA #$80
+85E2:F8          SED
+85E3:FF                   ???
+85E4:F1 81       SBC ($81),Y
+85E6:80                   ???
+85E7:80                   ???
+85E8:AA          TAX
+85E9:E7                   ???
+85EA:B6 D5       LDX $D5,Y
+85EC:AA          TAX
+85ED:D5 AA       CMP $AA,X
+85EF:80                   ???
+85F0:DC                   ???
+85F1:9F                   ???
+85F2:80                   ???
+85F3:80                   ???
+85F4:80                   ???
+85F5:80                   ???
+85F6:AA          TAX
+85F7:D5 AA       CMP $AA,X
+85F9:D5 AA       CMP $AA,X
+85FB:D5 AA       CMP $AA,X
+85FD:80                   ???
+85FE:80                   ???
+85FF:80                   ???
+8600:80                   ???
+8601:80                   ???
+8602:80                   ???
+8603:80                   ???
+; ==================================> nageur (15)
+8604:D5 AA       CMP $AA,X
+8606:D5 AA       CMP $AA,X
+8608:D5 AA       CMP $AA,X
+860A:D5 80       CMP $80,X
+860C:80                   ???
+860D:80                   ???
+860E:80                   ???
+860F:80                   ???
+8610:80                   ???
+8611:80                   ???
+8612:D5 F4       CMP $F4,X
+8614:CF                   ???
+8615:BA          TSX
+8616:D5 AA       CMP $AA,X
+8618:D5 80       CMP $80,X
+861A:F4                   ???
+861B:8F                   ???
+861C:FC                   ???
+861D:81 80       STA ($80,X)
+861F:80                   ???
+8620:D9 AA D6    CMP $D6AA,Y
+8623:FF                   ???
+8624:D7                   ???
+8625:AA          TAX
+8626:D5 F0       CMP $F0,X
+8628:81 BF       STA ($BF,X)
+862A:FF                   ???
+862B:8B                   ???
+862C:80                   ???
+862D:80                   ???
+862E:D5 F4       CMP $F4,X
+8630:BF                   ???
+8631:FF                   ???
+8632:E9 A9       SBC #$A9
+8634:D5 80       CMP $80,X
+8636:D5 BF       CMP $BF,X
+8638:FF                   ???
+8639:FA                   ???
+863A:81 80       STA ($80,X)
+863C:95 95       STA $95,X
+863E:BF                   ???
+863F:F7                   ???
+8640:D2                   ???
+8641:AA          TAX
+8642:D5 E0       CMP $E0,X
+8644:FF                   ???
+8645:C7                   ???
+8646:81 82       STA ($82,X)
+8648:80                   ???
+8649:80                   ???
+864A:95 DB       STA $DB,X
+864C:D5 AA       CMP $AA,X
+864E:BE AA D5    LDX $D5AA,Y
+8651:80                   ???
+8652:FE 80 80    INC $8080,X
+8655:BE 80 80    LDX $8080,Y
+8658:D5 AA       CMP $AA,X
+865A:D5 AA       CMP $AA,X
+865C:D5 AA       CMP $AA,X
+865E:D5 80       CMP $80,X
+8660:80                   ???
+8661:80                   ???
+8662:80                   ???
+8663:80                   ???
+8664:80                   ???
+8665:80                   ???
+; ==================================> nageur (16)
+8666:D5 AA       CMP $AA,X
+8668:D5 AA       CMP $AA,X
+866A:D5 AA       CMP $AA,X
+866C:D5 80       CMP $80,X
+866E:80                   ???
+866F:80                   ???
+8670:80                   ???
+8671:80                   ???
+8672:80                   ???
+8673:80                   ???
+8674:D5 D2       CMP $D2,X
+8676:BF                   ???
+8677:EA          NOP
+8678:D5 AA       CMP $AA,X
+867A:D5 80       CMP $80,X
+867C:D0 BF       BNE $863D
+867E:F0 87       BEQ $8607
+8680:80                   ???
+8681:80                   ???
+8682:E5 AA       SBC $AA
+8684:D9 FE DF    CMP $DFFE,Y
+8687:AA          TAX
+8688:D5 C0       CMP $C0,X
+868A:87                   ???
+868B:FC                   ???
+868C:FD AF 80    SBC $80AF,X
+868F:80                   ???
+8690:D5 D2       CMP $D2,X
+8692:FF                   ???
+8693:FD A7 A7    SBC $A7A7,X
+8696:D5 80       CMP $80,X
+8698:D4                   ???
+8699:FE FD EB    INC $EBFD,X
+869C:87                   ???
+869D:80                   ???
+869E:D5 D4       CMP $D4,X
+86A0:FC                   ???
+86A1:DD CB AA    CMP $AACB,X
+86A4:D5 80       CMP $80,X
+86A6:FF                   ???
+86A7:9F                   ???
+86A8:86 88       STX $88
+86AA:80                   ???
+86AB:80                   ???
+86AC:D5 EC       CMP $EC,X
+86AE:D6 AA       DEC $AA,X
+86B0:F9 A9 D5    SBC $D5A9,Y
+86B3:80                   ???
+86B4:F8          SED
+86B5:83                   ???
+86B6:80                   ???
+86B7:F8          SED
+86B8:81 80       STA ($80,X)
+86BA:D5 AA       CMP $AA,X
+86BC:D5 AA       CMP $AA,X
+86BE:D5 AA       CMP $AA,X
+86C0:D5 80       CMP $80,X
+86C2:80                   ???
+86C3:80                   ???
+86C4:80                   ???
+86C5:80                   ???
+86C6:80                   ???
+86C7:80                   ???
+; ==================================> nageur (17)
+86C8:D5 AA       CMP $AA,X
+86CA:D5 AA       CMP $AA,X
+86CC:D5 AA       CMP $AA,X
+86CE:D5 80       CMP $80,X
+86D0:80                   ???
+86D1:80                   ???
+86D2:80                   ???
+86D3:80                   ???
+86D4:80                   ???
+86D5:80                   ???
+86D6:D5 CA       CMP $CA,X
+86D8:FE A9 D7    INC $D7A9,X
+86DB:AA          TAX
+86DC:D5 80       CMP $80,X
+86DE:C0 FE       CPY #$FE
+86E0:C1 9F       CMP ($9F,X)
+86E2:80                   ???
+86E3:80                   ???
+86E4:D5 AB       CMP $AB,X
+86E6:E5 FA       SBC $FA
+86E8:FF                   ???
+86E9:AA          TAX
+86EA:D5 80       CMP $80,X
+86EC:9E                   ???
+86ED:F0 F7       BEQ $86E6
+86EF:BF                   ???
+86F0:81 80       STA ($80,X)
+86F2:D5 CA       CMP $CA,X
+86F4:FE F7 9F    INC $9FF7,X
+86F7:9D D5 80    STA $80D5,X
+86FA:D0 FA       BNE $86F6
+86FC:F7                   ???
+86FD:AF                   ???
+86FE:9F                   ???
+86FF:80                   ???
+8700:D5 D2       CMP $D2,X
+8702:F2                   ???
+8703:F7                   ???
+8704:AE AA D5    LDX $D5AA
+8707:80                   ???
+8708:FC                   ???
+8709:FF                   ???
+870A:98          TYA
+870B:A0 80       LDY #$80
+870D:80                   ???
+870E:D5 B2       CMP $B2,X
+8710:DB                   ???
+8711:AA          TAX
+8712:E5 A7       SBC $A7
+8714:D5 80       CMP $80,X
+8716:E0 8F       CPX #$8F
+8718:80                   ???
+8719:E0 87       CPX #$87
+871B:80                   ???
+871C:D5 AA       CMP $AA,X
+871E:D5 AA       CMP $AA,X
+8720:D5 AA       CMP $AA,X
+8722:D5 80       CMP $80,X
+8724:80                   ???
+8725:80                   ???
+8726:80                   ???
+8727:80                   ???
+8728:80                   ???
+8729:80                   ???
+; ==================================> nageur (18)
+872A:D5 AA       CMP $AA,X
+872C:D5 AA       CMP $AA,X
+872E:D5 AA       CMP $AA,X
+8730:D5 80       CMP $80,X
+8732:80                   ???
+8733:80                   ???
+8734:80                   ???
+8735:80                   ???
+8736:80                   ???
+8737:80                   ???
+8738:D5 AA       CMP $AA,X
+873A:FA                   ???
+873B:A7                   ???
+873C:DD AA D5    CMP $D5AA,X
+873F:80                   ???
+8740:80                   ???
+8741:FA                   ???
+8742:87                   ???
+8743:FE 80 80    INC $8080,X
+8746:D5 AC       CMP $AC,X
+8748:95 EB       STA $EB,X
+874A:FF                   ???
+874B:AB                   ???
+874C:D5 80       CMP $80,X
+874E:F8          SED
+874F:C0 DF       CPY #$DF
+8751:FF                   ???
+8752:85 80       STA $80
+8754:D5 AA       CMP $AA,X
+8756:FA                   ???
+8757:DF                   ???
+8758:FF                   ???
+8759:F4                   ???
+875A:D4                   ???
+875B:80                   ???
+875C:C0 EA       CPY #$EA
+875E:DF                   ???
+875F:BF                   ???
+8760:FD 80 D5    SBC $D580,X
+8763:CA          DEX
+8764:CA          DEX
+8765:DF                   ???
+8766:BB                   ???
+8767:A9 D5       LDA #$D5
+8769:80                   ???
+876A:F0 FF       BEQ $876B
+876C:E3                   ???
+876D:80                   ???
+876E:81 80       STA ($80,X)
+8770:D5 CA       CMP $CA,X
+8772:ED AA 95    SBC $95AA
+8775:9F                   ???
+8776:D5 80       CMP $80,X
+8778:80                   ???
+8779:BF                   ???
+877A:80                   ???
+877B:80                   ???
+877C:9F                   ???
+877D:80                   ???
+877E:D5 AA       CMP $AA,X
+8780:D5 AA       CMP $AA,X
+8782:D5 AA       CMP $AA,X
+8784:D5 80       CMP $80,X
+8786:80                   ???
+8787:80                   ???
+8788:80                   ???
+8789:80                   ???
+878A:80                   ???
+878B:80                   ???
+; ==================================> nageur (19)
+878C:AA          TAX
+878D:D5 AA       CMP $AA,X
+878F:D5 AA       CMP $AA,X
+8791:D5 AA       CMP $AA,X
+8793:80                   ???
+8794:80                   ???
+8795:80                   ???
+8796:80                   ???
+8797:80                   ???
+8798:80                   ???
+8799:80                   ???
+879A:AA          TAX
+879B:E9 9F       SBC #$9F
+879D:F5 AA       SBC $AA,X
+879F:D5 AA       CMP $AA,X
+87A1:80                   ???
+87A2:E8          INX
+87A3:9F                   ???
+87A4:F8          SED
+87A5:83                   ???
+87A6:80                   ???
+87A7:80                   ???
+87A8:B2                   ???
+87A9:D5 AC       CMP $AC,X
+87AB:FF                   ???
+87AC:AF                   ???
+87AD:D5 AA       CMP $AA,X
+87AF:E0 83       CPX #$83
+87B1:FF                   ???
+87B2:FE 97 80    INC $8097,X
+87B5:80                   ???
+87B6:AA          TAX
+87B7:E9 FF       SBC #$FF
+87B9:FE D3 D3    INC $D3D3,X
+87BC:AA          TAX
+87BD:80                   ???
+87BE:AA          TAX
+87BF:FF                   ???
+87C0:FE F5 83    INC $83F5,X
+87C3:80                   ???
+87C4:AA          TAX
+87C5:AA          TAX
+87C6:FE EE A5    INC $A5EE,X
+87C9:D5 AA       CMP $AA,X
+87CB:C0 FF       CPY #$FF
+87CD:8F                   ???
+87CE:83                   ???
+87CF:84 80       STY $80
+87D1:80                   ???
+87D2:AA          TAX
+87D3:B6 AB       LDX $AB,Y
+87D5:D5 FC       CMP $FC,X
+87D7:D4                   ???
+87D8:AA          TAX
+87D9:80                   ???
+87DA:FC                   ???
+87DB:81 80       STA ($80,X)
+87DD:FC                   ???
+87DE:80                   ???
+87DF:80                   ???
+87E0:AA          TAX
+87E1:D5 AA       CMP $AA,X
+87E3:D5 AA       CMP $AA,X
+87E5:D5 AA       CMP $AA,X
+87E7:80                   ???
+87E8:80                   ???
+87E9:80                   ???
+87EA:80                   ???
+87EB:80                   ???
+87EC:80                   ???
+87ED:80                   ???
+; ==================================> nageur (20)
+87EE:AA          TAX
+87EF:D5 AA       CMP $AA,X
+87F1:D5 AA       CMP $AA,X
+87F3:D5 AA       CMP $AA,X
+87F5:80                   ???
+87F6:80                   ???
+87F7:80                   ???
+87F8:80                   ???
+87F9:80                   ???
+87FA:80                   ???
+87FB:80                   ???
+87FC:AA          TAX
+87FD:A5 FF       LDA $FF
+87FF:D4                   ???
+8800:AB                   ???
+8801:D5 AA       CMP $AA,X
+8803:80                   ???
+8804:A0 FF       LDY #$FF
+8806:E0 8F       CPX #$8F
+8808:80                   ???
+8809:80                   ???
+880A:CA          DEX
+880B:D5 B2       CMP $B2,X
+880D:FD BF D5    SBC $D5BF,X
+8810:AA          TAX
+8811:80                   ???
+8812:8F                   ???
+8813:F8          SED
+8814:FB                   ???
+8815:DF                   ???
+8816:80                   ???
+8817:80                   ???
+8818:AA          TAX
+8819:A5 FF       LDA $FF
+881B:FB                   ???
+881C:CF                   ???
+881D:CE AA 80    DEC $80AA
+8820:A8          TAY
+8821:FD FB D7    SBC $D7FB,X
+8824:8F                   ???
+8825:80                   ???
+8826:AA          TAX
+8827:A9 F9       LDA #$F9
+8829:BB                   ???
+882A:97                   ???
+882B:D5 AA       CMP $AA,X
+882D:80                   ???
+882E:7E BF 8C    ROR $8CBF,X
+8831:90 80       BCC $87B3
+8833:80                   ???
+8834:AA          TAX
+8835:D9 AD D5    CMP $D5AD,Y
+8838:F2                   ???
+8839:D3                   ???
+883A:AA          TAX
+883B:80                   ???
+883C:F0 87       BEQ $87C5
+883E:80                   ???
+883F:F0 83       BEQ $87C4
+8841:80                   ???
+8842:AA          TAX
+8843:D5 AA       CMP $AA,X
+8845:D5 AA       CMP $AA,X
+8847:D5 AA       CMP $AA,X
+8849:80                   ???
+884A:80                   ???
+884B:80                   ???
+884C:80                   ???
+884D:80                   ???
+884E:80                   ???
+884F:80                   ???
+; ==================================> nageur (21)
+8850:AA          TAX
+8851:D5 AA       CMP $AA,X
+8853:D5 AA       CMP $AA,X
+8855:D5 AA       CMP $AA,X
+8857:80                   ???
+8858:80                   ???
+8859:80                   ???
+885A:80                   ???
+885B:80                   ???
+885C:80                   ???
+885D:80                   ???
+885E:AA          TAX
+885F:95 FD       STA $FD,X
+8861:D3                   ???
+8862:AE D5 AA    LDX $AAD5
+8865:80                   ???
+8866:80                   ???
+8867:FD 83 BF    SBC $BF83,X
+886A:80                   ???
+886B:80                   ???
+886C:AA          TAX
+886D:D6 CA       DEC $CA,X
+886F:F5 FF       SBC $FF,X
+8871:D5 AA       CMP $AA,X
+8873:80                   ???
+8874:BC E0 EF    LDY $EFE0,X
+8877:FF                   ???
+8878:82                   ???
+8879:80                   ???
+887A:AA          TAX
+887B:95 FD       STA $FD,X
+887D:EF                   ???
+887E:BF                   ???
+887F:BA          TSX
+8880:AA          TAX
+8881:80                   ???
+8882:A0 F5       LDY #$F5
+8884:EF                   ???
+8885:DF                   ???
+8886:BE 80 AA    LDX $AA80,Y
+8889:A5 E5       LDA $E5
+888B:EF                   ???
+888C:DB                   ???
+888D:D4                   ???
+888E:AA          TAX
+888F:80                   ???
+8890:F8          SED
+8891:FF                   ???
+8892:B1 C0       LDA ($C0),Y
+8894:80                   ???
+8895:80                   ???
+8896:AA          TAX
+8897:E5 B6       SBC $B6
+8899:D5 CA       CMP $CA,X
+889B:CF                   ???
+889C:AA          TAX
+889D:80                   ???
+889E:C0 9F       CPY #$9F
+88A0:80                   ???
+88A1:C0 8F       CPY #$8F
+88A3:80                   ???
+88A4:AA          TAX
+88A5:D5 AA       CMP $AA,X
+88A7:D5 AA       CMP $AA,X
+88A9:D5 AA       CMP $AA,X
+88AB:80                   ???
+88AC:80                   ???
+88AD:80                   ???
+88AE:80                   ???
+88AF:80                   ???
+88B0:80                   ???
+88B1:80                   ???
+; ==================================> nageur (22)
+88B2:D5 AA       CMP $AA,X
+88B4:D5 AA       CMP $AA,X
+88B6:D5 AA       CMP $AA,X
+88B8:D5 80       CMP $80,X
+88BA:80                   ???
+88BB:80                   ???
+88BC:80                   ???
+88BD:80                   ???
+88BE:80                   ???
+88BF:80                   ???
+88C0:D5 AA       CMP $AA,X
+88C2:D5 AA       CMP $AA,X
+88C4:D5 AA       CMP $AA,X
+88C6:D5 80       CMP $80,X
+88C8:FE 80 80    INC $8080,X
+88CB:BE 80 80    LDX $8080,Y
+88CE:95 DB       STA $DB,X
+88D0:D5 AA       CMP $AA,X
+88D2:BE AA D5    LDX $D5AA,Y
+88D5:E0 FF       CPX #$FF
+88D7:C7                   ???
+88D8:81 82       STA ($82,X)
+88DA:80                   ???
+88DB:80                   ???
+88DC:95 95       STA $95,X
+88DE:BF                   ???
+88DF:F7                   ???
+88E0:D2                   ???
+88E1:AA          TAX
+88E2:D5 80       CMP $80,X
+88E4:D5 BF       CMP $BF,X
+88E6:FF                   ???
+88E7:FA                   ???
+88E8:81 80       STA ($80,X)
+88EA:D5 F4       CMP $F4,X
+88EC:BF                   ???
+88ED:FF                   ???
+88EE:E9 A9       SBC #$A9
+88F0:D5 F0       CMP $F0,X
+88F2:81 BF       STA ($BF,X)
+88F4:FF                   ???
+88F5:8B                   ???
+88F6:80                   ???
+88F7:80                   ???
+88F8:D5 AA       CMP $AA,X
+88FA:D6 FF       DEC $FF,X
+88FC:D7                   ???
+88FD:AA          TAX
+88FE:D5 80       CMP $80,X
+8900:F4                   ???
+8901:8F                   ???
+8902:FC                   ???
+8903:81 80       STA ($80,X)
+8905:80                   ???
+8906:D5 F4       CMP $F4,X
+8908:CF                   ???
+8909:BA          TSX
+890A:D5 AA       CMP $AA,X
+890C:D5 80       CMP $80,X
+890E:80                   ???
+890F:80                   ???
+8910:80                   ???
+8911:80                   ???
+8912:80                   ???
+8913:80                   ???
+; ==================================> nageur (23)
+8914:D5 AA       CMP $AA,X
+8916:D5 AA       CMP $AA,X
+8918:D5 AA       CMP $AA,X
+891A:D5 80       CMP $80,X
+891C:80                   ???
+891D:80                   ???
+891E:80                   ???
+891F:80                   ???
+8920:80                   ???
+8921:80                   ???
+8922:D5 AA       CMP $AA,X
+8924:D5 AA       CMP $AA,X
+8926:D5 AA       CMP $AA,X
+8928:D5 80       CMP $80,X
+892A:F8          SED
+892B:83                   ???
+892C:80                   ???
+892D:F8          SED
+892E:81 80       STA ($80,X)
+8930:D5 EC       CMP $EC,X
+8932:D6 AA       DEC $AA,X
+8934:F9 A9 D5    SBC $D5A9,Y
+8937:80                   ???
+8938:FF                   ???
+8939:9F                   ???
+893A:86 88       STX $88
+893C:80                   ???
+893D:80                   ???
+893E:D5 D4       CMP $D4,X
+8940:FC                   ???
+8941:DD CB AA    CMP $AACB,X
+8944:D5 80       CMP $80,X
+8946:D4                   ???
+8947:FE FD EB    INC $EBFD,X
+894A:87                   ???
+894B:80                   ???
+894C:D5 D2       CMP $D2,X
+894E:FF                   ???
+894F:FD A7 A7    SBC $A7A7,X
+8952:D5 C0       CMP $C0,X
+8954:87                   ???
+8955:FC                   ???
+8956:FD AF 80    SBC $80AF,X
+8959:80                   ???
+895A:D5 AA       CMP $AA,X
+895C:D9 FE DF    CMP $DFFE,Y
+895F:AA          TAX
+8960:D5 80       CMP $80,X
+8962:D0 BF       BNE $8923
+8964:F0 87       BEQ $88ED
+8966:80                   ???
+8967:80                   ???
+8968:D5 D2       CMP $D2,X
+896A:BF                   ???
+896B:EA          NOP
+896C:D5 AA       CMP $AA,X
+896E:D5 80       CMP $80,X
+8970:80                   ???
+8971:80                   ???
+8972:80                   ???
+8973:80                   ???
+8974:80                   ???
+8975:80                   ???
+; ==================================> nageur (24)
+8976:D5 AA       CMP $AA,X
+8978:D5 AA       CMP $AA,X
+897A:D5 AA       CMP $AA,X
+897C:D5 80       CMP $80,X
+897E:80                   ???
+897F:80                   ???
+8980:80                   ???
+8981:80                   ???
+8982:80                   ???
+8983:80                   ???
+8984:D5 AA       CMP $AA,X
+8986:D5 AA       CMP $AA,X
+8988:D5 AA       CMP $AA,X
+898A:D5 80       CMP $80,X
+898C:E0 8F       CPX #$8F
+898E:80                   ???
+898F:E0 87       CPX #$87
+8991:80                   ???
+8992:D5 B2       CMP $B2,X
+8994:DB                   ???
+8995:AA          TAX
+8996:E5 A7       SBC $A7
+8998:D5 80       CMP $80,X
+899A:FC                   ???
+899B:FF                   ???
+899C:98          TYA
+899D:A0 80       LDY #$80
+899F:80                   ???
+89A0:D5 D2       CMP $D2,X
+89A2:F2                   ???
+89A3:F7                   ???
+89A4:AE AA D5    LDX $D5AA
+89A7:80                   ???
+89A8:D0 FA       BNE $89A4
+89AA:F7                   ???
+89AB:AF                   ???
+89AC:9E                   ???
+89AD:80                   ???
+89AE:D5 CA       CMP $CA,X
+89B0:FE F7 9F    INC $9FF7,X
+89B3:9D D5 80    STA $80D5,X
+89B6:9E                   ???
+89B7:F0 F7       BEQ $89B0
+89B9:BF                   ???
+89BA:81 80       STA ($80,X)
+89BC:D5 AA       CMP $AA,X
+89BE:E5 FA       SBC $FA
+89C0:FF                   ???
+89C1:AA          TAX
+89C2:D5 80       CMP $80,X
+89C4:C0 FE       CPY #$FE
+89C6:C1 9F       CMP ($9F,X)
+89C8:80                   ???
+89C9:80                   ???
+89CA:D5 CA       CMP $CA,X
+89CC:FE A9 D7    INC $D7A9,X
+89CF:AA          TAX
+89D0:D5 80       CMP $80,X
+89D2:80                   ???
+89D3:80                   ???
+89D4:80                   ???
+89D5:80                   ???
+89D6:80                   ???
+89D7:80                   ???
+; ==================================> nageur (25)
+89D8:D5 AA       CMP $AA,X
+89DA:D5 AA       CMP $AA,X
+89DC:D5 AA       CMP $AA,X
+89DE:D5 80       CMP $80,X
+89E0:80                   ???
+89E1:80                   ???
+89E2:80                   ???
+89E3:80                   ???
+89E4:80                   ???
+89E5:80                   ???
+89E6:D5 AA       CMP $AA,X
+89E8:D5 AA       CMP $AA,X
+89EA:D5 AA       CMP $AA,X
+89EC:D5 80       CMP $80,X
+89EE:80                   ???
+89EF:BF                   ???
+89F0:80                   ???
+89F1:80                   ???
+89F2:9F                   ???
+89F3:80                   ???
+89F4:D5 CA       CMP $CA,X
+89F6:ED AA 95    SBC $95AA
+89F9:9F                   ???
+89FA:D5 80       CMP $80,X
+89FC:F0 FF       BEQ $89FD
+89FE:E3                   ???
+89FF:80                   ???
+8A00:81 80       STA ($80,X)
+8A02:D5 CA       CMP $CA,X
+8A04:CA          DEX
+8A05:DF                   ???
+8A06:BB                   ???
+8A07:A9 D5       LDA #$D5
+8A09:80                   ???
+8A0A:C0 EA       CPY #$EA
+8A0C:DF                   ???
+8A0D:BF                   ???
+8A0E:FD 80 D5    SBC $D580,X
+8A11:AA          TAX
+8A12:FA                   ???
+8A13:DF                   ???
+8A14:FF                   ???
+8A15:F4                   ???
+8A16:D5 80       CMP $80,X
+8A18:F8          SED
+8A19:C0 DF       CPY #$DF
+8A1B:FF                   ???
+8A1C:85 80       STA $80
+8A1E:D5 AA       CMP $AA,X
+8A20:95 EB       STA $EB,X
+8A22:FF                   ???
+8A23:AB                   ???
+8A24:D5 80       CMP $80,X
+8A26:80                   ???
+8A27:FA                   ???
+8A28:87                   ???
+8A29:FE 80 80    INC $8080,X
+8A2C:D5 AA       CMP $AA,X
+8A2E:FA                   ???
+8A2F:A7                   ???
+8A30:DD AA D5    CMP $D5AA,X
+8A33:80                   ???
+8A34:80                   ???
+8A35:80                   ???
+8A36:80                   ???
+8A37:80                   ???
+8A38:80                   ???
+8A39:80                   ???
+; ==================================> nageur (26)
+8A3A:AA          TAX
+8A3B:D5 AA       CMP $AA,X
+8A3D:D5 AA       CMP $AA,X
+8A3F:D5 AA       CMP $AA,X
+8A41:80                   ???
+8A42:80                   ???
+8A43:80                   ???
+8A44:80                   ???
+8A45:80                   ???
+8A46:80                   ???
+8A47:80                   ???
+8A48:AA          TAX
+8A49:D5 AA       CMP $AA,X
+8A4B:D5 AA       CMP $AA,X
+8A4D:D5 AA       CMP $AA,X
+8A4F:80                   ???
+8A50:FC                   ???
+8A51:81 80       STA ($80,X)
+8A53:FC                   ???
+8A54:80                   ???
+8A55:80                   ???
+8A56:AA          TAX
+8A57:B6 AB       LDX $AB,Y
+8A59:D5 FC       CMP $FC,X
+8A5B:D4                   ???
+8A5C:AA          TAX
+8A5D:80                   ???
+8A5E:FF                   ???
+8A5F:8F                   ???
+8A60:83                   ???
+8A61:84 80       STY $80
+8A63:80                   ???
+8A64:AA          TAX
+8A65:AA          TAX
+8A66:FE EE A5    INC $A5EE,X
+8A69:D5 AA       CMP $AA,X
+8A6B:80                   ???
+8A6C:AA          TAX
+8A6D:FF                   ???
+8A6E:EF                   ???
+8A6F:58          CLI
+8A70:38          SEC
+8A71:00          BRK
+8A72:AA          TAX
+8A73:E9 FF       SBC #$FF
+8A75:FE D3 D3    INC $D3D3,X
+8A78:AA          TAX
+8A79:E0 83       CPX #$83
+8A7B:FE FE 97    INC $97FE,X
+8A7E:80                   ???
+8A7F:80                   ???
+8A80:AA          TAX
+8A81:D5 AC       CMP $AC,X
+8A83:FF                   ???
+8A84:AF                   ???
+8A85:D5 AA       CMP $AA,X
+8A87:80                   ???
+8A88:E8          INX
+8A89:9F                   ???
+8A8A:F8          SED
+8A8B:83                   ???
+8A8C:80                   ???
+8A8D:80                   ???
+8A8E:AA          TAX
+8A8F:E9 9F       SBC #$9F
+8A91:F5 AA       SBC $AA,X
+8A93:D5 AA       CMP $AA,X
+8A95:80                   ???
+8A96:80                   ???
+8A97:80                   ???
+8A98:80                   ???
+8A99:80                   ???
+8A9A:80                   ???
+8A9B:80                   ???
+; ==================================> nageur (27)
+8A9C:AA          TAX
+8A9D:D5 AA       CMP $AA,X
+8A9F:D5 AA       CMP $AA,X
+8AA1:D5 AA       CMP $AA,X
+8AA3:80                   ???
+8AA4:80                   ???
+8AA5:80                   ???
+8AA6:80                   ???
+8AA7:80                   ???
+8AA8:80                   ???
+8AA9:80                   ???
+8AAA:AA          TAX
+8AAB:D5 AA       CMP $AA,X
+8AAD:D5 AA       CMP $AA,X
+8AAF:D5 AA       CMP $AA,X
+8AB1:80                   ???
+8AB2:F0 87       BEQ $8A3B
+8AB4:80                   ???
+8AB5:F0 83       BEQ $8A3A
+8AB7:80                   ???
+8AB8:AA          TAX
+8AB9:D9 AD D5    CMP $D5AD,Y
+8ABC:F2                   ???
+8ABD:D3                   ???
+8ABE:AA          TAX
+8ABF:80                   ???
+8AC0:FE BF 8C    INC $8CBF,X
+8AC3:90 80       BCC $8A45
+8AC5:80                   ???
+8AC6:AA          TAX
+8AC7:A9 F9       LDA #$F9
+8AC9:BB                   ???
+8ACA:97                   ???
+8ACB:D5 AA       CMP $AA,X
+8ACD:80                   ???
+8ACE:A8          TAY
+8ACF:FD FB D7    SBC $D7FB,X
+8AD2:8F                   ???
+8AD3:80                   ???
+8AD4:AA          TAX
+8AD5:A5 FF       LDA $FF
+8AD7:FB                   ???
+8AD8:CF                   ???
+8AD9:CE AA 80    DEC $80AA
+8ADC:8F                   ???
+8ADD:F8          SED
+8ADE:FB                   ???
+8ADF:DF                   ???
+8AE0:80                   ???
+8AE1:80                   ???
+8AE2:AA          TAX
+8AE3:D5 B2       CMP $B2,X
+8AE5:FD BF D5    SBC $D5BF,X
+8AE8:AA          TAX
+8AE9:80                   ???
+8AEA:A0 FF       LDY #$FF
+8AEC:E0 8F       CPX #$8F
+8AEE:80                   ???
+8AEF:80                   ???
+8AF0:AA          TAX
+8AF1:A5 FF       LDA $FF
+8AF3:D4                   ???
+8AF4:AB                   ???
+8AF5:D5 AA       CMP $AA,X
+8AF7:80                   ???
+8AF8:80                   ???
+8AF9:80                   ???
+8AFA:80                   ???
+8AFB:80                   ???
+8AFC:80                   ???
+8AFD:80                   ???
+; ==================================> nageur (28)
+8AFE:AA          TAX
+8AFF:D5 AA       CMP $AA,X
+8B01:D5 AA       CMP $AA,X
+8B03:D5 AA       CMP $AA,X
+8B05:80                   ???
+8B06:80                   ???
+8B07:80                   ???
+8B08:80                   ???
+8B09:80                   ???
+8B0A:80                   ???
+8B0B:80                   ???
+8B0C:AA          TAX
+8B0D:D5 AA       CMP $AA,X
+8B0F:D5 AA       CMP $AA,X
+8B11:D5 AA       CMP $AA,X
+8B13:80                   ???
+8B14:C0 9F       CPY #$9F
+8B16:80                   ???
+8B17:C0 8F       CPY #$8F
+8B19:80                   ???
+8B1A:AA          TAX
+8B1B:E5 B6       SBC $B6
+8B1D:D5 CA       CMP $CA,X
+8B1F:CF                   ???
+8B20:AA          TAX
+8B21:80                   ???
+8B22:F8          SED
+8B23:FF                   ???
+8B24:B1 C0       LDA ($C0),Y
+8B26:80                   ???
+8B27:80                   ???
+8B28:AA          TAX
+8B29:A5 E5       LDA $E5
+8B2B:EF                   ???
+8B2C:DD D4 AA    CMP $AAD4,X
+8B2F:80                   ???
+8B30:A0 F5       LDY #$F5
+8B32:EF                   ???
+8B33:DF                   ???
+8B34:BE 80 AA    LDX $AA80,Y
+8B37:95 FD       STA $FD,X
+8B39:EF                   ???
+8B3A:BF                   ???
+8B3B:BA          TSX
+8B3C:AA          TAX
+8B3D:80                   ???
+8B3E:BC E0 EF    LDY $EFE0,X
+8B41:FF                   ???
+8B42:82                   ???
+8B43:80                   ???
+8B44:AA          TAX
+8B45:D5 CA       CMP $CA,X
+8B47:F5 FF       SBC $FF,X
+8B49:D5 AA       CMP $AA,X
+8B4B:80                   ???
+8B4C:80                   ???
+8B4D:FD 83 BF    SBC $BF83,X
+8B50:80                   ???
+8B51:80                   ???
+8B52:AA          TAX
+8B53:95 FD       STA $FD,X
+8B55:D3                   ???
+8B56:AE D5 AA    LDX $AAD5
+8B59:80                   ???
+8B5A:80                   ???
+8B5B:80                   ???
+8B5C:80                   ???
+8B5D:80                   ???
+8B5E:80                   ???
+8B5F:80                   ???
+; ==================================> nageur (29)
+8B60:D5 AA       CMP $AA,X
+8B62:D5 AA       CMP $AA,X
+8B64:D5 AA       CMP $AA,X
+8B66:D5 80       CMP $80,X
+8B68:80                   ???
+8B69:80                   ???
+8B6A:80                   ???
+8B6B:80                   ???
+8B6C:80                   ???
+8B6D:80                   ???
+8B6E:D5 D2       CMP $D2,X
+8B70:FF                   ???
+8B71:F2                   ???
+8B72:93                   ???
+8B73:A7                   ???
+8B74:D5 80       CMP $80,X
+8B76:D0 FF       BNE $8B77
+8B78:FD 83 87    SBC $8783,X
+8B7B:80                   ???
+8B7C:D5 AA       CMP $AA,X
+8B7E:F9 FD AB    SBC $ABFD,Y
+8B81:A7                   ???
+8B82:D5 80       CMP $80,X
+8B84:C0 FE       CPY #$FE
+8B86:9D 80 80    STA $8080,X
+8B89:80                   ???
+8B8A:95 D1       STA $D1,X
+8B8C:FA                   ???
+8B8D:FD 93 A7    SBC $A793,X
+8B90:D5 80       CMP $80,X
+8B92:D1 F2       CMP ($F2),Y
+8B94:FD 83 87    SBC $8783,X
+8B97:80                   ???
+8B98:D5 FD       CMP $FD,X
+8B9A:BF                   ???
+8B9B:FE AB A7    INC $A7AB,X
+8B9E:D5 E0       CMP $E0,X
+8BA0:B0 9B       BCS $8B3D
+8BA2:80                   ???
+8BA3:80                   ???
+8BA4:80                   ???
+8BA5:80                   ???
+8BA6:B5 EA       LDA $EA,X
+8BA8:CF                   ???
+8BA9:AA          TAX
+8BAA:D5 AA       CMP $AA,X
+8BAC:D5 98       CMP $98,X
+8BAE:80                   ???
+8BAF:80                   ???
+8BB0:80                   ???
+8BB1:80                   ???
+8BB2:80                   ???
+8BB3:80                   ???
+8BB4:D5 AA       CMP $AA,X
+8BB6:D5 AA       CMP $AA,X
+8BB8:D5 AA       CMP $AA,X
+8BBA:D5 80       CMP $80,X
+8BBC:80                   ???
+8BBD:80                   ???
+8BBE:80                   ???
+8BBF:80                   ???
+8BC0:80                   ???
+8BC1:80                   ???
+; ==================================> nageur (30)
+8BC2:D5 AA       CMP $AA,X
+8BC4:D5 AA       CMP $AA,X
+8BC6:D5 AA       CMP $AA,X
+8BC8:D5 80       CMP $80,X
+8BCA:80                   ???
+8BCB:80                   ???
+8BCC:80                   ???
+8BCD:80                   ???
+8BCE:80                   ???
+8BCF:80                   ???
+8BD0:D5 AA       CMP $AA,X
+8BD2:D5 AA       CMP $AA,X
+8BD4:D5 AA       CMP $AA,X
+8BD6:D5 80       CMP $80,X
+8BD8:80                   ???
+8BD9:80                   ???
+8BDA:80                   ???
+8BDB:80                   ???
+8BDC:80                   ???
+8BDD:80                   ???
+8BDE:D5 CA       CMP $CA,X
+8BE0:FE CB CF    INC $CFCB,X
+8BE3:9C                   ???
+8BE4:D5 80       CMP $80,X
+8BE6:C0 FE       CPY #$FE
+8BE8:F7                   ???
+8BE9:8F                   ???
+8BEA:9C                   ???
+8BEB:80                   ???
+8BEC:D5 AA       CMP $AA,X
+8BEE:E5 F7       SBC $F7
+8BF0:AF                   ???
+8BF1:9D D5 80    STA $80D5,X
+8BF4:80                   ???
+8BF5:FA                   ???
+8BF6:F7                   ???
+8BF7:80                   ???
+8BF8:80                   ???
+8BF9:80                   ???
+8BFA:D5 C4       CMP $C4,X
+8BFC:EA          NOP
+8BFD:F7                   ???
+8BFE:CF                   ???
+8BFF:9C                   ???
+8C00:D5 80       CMP $80,X
+8C02:C4 CA       CPY $CA
+8C04:F7                   ???
+8C05:8F                   ???
+8C06:9C                   ???
+8C07:80                   ???
+8C08:D5 F6       CMP $F6,X
+8C0A:FF                   ???
+8C0B:F9 AF 9D    SBC $9DAF,Y
+8C0E:D5 80       CMP $80,X
+8C10:C3                   ???
+8C11:ED 80 80    SBC $8080
+8C14:80                   ???
+8C15:80                   ???
+8C16:D5 A9       CMP $A9,X
+8C18:BF                   ???
+8C19:AA          TAX
+8C1A:D5 AA       CMP $AA,X
+8C1C:D5 E0       CMP $E0,X
+8C1E:80                   ???
+8C1F:80                   ???
+8C20:80                   ???
+8C21:80                   ???
+8C22:80                   ???
+8C23:80                   ???
+; ==================================> nageur (31)
+8C24:D5 AA       CMP $AA,X
+8C26:D5 AA       CMP $AA,X
+8C28:D5 AA       CMP $AA,X
+8C2A:D5 80       CMP $80,X
+8C2C:80                   ???
+8C2D:80                   ???
+8C2E:80                   ???
+8C2F:80                   ???
+8C30:80                   ???
+8C31:80                   ???
+8C32:D5 AA       CMP $AA,X
+8C34:D5 AA       CMP $AA,X
+8C36:D5 AA       CMP $AA,X
+8C38:D5 80       CMP $80,X
+8C3A:80                   ???
+8C3B:80                   ???
+8C3C:80                   ???
+8C3D:80                   ???
+8C3E:80                   ???
+8C3F:80                   ???
+8C40:D5 AA       CMP $AA,X
+8C42:FA                   ???
+8C43:AF                   ???
+8C44:BE F2 D4    LDX $D4F2,Y
+8C47:80                   ???
+8C48:80                   ???
+8C49:FA                   ???
+8C4A:DF                   ???
+8C4B:BF                   ???
+8C4C:F0 80       BEQ $8BCE
+8C4E:D5 AA       CMP $AA,X
+8C50:95 DF       STA $DF,X
+8C52:BF                   ???
+8C53:F5 D4       SBC $D4,X
+8C55:80                   ???
+8C56:80                   ???
+8C57:E8          INX
+8C58:DF                   ???
+8C59:83                   ???
+8C5A:80                   ???
+8C5B:80                   ???
+8C5C:D5 92       CMP $92,X
+8C5E:AA          TAX
+8C5F:DF                   ???
+8C60:BF                   ???
+8C61:F2                   ???
+8C62:D4                   ???
+8C63:80                   ???
+8C64:90 AA       BCC $8C10
+8C66:DE BF F0    DEC $F0BF,X
+8C69:80                   ???
+8C6A:D5 DA       CMP $DA,X
+8C6C:FF                   ???
+8C6D:E7                   ???
+8C6E:BF                   ???
+8C6F:F5 D4       SBC $D4,X
+8C71:80                   ???
+8C72:8C B6 83    STY $83B6
+8C75:80                   ???
+8C76:80                   ???
+8C77:80                   ???
+8C78:D5 A6       CMP $A6,X
+8C7A:FD A9 D5    SBC $D5A9,X
+8C7D:AA          TAX
+8C7E:D5 80       CMP $80,X
+8C80:83                   ???
+8C81:80                   ???
+8C82:80                   ???
+8C83:80                   ???
+8C84:80                   ???
+8C85:80                   ???
+; ==================================> nageur (32)
+8C86:D5 AA       CMP $AA,X
+8C88:D5 AA       CMP $AA,X
+8C8A:D5 AA       CMP $AA,X
+8C8C:D5 80       CMP $80,X
+8C8E:80                   ???
+8C8F:80                   ???
+8C90:80                   ???
+8C91:80                   ???
+8C92:80                   ???
+8C93:80                   ???
+8C94:D5 AA       CMP $AA,X
+8C96:D5 AA       CMP $AA,X
+8C98:D5 AA       CMP $AA,X
+8C9A:D5 80       CMP $80,X
+8C9C:80                   ???
+8C9D:80                   ???
+8C9E:80                   ???
+8C9F:80                   ???
+8CA0:80                   ???
+8CA1:80                   ???
+8CA2:D5 AA       CMP $AA,X
+8CA4:E9 BF       SBC #$BF
+8CA6:F9 C9 D3    SBC $D3C9,Y
+8CA9:80                   ???
+8CAA:80                   ???
+8CAB:E8          INX
+8CAC:FF                   ???
+8CAD:FE C1 83    INC $83C1,X
+8CB0:D5 AA       CMP $AA,X
+8CB2:D5 FC       CMP $FC,X
+8CB4:FE D5 D3    INC $D3D5,X
+8CB7:80                   ???
+8CB8:80                   ???
+8CB9:A0 FF       LDY #$FF
+8CBB:8E 80 80    STX $8080
+8CBE:D5 CA       CMP $CA,X
+8CC0:A8          TAY
+8CC1:FD FE C9    SBC $C9FE,X
+8CC4:D3                   ???
+8CC5:80                   ???
+8CC6:C0 A8       CPY #$A8
+8CC8:F9 FE C1    SBC $C1FE,Y
+8CCB:83                   ???
+8CCC:D5 EA       CMP $EA,X
+8CCE:FE 9F FF    INC $FF9F,X
+8CD1:D5 D3       CMP $D3,X
+8CD3:80                   ???
+8CD4:B0 D8       BCS $8CAE
+8CD6:8D 80 80    STA $8080
+8CD9:80                   ???
+8CDA:D5 9A       CMP $9A,X
+8CDC:F5 A7       SBC $A7,X
+8CDE:D5 AA       CMP $AA,X
+8CE0:D5 80       CMP $80,X
+8CE2:8C 80 80    STY $8080
+8CE5:80                   ???
+8CE6:80                   ???
+8CE7:80                   ???
+; ==================================> nageur (33)
+8CE8:D5 AA       CMP $AA,X
+8CEA:D5 AA       CMP $AA,X
+8CEC:D5 AA       CMP $AA,X
+8CEE:D5 80       CMP $80,X
+8CF0:80                   ???
+8CF1:80                   ???
+8CF2:80                   ???
+8CF3:80                   ???
+8CF4:80                   ???
+8CF5:80                   ???
+8CF6:AA          TAX
+8CF7:D5 AA       CMP $AA,X
+8CF9:D5 AA       CMP $AA,X
+8CFB:D5 AA       CMP $AA,X
+8CFD:80                   ???
+8CFE:80                   ???
+8CFF:80                   ???
+8D00:80                   ???
+8D01:80                   ???
+8D02:80                   ???
+8D03:80                   ???
+8D04:AA          TAX
+8D05:A5 FF       LDA $FF
+8D07:E5 A7       SBC $A7
+8D09:CE AA 80    DEC $80AA
+8D0C:A0 FF       LDY #$FF
+8D0E:FB                   ???
+8D0F:87                   ???
+8D10:8E 80 AA    STX $AA80
+8D13:D5 F2       CMP $F2,X
+8D15:FB                   ???
+8D16:D7                   ???
+8D17:CE AA 80    DEC $80AA
+8D1A:80                   ???
+8D1B:FD BB 80    SBC $80BB,X
+8D1E:80                   ???
+8D1F:80                   ???
+8D20:AA          TAX
+8D21:A2 F5       LDX #$F5
+8D23:FB                   ???
+8D24:A7                   ???
+8D25:CE AA 80    DEC $80AA
+8D28:A2 E5       LDX #$E5
+8D2A:FB                   ???
+8D2B:87                   ???
+8D2C:8E 80 AA    STX $AA80
+8D2F:FB                   ???
+8D30:FF                   ???
+8D31:FC                   ???
+8D32:D7                   ???
+8D33:CE AA C0    DEC $C0AA
+8D36:E1 B6       SBC ($B6,X)
+8D38:80                   ???
+8D39:80                   ???
+8D3A:80                   ???
+8D3B:80                   ???
+8D3C:EA          NOP
+8D3D:D4                   ???
+8D3E:9F                   ???
+8D3F:D5 AA       CMP $AA,X
+8D41:D5 AA       CMP $AA,X
+8D43:B0 80       BCS $8CC5
+8D45:80                   ???
+8D46:80                   ???
+8D47:80                   ???
+8D48:80                   ???
+8D49:80                   ???
+; ==================================> nageur (34)
+8D4A:AA          TAX
+8D4B:D5 AA       CMP $AA,X
+8D4D:D5 AA       CMP $AA,X
+8D4F:D5 AA       CMP $AA,X
+8D51:80                   ???
+8D52:80                   ???
+8D53:80                   ???
+8D54:80                   ???
+8D55:80                   ???
+8D56:80                   ???
+8D57:80                   ???
+8D58:AA          TAX
+8D59:D5 AA       CMP $AA,X
+8D5B:D5 AA       CMP $AA,X
+8D5D:D5 AA       CMP $AA,X
+8D5F:80                   ???
+8D60:80                   ???
+8D61:80                   ???
+8D62:80                   ???
+8D63:80                   ???
+8D64:80                   ???
+8D65:80                   ???
+8D66:AA          TAX
+8D67:95 FD       STA $FD,X
+8D69:97                   ???
+8D6A:9F                   ???
+8D6B:B9 AA 80    LDA $80AA,Y
+8D6E:80                   ???
+8D6F:FD EF 9F    SBC $9FEF,X
+8D72:B8          CLV
+8D73:80                   ???
+8D74:AA          TAX
+8D75:D5 CA       CMP $CA,X
+8D77:EF                   ???
+8D78:DF                   ???
+8D79:BA          TSX
+8D7A:AA          TAX
+8D7B:80                   ???
+8D7C:80                   ???
+8D7D:F4                   ???
+8D7E:EF                   ???
+8D7F:81 80       STA ($80,X)
+8D81:80                   ???
+8D82:AA          TAX
+8D83:89                   ???
+8D84:D5 EF       CMP $EF,X
+8D86:9F                   ???
+8D87:B9 AA 80    LDA $80AA,Y
+8D8A:88          DEY
+8D8B:95 EF       STA $EF,X
+8D8D:9F                   ???
+8D8E:B8          CLV
+8D8F:80                   ???
+8D90:AA          TAX
+8D91:ED FF F3    SBC $F3FF
+8D94:DF                   ???
+8D95:BA          TSX
+8D96:AA          TAX
+8D97:80                   ???
+8D98:86 DB       STX $DB
+8D9A:81 80       STA ($80,X)
+8D9C:80                   ???
+8D9D:80                   ???
+8D9E:AA          TAX
+8D9F:D3                   ???
+8DA0:FE D4 AA    INC $AAD4,X
+8DA3:D5 AA       CMP $AA,X
+8DA5:C0 81       CPY #$81
+8DA7:80                   ???
+8DA8:80                   ???
+8DA9:80                   ???
+8DAA:80                   ???
+8DAB:80                   ???
+; ==================================> nageur (35)
+8DAC:AA          TAX
+8DAD:D5 AA       CMP $AA,X
+8DAF:D5 AA       CMP $AA,X
+8DB1:D5 AA       CMP $AA,X
+8DB3:80                   ???
+8DB4:80                   ???
+8DB5:80                   ???
+8DB6:80                   ???
+8DB7:80                   ???
+8DB8:80                   ???
+8DB9:80                   ???
+8DBA:AA          TAX
+8DBB:D5 AA       CMP $AA,X
+8DBD:D5 AA       CMP $AA,X
+8DBF:D5 AA       CMP $AA,X
+8DC1:80                   ???
+8DC2:80                   ???
+8DC3:80                   ???
+8DC4:80                   ???
+8DC5:80                   ???
+8DC6:80                   ???
+8DC7:80                   ???
+8DC8:AA          TAX
+8DC9:D5 F4       CMP $F4,X
+8DCB:DF                   ???
+8DCC:FC                   ???
+8DCD:E4 A9       CPX $A9
+8DCF:80                   ???
+8DD0:80                   ???
+8DD1:F4                   ???
+8DD2:BF                   ???
+8DD3:FF                   ???
+8DD4:E0 81       CPX #$81
+8DD6:AA          TAX
+8DD7:D5 AA       CMP $AA,X
+8DD9:BE FF EA    LDX $EAFF,Y
+8DDC:A9 80       LDA #$80
+8DDE:80                   ???
+8DDF:D0 BF       BNE $8DA0
+8DE1:87                   ???
+8DE2:80                   ???
+8DE3:80                   ???
+8DE4:AA          TAX
+8DE5:A5 D4       LDA $D4
+8DE7:BE FF E4    LDX $E4FF,Y
+8DEA:A9 80       LDA #$80
+8DEC:A0 D4       LDY #$D4
+8DEE:BC FF E0    LDY $E0FF,X
+8DF1:81 AA       STA ($AA,X)
+8DF3:B5 FF       LDA $FF,X
+8DF5:CF                   ???
+8DF6:FF                   ???
+8DF7:EA          NOP
+8DF8:A9 80       LDA #$80
+8DFA:98          TYA
+8DFB:EC 86 80    CPX $8086
+8DFE:80                   ???
+8DFF:80                   ???
+8E00:AA          TAX
+8E01:CD FA D3    CMP $D3FA
+8E04:AA          TAX
+8E05:D5 AA       CMP $AA,X
+8E07:80                   ???
+8E08:86 80       STX $80
+8E0A:80                   ???
+8E0B:80                   ???
+8E0C:80                   ???
+8E0D:80                   ???
+; ==================================> nageur (36)
+8E0E:AA          TAX
+8E0F:D5 AA       CMP $AA,X
+8E11:D5 AA       CMP $AA,X
+8E13:D5 AA       CMP $AA,X
+8E15:80                   ???
+8E16:80                   ???
+8E17:80                   ???
+8E18:80                   ???
+8E19:80                   ???
+8E1A:80                   ???
+8E1B:80                   ???
+8E1C:00          BRK
+8E1D:00          BRK
+8E1E:11 10       ORA ($10),Y
+8E20:02                   ???
+8E21:00          BRK
+8E22:00          BRK
+8E23:00          BRK
+8E24:00          BRK
+8E25:09 10       ORA #$10
+8E27:02                   ???
+8E28:00          BRK
+8E29:00          BRK
+8E2A:00          BRK
+8E2B:00          BRK
+8E2C:21 08       AND ($08,X)
+8E2E:05 10       ORA $10
+8E30:00          BRK
+8E31:00          BRK
+8E32:08          PHP
+8E33:11 20       ORA ($20),Y
+8E35:10 09       BPL $8E40
+8E37:00          BRK
+8E38:00          BRK
+8E39:21 44       AND ($44,X)
+8E3B:08          PHP
+8E3C:09 00       ORA #$00
+8E3E:00          BRK
+8E3F:20 00 11    JSR $1100
+8E42:22                   ???
+8E43:20 12 00    JSR $0012
+8E46:04                   ???
+8E47:06 44       ASL $44
+8E49:08          PHP
+8E4A:01 20       ORA ($20,X)
+8E4C:00          BRK
+8E4D:21 00       AND ($00,X)
+8E4F:11 22       ORA ($22),Y
+8E51:4C 00 00    JMP $0000
+8E54:08          PHP
+8E55:00          BRK
+8E56:00          BRK
+8E57:40          RTI
+8E58:20 00 00    JSR $0000
+8E5B:00          BRK
+8E5C:00          BRK
+8E5D:44                   ???
+8E5E:40          RTI
+8E5F:08          PHP
+8E60:00          BRK
+8E61:00          BRK
+8E62:00          BRK
+8E63:00          BRK
+8E64:24 40       BIT $40
+8E66:08          PHP
+8E67:00          BRK
+8E68:00          BRK
+8E69:00          BRK
+8E6A:00          BRK
+8E6B:04                   ???
+8E6C:21 14       AND ($14,X)
+8E6E:40          RTI
+8E6F:00          BRK
+8E70:00          BRK
+8E71:20 44 00    JSR $0044
+8E74:41 24       EOR ($24,X)
+8E76:00          BRK
+8E77:00          BRK
+8E78:04                   ???
+8E79:11 22       ORA ($22),Y
+8E7B:24 00       BIT $00
+8E7D:00          BRK
+8E7E:00          BRK
+8E7F:01 44       ORA ($44,X)
+8E81:08          PHP
+8E82:01 49       ORA ($49,X)
+8E84:00          BRK
+8E85:10 18       BPL $8E9F
+8E87:10 22       BPL $8EAB
+8E89:04                   ???
+8E8A:00          BRK
+8E8B:01 04       ORA ($04,X)
+8E8D:01 44       ORA ($44,X)
+8E8F:08          PHP
+8E90:31 02       AND ($02),Y
+8E92:00          BRK
+8E93:20 00 00    JSR $0000
+8E96:00          BRK
+8E97:02                   ???
+8E98:01 00       ORA ($00,X)
+8E9A:00          BRK
+8E9B:00          BRK
+8E9C:10 02       BPL $8EA0
+8E9E:22                   ???
+8E9F:00          BRK
+8EA0:00          BRK
+8EA1:00          BRK
+8EA2:00          BRK
+8EA3:10 01       BPL $8EA6
+8EA5:22                   ???
+8EA6:00          BRK
+8EA7:00          BRK
+8EA8:00          BRK
+8EA9:00          BRK
+8EAA:10 04       BPL $8EB0
+8EAC:51 00       EOR ($00),Y
+8EAE:02                   ???
+8EAF:00          BRK
+8EB0:00          BRK
+8EB1:11 02       ORA ($02),Y
+8EB3:04                   ???
+8EB4:12                   ???
+8EB5:01 00       ORA ($00,X)
+8EB7:10 44       BPL $8EFD
+8EB9:08          PHP
+8EBA:11 01       ORA ($01),Y
+8EBC:00          BRK
+8EBD:00          BRK
+8EBE:04                   ???
+8EBF:10 22       BPL $8EE3
+8EC1:04                   ???
+8EC2:24 02       BIT $02
+8EC4:40          RTI
+8EC5:60          RTS
+8EC6:40          RTI
+8EC7:08          PHP
+8EC8:11 00       ORA ($00),Y
+8ECA:04                   ???
+8ECB:10 04       BPL $8ED1
+8ECD:10 22       BPL $8EF1
+8ECF:44                   ???
+8ED0:09 00       ORA #$00
+8ED2:00          BRK
+8ED3:01 00       ORA ($00,X)
+8ED5:00          BRK
+8ED6:08          PHP
+8ED7:04                   ???
+8ED8:00          BRK
+8ED9:00          BRK
+8EDA:00          BRK
+8EDB:40          RTI
+8EDC:08          PHP
+8EDD:08          PHP
+8EDE:01 00       ORA ($00,X)
+8EE0:00          BRK
+8EE1:00          BRK
+8EE2:40          RTI
+8EE3:04                   ???
+8EE4:08          PHP
+8EE5:01 00       ORA ($00,X)
+8EE7:00          BRK
+8EE8:00          BRK
+8EE9:40          RTI
+8EEA:10 44       BPL $8F30
+8EEC:02                   ???
+8EED:08          PHP
+8EEE:00          BRK
+8EEF:00          BRK
+8EF0:44                   ???
+8EF1:08          PHP
+8EF2:10 48       BPL $8F3C
+8EF4:04                   ???
+8EF5:00          BRK
+8EF6:40          RTI
+8EF7:10 22       BPL $8F1B
+8EF9:44                   ???
+8EFA:04                   ???
+8EFB:00          BRK
+8EFC:00          BRK
+8EFD:10 40       BPL $8F3F
+8EFF:08          PHP
+8F00:11 10       ORA ($10),Y
+8F02:09 00       ORA #$00
+8F04:02                   ???
+8F05:03                   ???
+8F06:22                   ???
+8F07:44                   ???
+8F08:00          BRK
+8F09:10 40       BPL $8F4B
+8F0B:10 40       BPL $8F4D
+8F0D:08          PHP
+8F0E:11 26       ORA ($26),Y
+8F10:00          BRK
+8F11:00          BRK
+8F12:02                   ???
+8F13:00          BRK
+8F14:00          BRK
+8F15:20 10 00    JSR $0010
+8F18:00          BRK
+8F19:00          BRK
+8F1A:10 0A       BPL $8F26
+8F1C:01 00       ORA ($00,X)
+8F1E:00          BRK
+8F1F:00          BRK
+8F20:00          BRK
+8F21:08          PHP
+8F22:11 09       ORA ($09),Y
+8F24:20 00 00    JSR $0000
+8F27:00          BRK
+8F28:42                   ???
+8F29:10 26       BPL $8F51
+8F2B:12                   ???
+8F2C:00          BRK
+8F2D:11 20       ORA ($20),Y
+8F2F:20 40 10    JSR $1040
+8F32:00          BRK
+8F33:00          BRK
+8F34:04                   ???
+8F35:41 08       EOR ($08,X)
+8F37:11 10       ORA ($10),Y
+8F39:00          BRK
+8F3A:00          BRK
+8F3B:10 00       BPL $8F3D
+8F3D:22                   ???
+8F3E:44                   ???
+8F3F:40          RTI
+8F40:24 00       BIT $00
+8F42:00          BRK
+8F43:04                   ???
+8F44:08          PHP
+8F45:11 02       ORA ($02),Y
+8F47:20 00 00    JSR $0000
+8F4A:00          BRK
+8F4B:22                   ???
+8F4C:44                   ???
+8F4D:18          CLC
+8F4E:01 00       ORA ($00,X)
+8F50:00          BRK
+8F51:00          BRK
+8F52:00          BRK
+8F53:00          BRK
+8F54:41 00       EOR ($00,X)
+8F56:00          BRK
+8F57:00          BRK
+8F58:00          BRK
+8F59:40          RTI
+8F5A:28          PLP
+8F5B:04                   ???
+8F5C:00          BRK
+8F5D:00          BRK
+8F5E:00          BRK
+8F5F:00          BRK
+8F60:20 44 24    JSR $2444
+8F63:00          BRK
+8F64:01 00       ORA ($00,X)
+8F66:00          BRK
+8F67:08          PHP
+8F68:12                   ???
+8F69:18          CLC
+8F6A:49 00       EOR #$00
+8F6C:44                   ???
+8F6D:00          BRK
+8F6E:01 01       ORA ($01,X)
+8F70:44                   ???
+8F71:00          BRK
+8F72:00          BRK
+8F73:10 04       BPL $8F79
+8F75:22                   ???
+8F76:44                   ???
+8F77:40          RTI
+8F78:00          BRK
+8F79:00          BRK
+8F7A:40          RTI
+8F7B:00          BRK
+8F7C:08          PHP
+8F7D:11 02       ORA ($02),Y
+8F7F:12                   ???
+8F80:01 00       ORA ($00,X)
+8F82:10 20       BPL $8FA4
+8F84:44                   ???
+8F85:08          PHP
+8F86:00          BRK
+8F87:01 00       ORA ($00,X)
+8F89:00          BRK
+8F8A:08          PHP
+8F8B:11 62       ORA ($62),Y
+8F8D:04                   ???
+8F8E:00          BRK
+8F8F:00          BRK
+8F90:00          BRK
+8F91:00          BRK
+8F92:00          BRK
+8F93:04                   ???
+8F94:02                   ???
+8F95:00          BRK
+8F96:00          BRK
+8F97:00          BRK
+8F98:00          BRK
+8F99:22                   ???
+8F9A:11 00       ORA ($00),Y
+8F9C:00          BRK
+8F9D:00          BRK
+8F9E:00          BRK
+8F9F:00          BRK
+8FA0:11 12       ORA ($12),Y
+8FA2:01 04       ORA ($04,X)
+8FA4:00          BRK
+8FA5:00          BRK
+8FA6:20 08 62    JSR $6208
+8FA9:24 02       BIT $02
+8FAB:10 02       BPL $8FAF
+8FAD:04                   ???
+8FAE:04                   ???
+8FAF:08          PHP
+8FB0:02                   ???
+8FB1:00          BRK
+8FB2:40          RTI
+8FB3:10 08       BPL $8FBD
+8FB5:11 02       ORA ($02),Y
+8FB7:02                   ???
+8FB8:00          BRK
+8FB9:00          BRK
+8FBA:02                   ???
+8FBB:20 44 08    JSR $0844
+8FBE:48          PHA
+8FBF:04                   ???
+8FC0:00          BRK
+8FC1:40          RTI
+8FC2:00          BRK
+8FC3:11 22       ORA ($22),Y
+8FC5:00          BRK
+8FC6:04                   ???
+8FC7:00          BRK
+8FC8:00          BRK
+8FC9:00          BRK
+8FCA:44                   ???
+8FCB:08          PHP
+8FCC:13                   ???
+8FCD:00          BRK
+8FCE:00          BRK
+8FCF:00          BRK
+8FD0:00          BRK
+8FD1:00          BRK
+8FD2:10 08       BPL $8FDC
+8FD4:00          BRK
+8FD5:08          PHP
+8FD6:08          PHP
+8FD7:01 00       ORA ($00,X)
+8FD9:11 00       ORA ($00),Y
+8FDB:00          BRK
+8FDC:22                   ???
+8FDD:20 10 20    JSR $2010
+8FE0:08          PHP
+8FE1:00          BRK
+8FE2:00          BRK
+8FE3:04                   ???
+8FE4:02                   ???
+8FE5:21 10       AND ($10,X)
+8FE7:02                   ???
+8FE8:00          BRK
+8FE9:00          BRK
+8FEA:20 08 11    JSR $1108
+8FED:20 00 10    JSR $1000
+8FF0:00          BRK
+8FF1:40          RTI
+8FF2:20 44 08    JSR $0844
+8FF5:49 09       EOR #$09
+8FF7:00          BRK
+8FF8:00          BRK
+8FF9:02                   ???
+8FFA:11 22       ORA ($22),Y
+8FFC:20 12 00    JSR $0012
+8FFF:00          BRK
+9000:10 44       BPL $9046
+9002:08          PHP
+9003:01 20       ORA ($20,X)
+9005:00          BRK
+9006:00          BRK
+9007:00          BRK
+9008:11 22       ORA ($22),Y
+900A:4C 00 00    JMP $0000
+900D:00          BRK
+900E:00          BRK
+900F:00          BRK
+9010:40          RTI
+9011:20 00 00    JSR $0000
+9014:20 20 04    JSR $0420
+9017:00          BRK
+9018:44                   ???
+9019:00          BRK
+901A:00          BRK
+901B:08          PHP
+901C:01 41       ORA ($41,X)
+901E:00          BRK
+901F:21 00       AND ($00,X)
+9021:00          BRK
+9022:10 08       BPL $902C
+9024:04                   ???
+9025:41 08       EOR ($08,X)
+9027:00          BRK
+9028:00          BRK
+9029:00          BRK
+902A:21 44       AND ($44,X)
+902C:00          BRK
+902D:01 40       ORA ($40,X)
+902F:00          BRK
+9030:00          BRK
+9031:02                   ???
+9032:11 22       ORA ($22),Y
+9034:24 26       BIT $26
+9036:00          BRK
+9037:00          BRK
+9038:08          PHP
+9039:44                   ???
+903A:08          PHP
+903B:01 49       ORA ($49,X)
+903D:00          BRK
+903E:00          BRK
+903F:40          RTI
+9040:10 22       BPL $9064
+9042:04                   ???
+9043:00          BRK
+9044:01 00       ORA ($00,X)
+9046:00          BRK
+9047:44                   ???
+9048:08          PHP
+9049:31 02       AND ($02),Y
+904B:00          BRK
+904C:00          BRK
+904D:00          BRK
+904E:00          BRK
+904F:00          BRK
+9050:02                   ???
+9051:01 00       ORA ($00,X)
+9053:00          BRK
+9054:01 11       ORA ($11,X)
+9056:00          BRK
+9057:10 02       BPL $905B
+9059:00          BRK
+905A:20 04 02    JSR $0204
+905D:02                   ???
+905E:04                   ???
+905F:01 00       ORA ($00,X)
+9061:40          RTI
+9062:20 10 04    JSR $0410
+9065:22                   ???
+9066:00          BRK
+9067:00          BRK
+9068:00          BRK
+9069:04                   ???
+906A:11 02       ORA ($02),Y
+906C:04                   ???
+906D:00          BRK
+906E:02                   ???
+906F:00          BRK
+9070:08          PHP
+9071:44                   ???
+9072:08          PHP
+9073:11 19       ORA ($19),Y
+9075:01 00       ORA ($00,X)
+9077:20 10 22    JSR $2210
+907A:04                   ???
+907B:24 02       BIT $02
+907D:00          BRK
+907E:00          BRK
+907F:42                   ???
+9080:08          PHP
+9081:11 00       ORA ($00),Y
+9083:04                   ???
+9084:00          BRK
+9085:00          BRK
+9086:10 22       BPL $90AA
+9088:44                   ???
+9089:08          PHP
+908A:00          BRK
+908B:00          BRK
+908C:00          BRK
+908D:00          BRK
+908E:00          BRK
+908F:08          PHP
+9090:04                   ???
+9091:00          BRK
+9092:00          BRK
+9093:04                   ???
+9094:44                   ???
+9095:00          BRK
+9096:40          RTI
+9097:08          PHP
+9098:00          BRK
+9099:00          BRK
+909A:11 10       ORA ($10),Y
+909C:08          PHP
+909D:10 04       BPL $90A3
+909F:00          BRK
+90A0:00          BRK
+90A1:02                   ???
+90A2:41 10       EOR ($10,X)
+90A4:08          PHP
+90A5:01 00       ORA ($00,X)
+90A7:00          BRK
+90A8:10 44       BPL $90EE
+90AA:08          PHP
+90AB:10 00       BPL $90AD
+90AD:08          PHP
+90AE:00          BRK
+90AF:20 10 22    JSR $2210
+90B2:44                   ???
+90B3:64                   ???
+90B4:04                   ???
+90B5:00          BRK
+90B6:00          BRK
+90B7:41 08       EOR ($08,X)
+90B9:11 10       ORA ($10),Y
+90BB:09 00       ORA #$00
+90BD:00          BRK
+90BE:08          PHP
+90BF:22                   ???
+90C0:44                   ???
+90C1:00          BRK
+90C2:10 00       BPL $90C4
+90C4:00          BRK
+90C5:40          RTI
+90C6:08          PHP
+90C7:11 24       ORA ($24),Y
+90C9:00          BRK
+90CA:00          BRK
+90CB:00          BRK
+90CC:00          BRK
+90CD:00          BRK
+90CE:20 01 00    JSR $0001
+90D1:10 10       BPL $90E3
+90D3:02                   ???
+90D4:00          BRK
+90D5:22                   ???
+90D6:00          BRK
+90D7:00          BRK
+90D8:44                   ???
+90D9:40          RTI
+90DA:20 40 10    JSR $1040
+90DD:00          BRK
+90DE:00          BRK
+90DF:08          PHP
+90E0:04                   ???
+90E1:42                   ???
+90E2:20 04 00    JSR $0004
+90E5:00          BRK
+90E6:40          RTI
+90E7:10 22       BPL $910B
+90E9:40          RTI
+90EA:00          BRK
+90EB:20 00 00    JSR $0000
+90EE:41 08       EOR ($08,X)
+90F0:11 12       ORA ($12),Y
+90F2:13                   ???
+90F3:00          BRK
+90F4:00          BRK
+90F5:04                   ???
+90F6:22                   ???
+90F7:44                   ???
+90F8:40          RTI
+90F9:24 00       BIT $00
+90FB:00          BRK
+90FC:20 08 11    JSR $1108
+90FF:02                   ???
+9100:40          RTI
+9101:00          BRK
+9102:00          BRK
+9103:00          BRK
+9104:22                   ???
+9105:44                   ???
+9106:18          CLC
+9107:01 00       ORA ($00,X)
+9109:00          BRK
+910A:00          BRK
+910B:00          BRK
+910C:00          BRK
+910D:41 00       EOR ($00,X)
+910F:00          BRK
+9110:40          RTI
+9111:40          RTI
+9112:08          PHP
+9113:00          BRK
+9114:08          PHP
+9115:01 00       ORA ($00,X)
+9117:10 02       BPL $911B
+9119:02                   ???
+911A:01 42       ORA ($42,X)
+911C:00          BRK
+911D:00          BRK
+911E:20 10 08    JSR $0810
+9121:02                   ???
+9122:11 00       ORA ($00),Y
+9124:00          BRK
+9125:00          BRK
+9126:44                   ???
+9127:08          PHP
+9128:01 02       ORA ($02,X)
+912A:00          BRK
+912B:01 00       ORA ($00,X)
+912D:04                   ???
+912E:24 44       BIT $44
+9130:48          PHA
+9131:4C 00 00    JMP $0000
+9134:10 08       BPL $913E
+9136:11 02       ORA ($02),Y
+9138:12                   ???
+9139:01 00       ORA ($00,X)
+913B:00          BRK
+913C:21 44       AND ($44,X)
+913E:08          PHP
+913F:00          BRK
+9140:02                   ???
+9141:00          BRK
+9142:00          BRK
+9143:08          PHP
+9144:11 62       ORA ($62),Y
+9146:04                   ???
+9147:00          BRK
+9148:00          BRK
+9149:00          BRK
+914A:00          BRK
+914B:00          BRK
+914C:04                   ???
+914D:02                   ???
+914E:00          BRK
+914F:00          BRK
+9150:02                   ???
+9151:22                   ???
+9152:00          BRK
+9153:20 04 00    JSR $0004
+9156:04                   ???
+9157:08          PHP
+9158:08          PHP
+9159:04                   ???
+915A:08          PHP
+915B:02                   ???
+915C:00          BRK
+915D:00          BRK
+915E:41 20       EOR ($20,X)
+9160:08          PHP
+9161:44                   ???
+9162:00          BRK
+9163:00          BRK
+9164:00          BRK
+9165:08          PHP
+9166:22                   ???
+9167:04                   ???
+9168:08          PHP
+9169:00          BRK
+916A:04                   ???
+916B:00          BRK
+916C:10 08       BPL $9176
+916E:11 22       ORA ($22),Y
+9170:34                   ???
+9171:02                   ???
+9172:00          BRK
+9173:40          RTI
+9174:20 44 08    JSR $0844
+9177:48          PHA
+9178:04                   ???
+9179:00          BRK
+917A:00          BRK
+917B:04                   ???
+917C:11 22       ORA ($22),Y
+917E:00          BRK
+917F:08          PHP
+9180:00          BRK
+9181:00          BRK
+9182:20 44 08    JSR $0844
+9185:13                   ???
+9186:00          BRK
+9187:00          BRK
+9188:00          BRK
+9189:00          BRK
+918A:00          BRK
+918B:10 08       BPL $9195
+918D:00          BRK
+918E:9D CA 95    STA $95CA,X
+9191:AE E0 A0    LDX $A0E0
+9194:90 A4       BCC $913A
+9196:A7                   ???
+9197:A6 93       LDX $93
+9199:9D BA 9C    STA $9CBA,X
+919C:CE A7 8C    DEC $8CA7
+919F:CD BB F3    CMP $F3BB
+91A2:9C                   ???
+91A3:CD C8 B1    CMP $B1C8
+91A6:8C 99 83    STY $8399
+91A9:D7                   ???
+91AA:8E D8 8B    STX $8BD8
+91AD:D1 8A       CMP ($8A),Y
+91AF:C1 A0       CMP ($A0,X)
+91B1:C4 80       CPY $80
+91B3:91 A0       STA ($A0),Y
+91B5:C4 88       CPY $88
+91B7:D0 88       BNE $9141
+91B9:C0 AC       CPY #$AC
+91BB:C4 88       CPY $88
+91BD:81 A0       STA ($A0,X)
+91BF:84 80       STY $80
+91C1:81 81       STA ($81,X)
+91C3:80                   ???
+91C4:81 A0       STA ($A0,X)
+91C6:80                   ???
+91C7:80                   ???
+91C8:80                   ???
+91C9:80                   ???
+91CA:C5 8A       CMP $8A
+91CC:C5 A2       CMP $A2
+91CE:F5 A8       SBC $A8,X
+91D0:D6 B8       DEC $B8,X
+91D2:81 83       STA ($83,X)
+91D4:D1 90       CMP ($90),Y
+91D6:9C                   ???
+91D7:99 CD F4    STA $F4CD,Y
+91DA:E9 F1       SBC #$F1
+91DC:B8          CLV
+91DD:9E                   ???
+91DE:B3                   ???
+91DF:B4 EE       LDY $EE,X
+91E1:CD B1 B4    CMP $B4B1
+91E4:A2 C6       LDX #$C6
+91E6:B2                   ???
+91E7:E4 8C       CPX $8C
+91E9:DC                   ???
+91EA:BA          TSX
+91EB:E0 AE       CPX #$AE
+91ED:C4 AA       CPY $AA
+91EF:84 82       STY $82
+91F1:91 82       STA ($82),Y
+91F3:C4 80       CPY $80
+91F5:91 A2       STA ($A2),Y
+91F7:C0 A2       CPY #$A2
+91F9:80                   ???
+91FA:B0 91       BCS $918D
+91FC:A2 84       LDX #$84
+91FE:80                   ???
+91FF:91 80       STA ($80),Y
+9201:84 85       STY $85
+9203:80                   ???
+9204:84 80       STY $80
+9206:80                   ???
+9207:80                   ???
+9208:80                   ???
+9209:80                   ???
+920A:95 AA       STA $AA,X
+920C:94 8A       STY $8A,X
+920E:D5 A3       CMP $A3,X
+9210:D9 E2 84    CMP $84E2,Y
+9213:8C 84 C2    STY $C284
+9216:F3                   ???
+9217:E4 B4       CPX $B4
+9219:D2                   ???
+921A:A4 C7       LDY $C7
+921C:E3                   ???
+921D:F9 CE D1    SBC $D1CE,Y
+9220:B9 B7 C6    LDA $C6B7,Y
+9223:D1 89       CMP ($89),Y
+9225:99 CA 91    STA $91CA,Y
+9228:B3                   ???
+9229:F0 EA       BEQ $9215
+922B:81 BB       STA ($BB,X)
+922D:91 A8       STA ($A8),Y
+922F:91 88       STA ($88),Y
+9231:C4 88       CPY $88
+9233:90 82       BCC $91B7
+9235:C4 88       CPY $88
+9237:81 8A       STA ($8A,X)
+9239:81 C0       STA ($C0,X)
+923B:C5 88       CMP $88
+923D:91 80       STA ($80),Y
+923F:C4 80       CPY $80
+9241:90 94       BCC $91D7
+9243:80                   ???
+9244:90 80       BCC $91C6
+9246:80                   ???
+9247:80                   ???
+9248:80                   ???
+9249:80                   ???
+924A:D4                   ???
+924B:A8          TAY
+924C:D1 A8       CMP ($A8),Y
+924E:D7                   ???
+924F:8E E5 8A    STX $8AE5
+9252:92                   ???
+9253:B0 90       BCS $91E5
+9255:88          DEY
+9256:CE 93 D3    DEC $D393
+9259:C9 93       CMP #$93
+925B:9D 8E E7    STA $E78E,X
+925E:B9 C6 E6    LDA $E6C6,Y
+9261:DD 98 C6    CMP $C698,X
+9264:A6 E4       LDX $E4
+9266:AB                   ???
+9267:C6 CC       DEC $CC
+9269:C1 A8       CMP ($A8,X)
+926B:87                   ???
+926C:EC C5 A2    CPX $A2C5
+926F:C5 A0       CMP $A0
+9271:90 A2       BCC $9215
+9273:C0 88       CPY #$88
+9275:90 A0       BCC $9217
+9277:84 A8       STY $A8
+9279:84 80       STY $80
+927B:96 A2       STX $A2,Y
+927D:C4 80       CPY $80
+927F:90 82       BCC $9203
+9281:C0 D0       CPY #$D0
+9283:80                   ???
+9284:C0 80       CPY #$80
+9286:80                   ???
+9287:80                   ???
+9288:80                   ???
+9289:80                   ???
+928A:D1 A2       CMP ($A2),Y
+928C:C5 A2       CMP $A2
+928E:DC                   ???
+928F:BA          TSX
+9290:94 AB       STY $AB,X
+9292:C8          INY
+9293:C0 C1       CPY #$C1
+9295:A0 BA       LDY #$BA
+9297:CE CC A6    DEC $A6CC
+929A:CF                   ???
+929B:F4                   ???
+929C:B8          CLV
+929D:9C                   ???
+929E:E6 99       INC $99
+92A0:9A          TXS
+92A1:F7                   ???
+92A2:E3                   ???
+92A3:98          TYA
+92A4:9A          TXS
+92A5:91 AE       STA ($AE),Y
+92A7:99 B2 86    STA $86B2,Y
+92AA:A2 9D       LDX #$9D
+92AC:B0 97       BCS $9245
+92AE:88          DEY
+92AF:95 82       STA $82,X
+92B1:C1 88       CMP ($88,X)
+92B3:81 A2       STA ($A2,X)
+92B5:C0 80       CPY #$80
+92B7:91 A0       STA ($A0),Y
+92B9:91 82       STA ($82),Y
+92BB:D8          CLD
+92BC:88          DEY
+92BD:91 82       STA ($82),Y
+92BF:C0 88       CPY #$88
+92C1:80                   ???
+92C2:C0 82       CPY #$82
+92C4:80                   ???
+92C5:82                   ???
+92C6:80                   ???
+92C7:80                   ???
+92C8:80                   ???
+92C9:80                   ???
+92CA:C5 8A       CMP $8A
+92CC:95 8A       STA $8A,X
+92CE:F1 EA       SBC ($EA),Y
+92D0:D1 AC       CMP ($AC),Y
+92D2:A1 82       LDA ($82,X)
+92D4:86 82       STX $82
+92D6:E9 B9       SBC #$B9
+92D8:B2                   ???
+92D9:9A          TXS
+92DA:BC D2 E3    LDY $E3D2,X
+92DD:F1 9B       SBC ($9B),Y
+92DF:E7                   ???
+92E0:E8          INX
+92E1:DC                   ???
+92E2:8C E3 E8    STY $E8E3
+92E5:C4 B8       CPY $B8
+92E7:E5 C8       SBC $C8
+92E9:99 88 F5    STA $F588,Y
+92EC:C0 DD       CPY #$DD
+92EE:A2 D4       LDX #$D4
+92F0:88          DEY
+92F1:84 A2       STY $A2
+92F3:84 88       STY $88
+92F5:81 80       STA ($80,X)
+92F7:C4 80       CPY $80
+92F9:C5 88       CMP $88
+92FB:E0 A2       CPX #$A2
+92FD:C4 88       CPY $88
+92FF:80                   ???
+9300:A2 80       LDX #$80
+9302:80                   ???
+9303:8A          TXA
+9304:80                   ???
+9305:88          DEY
+9306:80                   ???
+9307:80                   ???
+9308:80                   ???
+9309:80                   ???
+930A:94 AA       STY $AA,X
+930C:D4                   ???
+930D:A8          TAY
+930E:C5 AB       CMP $AB
+9310:C7                   ???
+9311:B2                   ???
+9312:84 89       STY $89
+9314:98          TYA
+9315:88          DEY
+9316:A4 E7       LDY $E7
+9318:C9 E9       CMP #$E9
+931A:F3                   ???
+931B:C9 8E       CMP #$8E
+931D:C7                   ???
+931E:EE 9C A3    INC $A39C
+9321:F3                   ???
+9322:B2                   ???
+9323:8C A3 93    STY $93A3
+9326:E0 95       CPX #$95
+9328:A3                   ???
+9329:E6 A2       INC $A2
+932B:D4                   ???
+932C:83                   ???
+932D:F6 88       INC $88,X
+932F:D1 A2       CMP ($A2),Y
+9331:90 88       BCC $92BB
+9333:91 A0       STA ($A0),Y
+9335:84 82       STY $82
+9337:90 82       BCC $92BB
+9339:94 A2       STY $A2,X
+933B:80                   ???
+933C:8B                   ???
+933D:91 A0       STA ($A0),Y
+933F:80                   ???
+9340:88          DEY
+9341:81 80       STA ($80,X)
+9343:A8          TAY
+9344:80                   ???
+9345:A0 80       LDY #$80
+9347:80                   ???
+9348:80                   ???
+9349:80                   ???
+934A:D1 A8       CMP ($A8),Y
+934C:D1 A2       CMP ($A2),Y
+934E:95 AE       STA $AE,X
+9350:9D CA 90    STA $90CA,X
+9353:A4 E0       LDY $E0
+9355:A0 93       LDY #$93
+9357:9D A7 A6    STA $A6A7,X
+935A:CE A7 BA    DEC $BAA7
+935D:9C                   ???
+935E:BB                   ???
+935F:F3                   ???
+9360:8C CD C8    STY $C8CD
+9363:B1 8C       LDA ($8C),Y
+9365:CD 83 D7    CMP $D783
+9368:8C 99 8B    STY $8B99
+936B:D1 8E       CMP ($8E),Y
+936D:D8          CLD
+936E:A0 C4       LDY #$C4
+9370:8A          TXA
+9371:C1 A0       CMP ($A0,X)
+9373:C4 80       CPY $80
+9375:91 88       STA ($88),Y
+9377:C0 88       CPY #$88
+9379:D0 88       BNE $9303
+937B:81 AC       STA ($AC,X)
+937D:C4 80       CPY $80
+937F:81 A0       STA ($A0,X)
+9381:84 81       STY $81
+9383:A0 81       LDY #$81
+9385:80                   ???
+9386:80                   ???
+9387:80                   ???
+9388:80                   ???
+9389:80                   ???
+938A:C5 A2       CMP $A2
+938C:C5 8A       CMP $8A
+938E:D6 B8       DEC $B8,X
+9390:F5 A8       SBC $A8,X
+9392:C1 90       CMP ($90,X)
+9394:81 83       STA ($83,X)
+9396:CD F4 9C    CMP $9CF4
+9399:99 B8 9E    STA $9EB8,Y
+939C:E9 F1       SBC #$F1
+939E:EE CD B3    INC $B3CD
+93A1:B4 A2       LDY $A2,X
+93A3:C6 B1       DEC $B1
+93A5:B4 8C       LDY $8C,X
+93A7:DC                   ???
+93A8:B2                   ???
+93A9:E4 AE       CPX $AE
+93AB:C4 BA       CPY $BA
+93AD:E0 82       CPX #$82
+93AF:91 AA       STA ($AA),Y
+93B1:84 80       STY $80
+93B3:91 82       STA ($82),Y
+93B5:C4 A2       CPY $A2
+93B7:80                   ???
+93B8:A2 C0       LDX #$C0
+93BA:A2 84       LDX #$84
+93BC:B0 91       BCS $934F
+93BE:80                   ???
+93BF:84 80       STY $80
+93C1:91 84       STA ($84),Y
+93C3:80                   ???
+93C4:85 80       STA $80
+93C6:80                   ???
+93C7:80                   ???
+93C8:80                   ???
+93C9:80                   ???
+93CA:94 8A       STY $8A,X
+93CC:95 AA       STA $AA,X
+93CE:D9 E2 D5    CMP $D5E2,Y
+93D1:A3                   ???
+93D2:84 C2       STY $C2
+93D4:84 8C       STY $8C
+93D6:B4 D2       LDY $D2,X
+93D8:F3                   ???
+93D9:E4 E3       CPX $E3
+93DB:F9 A4 C7    SBC $C7A4,Y
+93DE:B9 B7 CE    LDA $CEB7,Y
+93E1:D1 89       CMP ($89),Y
+93E3:99 C6 D1    STA $D1C6,Y
+93E6:B3                   ???
+93E7:F0 CA       BEQ $93B3
+93E9:91 BB       STA ($BB),Y
+93EB:91 EA       STA ($EA),Y
+93ED:81 88       STA ($88,X)
+93EF:C4 A8       CPY $A8
+93F1:91 82       STA ($82),Y
+93F3:C4 88       CPY $88
+93F5:90 8A       BCC $9381
+93F7:81 88       STA ($88,X)
+93F9:81 88       STA ($88,X)
+93FB:91 C0       STA ($C0),Y
+93FD:C5 80       CMP $80
+93FF:90 80       BCC $9381
+9401:C4 90       CPY $90
+9403:80                   ???
+9404:94 80       STY $80,X
+9406:80                   ???
+9407:80                   ???
+9408:80                   ???
+9409:80                   ???
+940A:D1 A8       CMP ($A8),Y
+940C:D4                   ???
+940D:A8          TAY
+940E:E5 8A       SBC $8A
+9410:D7                   ???
+9411:8E 90 88    STX $8890
+9414:92                   ???
+9415:B0 D3       BCS $93EA
+9417:C9 CE       CMP #$CE
+9419:93                   ???
+941A:8E E7 93    STX $93E7
+941D:9D E6 DD    STA $DDE6,X
+9420:B9 C6 A6    LDA $A6C6,Y
+9423:E4 98       CPX $98
+9425:C6 CC       DEC $CC
+9427:C1 AB       CMP ($AB,X)
+9429:C6 EC       DEC $EC
+942B:C5 A8       CMP $A8
+942D:87                   ???
+942E:A0 90       LDY #$90
+9430:A2 C5       LDX #$C5
+9432:88          DEY
+9433:90 A2       BCC $93D7
+9435:C0 A8       CPY #$A8
+9437:84 A0       STY $A0
+9439:84 A2       STY $A2
+943B:C4 80       CPY $80
+943D:96 82       STX $82,Y
+943F:C0 80       CPY #$80
+9441:90 C0       BCC $9403
+9443:80                   ???
+9444:D0 80       BNE $93C6
+9446:80                   ???
+9447:80                   ???
+9448:80                   ???
+9449:80                   ???
+944A:C5 A2       CMP $A2
+944C:D1 A2       CMP ($A2),Y
+944E:94 AB       STY $AB,X
+9450:DC                   ???
+9451:BA          TSX
+9452:C1 A0       CMP ($A0,X)
+9454:C8          INY
+9455:C0 CC       CPY #$CC
+9457:A6 BA       LDX $BA
+9459:CE B8 9C    DEC $9CB8
+945C:CF                   ???
+945D:F4                   ???
+945E:9A          TXS
+945F:F7                   ???
+9460:E6 99       INC $99
+9462:9A          TXS
+9463:91 E3       STA ($E3),Y
+9465:98          TYA
+9466:B2                   ???
+9467:86 AE       STX $AE
+9469:99 C0 97    STA $97C0,Y
+946C:A2 9D       LDX #$9D
+946E:82                   ???
+946F:C1 88       CMP ($88,X)
+9471:95 A2       STA $A2,X
+9473:C0 88       CPY #$88
+9475:81 A0       STA ($A0,X)
+9477:91 80       STA ($80),Y
+9479:91 88       STA ($88),Y
+947B:91 82       STA ($82),Y
+947D:D8          CLD
+947E:88          DEY
+947F:80                   ???
+9480:82                   ???
+9481:C0 80       CPY #$80
+9483:82                   ???
+9484:C0 82       CPY #$82
+9486:80                   ???
+9487:80                   ???
+9488:80                   ???
+9489:80                   ???
+948A:95 8A       STA $8A,X
+948C:C5 8A       CMP $8A
+948E:D1 AC       CMP ($AC),Y
+9490:F1 EA       SBC ($EA),Y
+9492:86 82       STX $82
+9494:A1 82       LDA ($82,X)
+9496:B2                   ???
+9497:9A          TXS
+9498:E9 B9       SBC #$B9
+949A:E3                   ???
+949B:F1 BC       SBC ($BC),Y
+949D:D2                   ???
+949E:E8          INX
+949F:DC                   ???
+94A0:9B                   ???
+94A1:E7                   ???
+94A2:E8          INX
+94A3:C4 8C       CPY $8C
+94A5:E3                   ???
+94A6:C8          INY
+94A7:99 B8 E5    STA $E5B8,Y
+94AA:C0 DD       CPY #$DD
+94AC:88          DEY
+94AD:F5 88       SBC $88,X
+94AF:84 A2       STY $A2
+94B1:D4                   ???
+94B2:88          DEY
+94B3:81 A2       STA ($A2,X)
+94B5:84 80       STY $80
+94B7:C5 80       CMP $80
+94B9:C4 A2       CPY $A2
+94BB:C4 88       CPY $88
+94BD:E0 A2       CPX #$A2
+94BF:80                   ???
+94C0:88          DEY
+94C1:80                   ???
+94C2:80                   ???
+94C3:88          DEY
+94C4:80                   ???
+94C5:8A          TXA
+94C6:80                   ???
+94C7:80                   ???
+94C8:80                   ???
+94C9:80                   ???
+94CA:D4                   ???
+94CB:A8          TAY
+94CC:94 AA       STY $AA,X
+94CE:C7                   ???
+94CF:B2                   ???
+94D0:C5 AB       CMP $AB
+94D2:98          TYA
+94D3:88          DEY
+94D4:84 89       STY $89
+94D6:C9 E9       CMP #$E9
+94D8:A4 E7       LDY $E7
+94DA:8E C7 F3    STX $F3C7
+94DD:C9 A3       CMP #$A3
+94DF:F3                   ???
+94E0:EE 9C A3    INC $A39C
+94E3:93                   ???
+94E4:B2                   ???
+94E5:8C A3 E6    STY $E6A3
+94E8:E0 95       CPX #$95
+94EA:83                   ???
+94EB:F6 A2       INC $A2,X
+94ED:D4                   ???
+94EE:A2 90       LDX #$90
+94F0:88          DEY
+94F1:D1 A0       CMP ($A0),Y
+94F3:84 88       STY $88
+94F5:91 82       STA ($82),Y
+94F7:94 82       STY $82,X
+94F9:90 8B       BCC $9486
+94FB:91 A2       STA ($A2),Y
+94FD:80                   ???
+94FE:88          DEY
+94FF:81 A0       STA ($A0,X)
+9501:80                   ???
+9502:80                   ???
+9503:A0 80       LDY #$80
+9505:A8          TAY
+9506:80                   ???
+9507:80                   ???
+9508:80                   ???
+9509:80                   ???
+950A:D1 A2       CMP ($A2),Y
+950C:D1 A8       CMP ($A8),Y
+950E:D5 AA       CMP $AA,X
+9510:D5 AA       CMP $AA,X
+9512:C5 82       CMP $82
+9514:80                   ???
+9515:80                   ???
+9516:D5 AA       CMP $AA,X
+9518:D5 AA       CMP $AA,X
+951A:D5 AA       CMP $AA,X
+951C:80                   ???
+951D:A8          TAY
+951E:D5 AA       CMP $AA,X
+9520:D5 8A       CMP $8A,X
+9522:D5 AA       CMP $AA,X
+9524:D5 A8       CMP $A8,X
+9526:D5 AA       CMP $AA,X
+9528:D5 AA       CMP $AA,X
+952A:94 8A       STY $8A,X
+952C:80                   ???
+952D:80                   ???
+952E:D5 AA       CMP $AA,X
+9530:D5 AA       CMP $AA,X
+9532:D5 AA       CMP $AA,X
+9534:81 A0       STA ($A0,X)
+9536:D4                   ???
+9537:AA          TAX
+9538:D5 AA       CMP $AA,X
+953A:D5 AA       CMP $AA,X
+953C:D5 A2       CMP $A2,X
+953E:D5 AA       CMP $AA,X
+9540:D5 AA       CMP $AA,X
+9542:D0 A8       BNE $94EC
+9544:80                   ???
+9545:80                   ???
+9546:D5 AA       CMP $AA,X
+9548:D5 AA       CMP $AA,X
+954A:D5 AA       CMP $AA,X
+954C:85 80       STA $80
+954E:D1 AA       CMP ($AA),Y
+9550:D5 AA       CMP $AA,X
+9552:D5 AA       CMP $AA,X
+9554:D5 8A       CMP $8A,X
+9556:D5 AA       CMP $AA,X
+9558:D5 AA       CMP $AA,X
+955A:C0 A2       CPY #$A2
+955C:81 80       STA ($80,X)
+955E:D5 AA       CMP $AA,X
+9560:D5 AA       CMP $AA,X
+9562:D4                   ???
+9563:AA          TAX
+9564:95 80       STA $80,X
+9566:C5 AA       CMP $AA
+9568:D5 AA       CMP $AA,X
+956A:D4                   ???
+956B:AA          TAX
+956C:D5 AA       CMP $AA,X
+956E:D5 AA       CMP $AA,X
+9570:D5 AA       CMP $AA,X
+9572:80                   ???
+9573:8A          TXA
+9574:85 80       STA $80
+9576:D5 AA       CMP $AA,X
+9578:D5 AA       CMP $AA,X
+957A:D0 AA       BNE $9526
+957C:D5 80       CMP $80,X
+957E:95 AA       STA $AA,X
+9580:D5 AA       CMP $AA,X
+9582:D1 AA       CMP ($AA),Y
+9584:D5 AA       CMP $AA,X
+9586:D5 AA       CMP $AA,X
+9588:D5 AA       CMP $AA,X
+958A:80                   ???
+958B:A8          TAY
+958C:94 80       STY $80,X
+958E:D5 AA       CMP $AA,X
+9590:D5 AA       CMP $AA,X
+9592:C0 AA       CPY #$AA
+9594:D5 82       CMP $82,X
+9596:D5 A8       CMP $A8,X
+9598:D5 AA       CMP $AA,X
+959A:C5 AA       CMP $AA
+959C:D5 AA       CMP $AA,X
+959E:D5 AA       CMP $AA,X
+95A0:D5 AA       CMP $AA,X
+95A2:80                   ???
+95A3:A0 D1       LDY #$D1
+95A5:80                   ???
+95A6:D5 AA       CMP $AA,X
+95A8:D5 AA       CMP $AA,X
+95AA:80                   ???
+95AB:AA          TAX
+95AC:D5 8A       CMP $8A,X
+95AE:D5 A2       CMP $A2,X
+95B0:D5 AA       CMP $AA,X
+95B2:95 AA       STA $AA,X
+95B4:D5 AA       CMP $AA,X
+95B6:D5 AA       CMP $AA,X
+95B8:D5 AA       CMP $AA,X
+95BA:80                   ???
+95BB:80                   ???
+95BC:C5 82       CMP $82
+95BE:D5 AA       CMP $AA,X
+95C0:D5 AA       CMP $AA,X
+95C2:80                   ???
+95C3:A8          TAY
+95C4:D5 AA       CMP $AA,X
+95C6:D5 8A       CMP $8A,X
+95C8:D5 AA       CMP $AA,X
+95CA:D5 A8       CMP $A8,X
+95CC:D5 AA       CMP $AA,X
+95CE:D5 AA       CMP $AA,X
+95D0:D5 AA       CMP $AA,X
+95D2:80                   ???
+95D3:80                   ???
+95D4:94 8A       STY $8A,X
+95D6:D5 AA       CMP $AA,X
+95D8:D5 AA       CMP $AA,X
+95DA:81 A0       STA ($A0,X)
+95DC:D5 AA       CMP $AA,X
+95DE:D5 AA       CMP $AA,X
+95E0:D4                   ???
+95E1:AA          TAX
+95E2:D5 A2       CMP $A2,X
+95E4:D5 AA       CMP $AA,X
+95E6:D5 AA       CMP $AA,X
+95E8:D5 AA       CMP $AA,X
+95EA:80                   ???
+95EB:80                   ???
+95EC:D0 A8       BNE $9596
+95EE:D5 AA       CMP $AA,X
+95F0:D5 AA       CMP $AA,X
+95F2:85 80       STA $80
+95F4:D5 AA       CMP $AA,X
+95F6:D5 AA       CMP $AA,X
+95F8:D1 AA       CMP ($AA),Y
+95FA:D5 8A       CMP $8A,X
+95FC:D5 AA       CMP $AA,X
+95FE:D5 AA       CMP $AA,X
+9600:D5 AA       CMP $AA,X
+9602:81 80       STA ($80,X)
+9604:C0 A2       CPY #$A2
+9606:D5 AA       CMP $AA,X
+9608:D5 AA       CMP $AA,X
+960A:95 80       STA $80,X
+960C:D4                   ???
+960D:AA          TAX
+960E:D5 AA       CMP $AA,X
+9610:C5 AA       CMP $AA
+9612:D5 AA       CMP $AA,X
+9614:D4                   ???
+9615:AA          TAX
+9616:D5 AA       CMP $AA,X
+9618:D5 AA       CMP $AA,X
+961A:85 80       STA $80
+961C:80                   ???
+961D:8A          TXA
+961E:D5 AA       CMP $AA,X
+9620:D5 AA       CMP $AA,X
+9622:D5 80       CMP $80,X
+9624:D0 AA       BNE $95D0
+9626:D5 AA       CMP $AA,X
+9628:95 AA       STA $AA,X
+962A:D5 AA       CMP $AA,X
+962C:D1 AA       CMP ($AA),Y
+962E:D5 AA       CMP $AA,X
+9630:D5 AA       CMP $AA,X
+9632:94 80       STY $80,X
+9634:80                   ???
+9635:A8          TAY
+9636:D5 AA       CMP $AA,X
+9638:D5 AA       CMP $AA,X
+963A:D5 82       CMP $82,X
+963C:C0 AA       CPY #$AA
+963E:D5 AA       CMP $AA,X
+9640:D5 A8       CMP $A8,X
+9642:D5 AA       CMP $AA,X
+9644:C5 AA       CMP $AA
+9646:D5 AA       CMP $AA,X
+9648:D5 AA       CMP $AA,X
+964A:D1 80       CMP ($80),Y
+964C:80                   ???
+964D:A0 D5       LDY #$D5
+964F:AA          TAX
+9650:D5 AA       CMP $AA,X
+9652:D5 8A       CMP $8A,X
+9654:80                   ???
+9655:AA          TAX
+9656:D5 AA       CMP $AA,X
+9658:D5 A2       CMP $A2,X
+965A:D5 AA       CMP $AA,X
+965C:95 AA       STA $AA,X
+965E:87                   ???
+965F:F0 80       BEQ $95E1
+9661:80                   ???
+9662:8E 80 80    STX $8080
+9665:9C                   ???
+9666:C0 8F       CPY #$8F
+9668:C0 87       CPY #$87
+966A:80                   ???
+966B:80                   ???
+966C:F8          SED
+966D:81 9E       STA ($9E,X)
+966F:E0 81       CPX #$81
+9671:80                   ???
+9672:80                   ???
+9673:C0 F7       CPY #$F7
+9675:EC DF FF    CPX $FFDF
+9678:8F                   ???
+9679:80                   ???
+967A:80                   ???
+967B:DF                   ???
+967C:BB                   ???
+967D:F7                   ???
+967E:B6 86       LDX $86,Y
+9680:80                   ???
+9681:80                   ???
+9682:FC                   ???
+9683:EE DD DF    INC $DFDD
+9686:8D 80 80    STA $8080
+9689:E0 BB       CPX #$BB
+968B:F7                   ???
+968C:FE 9F 80    INC $809F,X
+968F:80                   ???
+9690:80                   ???
+9691:EE DD B3    INC $B3DD
+9694:80                   ???
+9695:80                   ???
+9696:80                   ???
+9697:80                   ???
+9698:80                   ???
+9699:80                   ???
+969A:9F                   ???
+969B:80                   ???
+969C:80                   ???
+969D:9C                   ???
+969E:C0 83       CPY #$83
+96A0:80                   ???
+96A1:B8          CLV
+96A2:80                   ???
+96A3:80                   ???
+96A4:F0 80       BEQ $9626
+96A6:BE 80 9E    LDX $9E80,Y
+96A9:80                   ???
+96AA:80                   ???
+96AB:E0 87       CPX #$87
+96AD:F8          SED
+96AE:80                   ???
+96AF:87                   ???
+96B0:80                   ???
+96B1:80                   ???
+96B2:80                   ???
+96B3:DE BB FF    DEC $FFBB,X
+96B6:FE BF 80    INC $80BF,X
+96B9:80                   ???
+96BA:FC                   ???
+96BB:EE DD DB    INC $DBDD
+96BE:99 80 80    STA $8080,Y
+96C1:F0 BB       BEQ $967E
+96C3:F7                   ???
+96C4:FE B6 80    INC $80B6,X
+96C7:80                   ???
+96C8:80                   ???
+96C9:EF                   ???
+96CA:DD FB FF    CMP $FFFB,X
+96CD:80                   ???
+96CE:80                   ???
+96CF:80                   ???
+96D0:B8          CLV
+96D1:F7                   ???
+96D2:CE 81 80    DEC $8081
+96D5:80                   ???
+96D6:80                   ???
+96D7:80                   ???
+96D8:80                   ???
+96D9:FC                   ???
+96DA:80                   ???
+96DB:80                   ???
+96DC:F0 80       BEQ $965E
+96DE:8E 80 E0    STX $E080
+96E1:81 80       STA ($80,X)
+96E3:C0 83       CPY #$83
+96E5:F8          SED
+96E6:81 F8       STA ($F8,X)
+96E8:80                   ???
+96E9:80                   ???
+96EA:80                   ???
+96EB:9F                   ???
+96EC:E0 83       CPX #$83
+96EE:9C                   ???
+96EF:80                   ???
+96F0:80                   ???
+96F1:80                   ???
+96F2:F8          SED
+96F3:EE FD FB    INC $FBFD
+96F6:FF                   ???
+96F7:81 80       STA ($80,X)
+96F9:F0 BB       BEQ $96B6
+96FB:F7                   ???
+96FC:EE E6 80    INC $80E6
+96FF:80                   ???
+9700:C0 EF       CPY #$EF
+9702:DD FB DB    CMP $DBFB,X
+9705:81 80       STA ($80,X)
+9707:80                   ???
+9708:BC F7 EE    LDY $EEF7,X
+970B:FF                   ???
+970C:83                   ???
+970D:80                   ???
+970E:80                   ???
+970F:E0 DD       CPX #$DD
+9711:BB                   ???
+9712:86 80       STX $80
+9714:80                   ???
+9715:80                   ???
+9716:80                   ???
+9717:80                   ???
+9718:F0 83       BEQ $969D
+971A:80                   ???
+971B:C0 83       CPY #$83
+971D:B8          CLV
+971E:80                   ???
+971F:80                   ???
+9720:87                   ???
+9721:80                   ???
+9722:80                   ???
+9723:8E E0 87    STX $87E0
+9726:E0 83       CPX #$83
+9728:80                   ???
+9729:80                   ???
+972A:FC                   ???
+972B:80                   ???
+972C:8F                   ???
+972D:F0 80       BEQ $96AF
+972F:80                   ???
+9730:80                   ???
+9731:E0 BB       CPX #$BB
+9733:F7                   ???
+9734:EF                   ???
+9735:FF                   ???
+9736:87                   ???
+9737:80                   ???
+9738:C0 EF       CPY #$EF
+973A:DD BB 9B    CMP $9BBB,X
+973D:83                   ???
+973E:80                   ???
+973F:80                   ???
+9740:BE E7 EE    LDX $EEE7,Y
+9743:EF                   ???
+9744:86 80       STX $80
+9746:80                   ???
+9747:F0 DD       BEQ $9726
+9749:BB                   ???
+974A:FF                   ???
+974B:8F                   ???
+974C:80                   ???
+974D:80                   ???
+974E:80                   ???
+974F:F7                   ???
+9750:EE 99 80    INC $8099
+9753:80                   ???
+9754:80                   ???
+9755:80                   ???
+9756:80                   ???
+9757:C0 8F       CPY #$8F
+9759:80                   ???
+975A:8E E0 81    STX $81E0
+975D:80                   ???
+975E:9C                   ???
+975F:80                   ???
+9760:80                   ???
+9761:B8          CLV
+9762:80                   ???
+9763:9F                   ???
+9764:80                   ???
+9765:8F                   ???
+9766:80                   ???
+9767:80                   ???
+9768:F0 83       BEQ $96ED
+976A:BC C0 83    LDY $83C0,X
+976D:80                   ???
+976E:80                   ???
+976F:80                   ???
+9770:EF                   ???
+9771:DD BF FF    CMP $FFBF,X
+9774:9F                   ???
+9775:80                   ???
+9776:80                   ???
+9777:BE F7 EE    LDX $EEF7,Y
+977A:ED 8C 80    SBC $808C
+977D:80                   ???
+977E:F8          SED
+977F:DD BB BF    CMP $BFBB,X
+9782:9B                   ???
+9783:80                   ???
+9784:80                   ???
+9785:C0 F7       CPY #$F7
+9787:EE FD BF    INC $BFFD
+978A:80                   ???
+978B:80                   ???
+978C:80                   ???
+978D:DC                   ???
+978E:BB                   ???
+978F:E7                   ???
+9790:80                   ???
+9791:80                   ???
+9792:80                   ???
+9793:80                   ???
+9794:80                   ???
+9795:80                   ???
+9796:BE 80 80    LDX $8080,Y
+9799:B8          CLV
+979A:80                   ???
+979B:87                   ???
+979C:80                   ???
+979D:F0 80       BEQ $971F
+979F:80                   ???
+97A0:E0 81       CPX #$81
+97A2:FC                   ???
+97A3:80                   ???
+97A4:BC 80 80    LDY $8080,X
+97A7:C0 8F       CPY #$8F
+97A9:F0 81       BEQ $972C
+97AB:8E 80 80    STX $8080
+97AE:80                   ???
+97AF:BC F7 FE    LDY $FEF7,X
+97B2:FD FF 80    SBC $80FF,X
+97B5:80                   ???
+97B6:F8          SED
+97B7:DD BB B7    CMP $B7BB,X
+97BA:B3                   ???
+97BB:80                   ???
+97BC:80                   ???
+97BD:E0 F7       CPX #$F7
+97BF:EE FD ED    INC $EDFD
+97C2:80                   ???
+97C3:80                   ???
+97C4:80                   ???
+97C5:DE BB F7    DEC $F7BB,X
+97C8:FF                   ???
+97C9:81 80       STA ($80,X)
+97CB:80                   ???
+97CC:F0 EE       BEQ $97BC
+97CE:9D 83 80    STA $8083,X
+97D1:80                   ???
+97D2:80                   ???
+97D3:80                   ???
+97D4:80                   ???
+97D5:F8          SED
+97D6:81 80       STA ($80,X)
+97D8:E0 81       CPX #$81
+97DA:9C                   ???
+97DB:80                   ???
+97DC:C0 83       CPY #$83
+97DE:80                   ???
+97DF:80                   ???
+97E0:87                   ???
+97E1:F0 83       BEQ $9766
+97E3:F0 81       BEQ $9766
+97E5:80                   ???
+97E6:80                   ???
+97E7:BE C0 87    LDX $87C0,Y
+97EA:B8          CLV
+97EB:80                   ???
+97EC:80                   ???
+97ED:80                   ???
+97EE:F0 DD       BEQ $97CD
+97F0:FB                   ???
+97F1:F7                   ???
+97F2:FF                   ???
+97F3:83                   ???
+97F4:80                   ???
+97F5:E0 F7       CPX #$F7
+97F7:EE DD CD    INC $CDDD
+97FA:81 80       STA ($80,X)
+97FC:80                   ???
+97FD:DF                   ???
+97FE:BB                   ???
+97FF:F7                   ???
+9800:B7                   ???
+9801:83                   ???
+9802:80                   ???
+9803:80                   ???
+9804:F8          SED
+9805:EE DD FF    INC $FFDD
+9808:87                   ???
+9809:80                   ???
+980A:80                   ???
+980B:C0 BB       CPY #$BB
+980D:F7                   ???
+980E:8C 80 80    STY $8080
+9811:80                   ???
+9812:80                   ???
+9813:80                   ???
+9814:E0 87       CPX #$87
+9816:80                   ???
+9817:80                   ???
+9818:80                   ???
+9819:8E E0 81    STX $81E0
+981C:80                   ???
+981D:80                   ???
+981E:80                   ???
+981F:80                   ???
+9820:86 E0       STX $E0
+9822:81 80       STA ($80,X)
+9824:80                   ???
+9825:80                   ???
+9826:80                   ???
+9827:9E                   ???
+9828:F0 F8       BEQ $9822
+982A:8F                   ???
+982B:80                   ???
+982C:80                   ???
+982D:F0 EE       BEQ $981D
+982F:DF                   ???
+9830:EF                   ???
+9831:86 80       STX $80
+9833:80                   ???
+9834:DE BB F7    DEC $F7BB,X
+9837:86 80       STX $80
+9839:80                   ???
+983A:C0 FF       CPY #$FF
+983C:EE DD DF    INC $DFDD
+983F:8D 80 F8    STA $F880
+9842:F9 BB F7    SBC $F7BB,Y
+9845:FE 9F 80    INC $809F,X
+9848:9E                   ???
+9849:80                   ???
+984A:EE DD B3    INC $B3DD
+984D:80                   ???
+984E:80                   ???
+984F:87                   ???
+9850:80                   ???
+9851:80                   ???
+9852:80                   ???
+9853:9F                   ???
+9854:80                   ???
+9855:80                   ???
+9856:80                   ???
+9857:80                   ???
+9858:B8          CLV
+9859:80                   ???
+985A:87                   ???
+985B:80                   ???
+985C:80                   ???
+985D:80                   ???
+985E:80                   ???
+985F:98          TYA
+9860:80                   ???
+9861:87                   ???
+9862:80                   ???
+9863:80                   ???
+9864:80                   ???
+9865:80                   ???
+9866:F8          SED
+9867:C0 E3       CPY #$E3
+9869:BF                   ???
+986A:80                   ???
+986B:80                   ???
+986C:C0 BB       CPY #$BB
+986E:FF                   ???
+986F:BE 9B 80    LDX $809B,Y
+9872:80                   ???
+9873:F8          SED
+9874:EE DD 9B    INC $9BDD
+9877:80                   ???
+9878:80                   ???
+9879:80                   ???
+987A:FE BB F7    INC $F7BB,X
+987D:FE B6 80    INC $80B6,X
+9880:E0 E7       CPX #$E7
+9882:EF                   ???
+9883:DD FB FF    CMP $FFFB,X
+9886:80                   ???
+9887:F8          SED
+9888:80                   ???
+9889:B8          CLV
+988A:F7                   ???
+988B:CE 81 80    DEC $8081
+988E:9C                   ???
+988F:80                   ???
+9890:80                   ???
+9891:80                   ???
+9892:FC                   ???
+9893:80                   ???
+9894:80                   ???
+9895:80                   ???
+9896:80                   ???
+9897:E0 81       CPX #$81
+9899:9C                   ???
+989A:80                   ???
+989B:80                   ???
+989C:80                   ???
+989D:80                   ???
+989E:E0 80       CPX #$80
+98A0:9C                   ???
+98A1:80                   ???
+98A2:80                   ???
+98A3:80                   ???
+98A4:80                   ???
+98A5:E0 83       CPX #$83
+98A7:8E FF 81    STX $81FF
+98AA:80                   ???
+98AB:80                   ???
+98AC:EE FD FB    INC $FBFD
+98AF:ED 80 80    SBC $8080
+98B2:E0 BB       CPX #$BB
+98B4:F7                   ???
+98B5:EE 80 80    INC $8080
+98B8:80                   ???
+98B9:F8          SED
+98BA:EF                   ???
+98BB:DD FB DB    CMP $DBFB,X
+98BE:81 80       STA ($80,X)
+98C0:9F                   ???
+98C1:BF                   ???
+98C2:F7                   ???
+98C3:EE FF 83    INC $83FF
+98C6:E0 83       CPX #$83
+98C8:E0 DD       CPX #$DD
+98CA:BB                   ???
+98CB:86 80       STX $80
+98CD:F0 80       BEQ $984F
+98CF:80                   ???
+98D0:80                   ???
+98D1:F0 83       BEQ $9856
+98D3:80                   ???
+98D4:80                   ???
+98D5:80                   ???
+98D6:80                   ???
+98D7:87                   ???
+98D8:F0 80       BEQ $985A
+98DA:80                   ???
+98DB:80                   ???
+98DC:80                   ???
+98DD:80                   ???
+98DE:83                   ???
+98DF:F0 80       BEQ $9861
+98E1:80                   ???
+98E2:80                   ???
+98E3:80                   ???
+98E4:80                   ???
+98E5:8F                   ???
+98E6:B8          CLV
+98E7:FC                   ???
+98E8:87                   ???
+98E9:80                   ???
+98EA:80                   ???
+98EB:B8          CLV
+98EC:F7                   ???
+98ED:EF                   ???
+98EE:B7                   ???
+98EF:83                   ???
+98F0:80                   ???
+98F1:80                   ???
+98F2:EF                   ???
+98F3:DD BB 83    CMP $83BB,X
+98F6:80                   ???
+98F7:80                   ???
+98F8:E0 BF       CPX #$BF
+98FA:F7                   ???
+98FB:EE EF 86    INC $86EF
+98FE:80                   ???
+98FF:FC                   ???
+9900:FC                   ???
+9901:DD BB FF    CMP $FFBB,X
+9904:8F                   ???
+9905:80                   ???
+9906:8F                   ???
+9907:80                   ???
+9908:F7                   ???
+9909:EE 99 80    INC $8099
+990C:C0 83       CPY #$83
+990E:80                   ???
+990F:80                   ???
+9910:C0 8F       CPY #$8F
+9912:80                   ???
+9913:80                   ???
+9914:80                   ???
+9915:E0 F1       CPX #$F1
+9917:80                   ???
+9918:80                   ???
+9919:80                   ???
+991A:80                   ???
+991B:80                   ???
+991C:F0 E0       BEQ $98FE
+991E:F0 9F       BEQ $98BF
+9920:80                   ???
+9921:80                   ???
+9922:80                   ???
+9923:BC E0 D9    LDY $D9E0,X
+9926:8D 80 8E    STA $8E80
+9929:C0 DF       CPY #$DF
+992B:BF                   ???
+992C:8F                   ???
+992D:80                   ???
+992E:80                   ???
+992F:F8          SED
+9930:BE F7 EE    LDX $EEF7,Y
+9933:8F                   ???
+9934:80                   ???
+9935:80                   ???
+9936:E0 FF       CPX #$FF
+9938:DD BB BF    CMP $BFBB,X
+993B:9B                   ???
+993C:80                   ???
+993D:80                   ???
+993E:F8          SED
+993F:F7                   ???
+9940:EE FD BF    INC $BFFD
+9943:80                   ???
+9944:80                   ???
+9945:80                   ???
+9946:DC                   ???
+9947:BB                   ???
+9948:E7                   ???
+9949:80                   ???
+994A:80                   ???
+994B:80                   ???
+994C:80                   ???
+994D:80                   ???
+994E:80                   ???
+994F:BE 80 80    LDX $8080,Y
+9952:80                   ???
+9953:80                   ???
+9954:80                   ???
+9955:C7                   ???
+9956:83                   ???
+9957:80                   ???
+9958:80                   ???
+9959:80                   ???
+995A:80                   ???
+995B:C0 83       CPY #$83
+995D:C3                   ???
+995E:FF                   ???
+995F:80                   ???
+9960:80                   ???
+9961:80                   ???
+9962:F0 81       BEQ $98E5
+9964:E7                   ???
+9965:B6 80       LDX $80,Y
+9967:B8          CLV
+9968:80                   ???
+9969:FE FE BD    INC $BDFE,X
+996C:80                   ???
+996D:80                   ???
+996E:E0 FB       CPX #$FB
+9970:DD BB BF    CMP $BFBB,X
+9973:80                   ???
+9974:80                   ???
+9975:80                   ???
+9976:FF                   ???
+9977:F7                   ???
+9978:EE FD ED    INC $EDFD
+997B:80                   ???
+997C:80                   ???
+997D:E0 DF       CPX #$DF
+997F:BB                   ???
+9980:F7                   ???
+9981:FF                   ???
+9982:81 80       STA ($80,X)
+9984:80                   ???
+9985:F0 EE       BEQ $9975
+9987:9D 83 80    STA $8083,X
+998A:80                   ???
+998B:80                   ???
+998C:80                   ???
+998D:80                   ???
+998E:F8          SED
+998F:81 80       STA ($80,X)
+9991:80                   ???
+9992:80                   ???
+9993:80                   ???
+9994:9C                   ???
+9995:8E 80 80    STX $8080
+9998:80                   ???
+9999:80                   ???
+999A:80                   ???
+999B:8E 8C FE    STX $FE8C
+999E:83                   ???
+999F:80                   ???
+99A0:80                   ???
+99A1:C0 87       CPY #$87
+99A3:9C                   ???
+99A4:DB                   ???
+99A5:81 E0       STA ($E0,X)
+99A7:81 F8       STA ($F8,X)
+99A9:FB                   ???
+99AA:F7                   ???
+99AB:81 80       STA ($80,X)
+99AD:80                   ???
+99AE:EF                   ???
+99AF:F7                   ???
+99B0:EE FD 81    INC $81FD
+99B3:80                   ???
+99B4:80                   ???
+99B5:FC                   ???
+99B6:DF                   ???
+99B7:BB                   ???
+99B8:F7                   ???
+99B9:B7                   ???
+99BA:83                   ???
+99BB:80                   ???
+99BC:80                   ???
+99BD:FF                   ???
+99BE:EE DD FF    INC $FFDD
+99C1:87                   ???
+99C2:80                   ???
+99C3:80                   ???
+99C4:C0 BB       CPY #$BB
+99C6:F7                   ???
+99C7:8C 80 80    STY $8080
+99CA:80                   ???
+99CB:80                   ???
+99CC:80                   ???
+99CD:E0 87       CPX #$87
+99CF:80                   ???
+99D0:02                   ???
+99D1:BB                   ???
+99D2:5A                   ???
+99D3:30 5F       BMI $9A34
+99D5:EE 3D A8    INC $A83D
+99D8:60          RTS
+99D9:01 00       ORA ($00,X)
+99DB:00          BRK
+99DC:01 01       ORA ($01,X)
+99DE:00          BRK
+99DF:00          BRK
+99E0:01 01       ORA ($01,X)
+99E2:00          BRK
+99E3:00          BRK
+99E4:01 01       ORA ($01,X)
+99E6:00          BRK
+99E7:00          BRK
+99E8:01 01       ORA ($01,X)
+99EA:00          BRK
+99EB:00          BRK
+99EC:01 01       ORA ($01,X)
+99EE:00          BRK
+99EF:00          BRK
+99F0:01 01       ORA ($01,X)
+99F2:00          BRK
+99F3:00          BRK
+99F4:01 01       ORA ($01,X)
+99F6:00          BRK
+99F7:00          BRK
+99F8:01 01       ORA ($01,X)
+99FA:00          BRK
+99FB:00          BRK
+99FC:01 01       ORA ($01,X)
+99FE:00          BRK
+99FF:00          BRK
+9A00:01 01       ORA ($01,X)
+9A02:00          BRK
+9A03:00          BRK
+9A04:01 01       ORA ($01,X)
+9A06:00          BRK
+9A07:00          BRK
+9A08:01 01       ORA ($01,X)
+9A0A:00          BRK
+9A0B:00          BRK
+9A0C:01 01       ORA ($01,X)
+9A0E:00          BRK
+9A0F:00          BRK
+9A10:01 01       ORA ($01,X)
+9A12:00          BRK
+9A13:00          BRK
+9A14:01 01       ORA ($01,X)
+9A16:00          BRK
+9A17:00          BRK
+9A18:01 01       ORA ($01,X)
+9A1A:00          BRK
+9A1B:00          BRK
+9A1C:01 01       ORA ($01,X)
+9A1E:00          BRK
+9A1F:00          BRK
+9A20:01 01       ORA ($01,X)
+9A22:00          BRK
+9A23:00          BRK
+9A24:01 01       ORA ($01,X)
+9A26:00          BRK
+9A27:00          BRK
+9A28:01 01       ORA ($01,X)
+9A2A:00          BRK
+9A2B:00          BRK
+9A2C:01 01       ORA ($01,X)
+9A2E:00          BRK
+9A2F:00          BRK
+9A30:01 01       ORA ($01,X)
+9A32:00          BRK
+9A33:00          BRK
+9A34:01 01       ORA ($01,X)
+9A36:00          BRK
+9A37:00          BRK
+9A38:01 01       ORA ($01,X)
+9A3A:00          BRK
+9A3B:00          BRK
+9A3C:01 01       ORA ($01,X)
+9A3E:00          BRK
+9A3F:00          BRK
+9A40:01 01       ORA ($01,X)
+9A42:00          BRK
+9A43:00          BRK
+9A44:01 01       ORA ($01,X)
+9A46:00          BRK
+9A47:00          BRK
+9A48:01 01       ORA ($01,X)
+9A4A:00          BRK
+9A4B:00          BRK
+9A4C:01 01       ORA ($01,X)
+9A4E:00          BRK
+9A4F:00          BRK
+9A50:01 01       ORA ($01,X)
+9A52:00          BRK
+9A53:00          BRK
+9A54:01 01       ORA ($01,X)
+9A56:00          BRK
+9A57:00          BRK
+9A58:01 01       ORA ($01,X)
+9A5A:00          BRK
+9A5B:00          BRK
+9A5C:01 01       ORA ($01,X)
+9A5E:00          BRK
+9A5F:00          BRK
+9A60:01 01       ORA ($01,X)
+9A62:00          BRK
+9A63:00          BRK
+9A64:01 01       ORA ($01,X)
+9A66:00          BRK
+9A67:00          BRK
+9A68:01 01       ORA ($01,X)
+9A6A:00          BRK
+9A6B:00          BRK
+9A6C:01 01       ORA ($01,X)
+9A6E:00          BRK
+9A6F:00          BRK
+9A70:01 01       ORA ($01,X)
+9A72:00          BRK
+9A73:00          BRK
+9A74:01 01       ORA ($01,X)
+9A76:00          BRK
+9A77:00          BRK
+9A78:00          BRK
+9A79:01 00       ORA ($00,X)
+9A7B:00          BRK
+9A7C:01 01       ORA ($01,X)
+9A7E:00          BRK
+9A7F:00          BRK
+9A80:00          BRK
+9A81:01 00       ORA ($00,X)
+9A83:00          BRK
+9A84:01 01       ORA ($01,X)
+9A86:00          BRK
+9A87:00          BRK
+9A88:01 01       ORA ($01,X)
+9A8A:00          BRK
+9A8B:00          BRK
+9A8C:01 01       ORA ($01,X)
+9A8E:00          BRK
+9A8F:00          BRK
+9A90:01 01       ORA ($01,X)
+9A92:00          BRK
+9A93:00          BRK
+9A94:01 01       ORA ($01,X)
+9A96:00          BRK
+9A97:00          BRK
+9A98:01 01       ORA ($01,X)
+9A9A:00          BRK
+9A9B:00          BRK
+9A9C:01 01       ORA ($01,X)
+9A9E:53                   ???
+9A9F:9A          TXS
+9AA0:53                   ???
+9AA1:99 53 98    STA $9853,Y
+9AA4:2D 04 00    AND $0004
+9AA7:40          RTI
+9AA8:60          RTS
+9AA9:00          BRK
+9AAA:A9 7D       LDA #$7D
+9AAC:8D 52 40    STA $4052
+9AAF:A9 06       LDA #$06
+9AB1:8D 4D 40    STA $404D
+9AB4:A9 07       LDA #$07
+9AB6:8D 5F 40    STA $405F
+9AB9:A9 0F       LDA #$0F
+9ABB:8D 4E 40    STA $404E
+9ABE:A9 00       LDA #$00
+9AC0:8D 5E 40    STA $405E
+9AC3:A9 00       LDA #$00
+9AC5:8D 56 40    STA $4056
+9AC8:A0 49       LDY #$49
+9ACA:A9 40       LDA #$40
+9ACC:20 B5 B7    JSR $B7B5
+9ACF:EE 52 40    INC $4052
+9AD2:CE 4E 40    DEC $404E
+9AD5:10 08       BPL $9ADF
+9AD7:A9 0F       LDA #$0F
+9AD9:8D 4E 40    STA $404E
+9ADC:EE 4D 40    INC $404D
+9ADF:AD 4D 40    LDA $404D
+9AE2:CD 5F 40    CMP $405F
+9AE5:90 DC       BCC $9AC3
+9AE7:F0 01       BEQ $9AEA
+9AE9:60          RTS
+9AEA:AD 4E 40    LDA $404E
+9AED:CD 5E 40    CMP $405E
+9AF0:B0 D1       BCS $9AC3
+9AF2:60          RTS
+9AF3:01 60       ORA ($60,X)
+9AF5:01 00       ORA ($00,X)
+9AF7:00          BRK
+9AF8:0F                   ???
+9AF9:5A                   ???
+9AFA:40          RTI
+9AFB:00          BRK
+9AFC:00          BRK
+9AFD:00          BRK
+9AFE:00          BRK
+9AFF:02                   ???
+9B00:00          BRK
+9B01:00          BRK
+9B02:60          RTS
+9B03:01 00       ORA ($00,X)
+9B05:01 EF       ORA ($EF,X)
+9B07:D8          CLD
+9B08:00          BRK
+9B09:00          BRK
+9B0A:D8          CLD
+9B0B:00          BRK
+9B0C:00          BRK
+9B0D:00          BRK
+9B0E:00          BRK
+9B0F:00          BRK
+9B10:00          BRK
+9B11:00          BRK
+9B12:00          BRK
+9B13:00          BRK
+9B14:00          BRK
+9B15:00          BRK
+9B16:00          BRK
+9B17:00          BRK
+9B18:00          BRK
+9B19:00          BRK
+9B1A:00          BRK
+9B1B:00          BRK
+9B1C:00          BRK
+9B1D:00          BRK
+9B1E:00          BRK
+9B1F:00          BRK
+9B20:00          BRK
+9B21:00          BRK
+9B22:00          BRK
+9B23:00          BRK
+9B24:00          BRK
+9B25:00          BRK
+9B26:00          BRK
+9B27:00          BRK
+9B28:00          BRK
+9B29:00          BRK
+9B2A:00          BRK
+9B2B:00          BRK
+9B2C:00          BRK
+9B2D:00          BRK
+9B2E:00          BRK
+9B2F:00          BRK
+9B30:00          BRK
+9B31:00          BRK
+9B32:00          BRK
+9B33:00          BRK
+9B34:00          BRK
+9B35:00          BRK
+9B36:00          BRK
+9B37:00          BRK
+9B38:00          BRK
+9B39:00          BRK
+9B3A:00          BRK
+9B3B:00          BRK
+9B3C:00          BRK
+9B3D:00          BRK
+9B3E:00          BRK
+9B3F:00          BRK
+9B40:00          BRK
+9B41:00          BRK
+9B42:00          BRK
+9B43:00          BRK
+9B44:00          BRK
+9B45:00          BRK
+9B46:00          BRK
+9B47:00          BRK
+9B48:00          BRK
+9B49:00          BRK
+9B4A:00          BRK
+9B4B:00          BRK
+9B4C:00          BRK
+9B4D:00          BRK
+9B4E:00          BRK
+9B4F:00          BRK
+9B50:00          BRK
+9B51:00          BRK
+9B52:00          BRK
+9B53:00          BRK
+9B54:00          BRK
+9B55:00          BRK
+9B56:00          BRK
+9B57:00          BRK
+9B58:00          BRK
+9B59:00          BRK
+9B5A:00          BRK
+9B5B:00          BRK
+9B5C:00          BRK
+9B5D:00          BRK
+9B5E:00          BRK
+9B5F:00          BRK
+9B60:00          BRK
+9B61:00          BRK
+9B62:00          BRK
+9B63:00          BRK
+9B64:00          BRK
+9B65:00          BRK
+9B66:00          BRK
+9B67:00          BRK
+9B68:00          BRK
+9B69:00          BRK
+9B6A:00          BRK
+9B6B:00          BRK
+9B6C:00          BRK
+9B6D:00          BRK
+9B6E:00          BRK
+9B6F:00          BRK
+9B70:00          BRK
+9B71:00          BRK
+9B72:00          BRK
+9B73:00          BRK
+9B74:00          BRK
+9B75:00          BRK
+9B76:00          BRK
+9B77:00          BRK
+9B78:00          BRK
+9B79:00          BRK
+9B7A:00          BRK
+9B7B:00          BRK
+9B7C:00          BRK
+9B7D:00          BRK
+9B7E:00          BRK
+9B7F:00          BRK
+9B80:00          BRK
+9B81:00          BRK
+9B82:00          BRK
+9B83:00          BRK
+9B84:00          BRK
+9B85:00          BRK
+9B86:00          BRK
+9B87:00          BRK
+9B88:00          BRK
+9B89:00          BRK
+9B8A:00          BRK
+9B8B:00          BRK
+9B8C:00          BRK
+9B8D:00          BRK
+9B8E:00          BRK
+9B8F:00          BRK
+9B90:00          BRK
+9B91:00          BRK
+9B92:00          BRK
+9B93:00          BRK
+9B94:00          BRK
+9B95:00          BRK
+9B96:00          BRK
+9B97:00          BRK
+9B98:00          BRK
+9B99:00          BRK
+9B9A:00          BRK
+9B9B:00          BRK
+9B9C:00          BRK
+9B9D:00          BRK
+9B9E:00          BRK
+9B9F:00          BRK
+9BA0:00          BRK
+9BA1:00          BRK
+9BA2:00          BRK
+9BA3:00          BRK
+9BA4:00          BRK
+9BA5:00          BRK
+9BA6:00          BRK
+9BA7:00          BRK
+9BA8:00          BRK
+9BA9:00          BRK
+9BAA:00          BRK
+9BAB:00          BRK
+9BAC:00          BRK
+9BAD:00          BRK
+9BAE:00          BRK
+9BAF:00          BRK
+9BB0:00          BRK
+9BB1:00          BRK
+9BB2:16 0D       ASL $0D,X
+9BB4:00          BRK
+9BB5:00          BRK
+9BB6:00          BRK
+9BB7:00          BRK
+9BB8:00          BRK
+9BB9:00          BRK
+9BBA:00          BRK
+9BBB:00          BRK
+9BBC:00          BRK
+9BBD:00          BRK
+9BBE:00          BRK
+9BBF:00          BRK
+9BC0:00          BRK
+9BC1:00          BRK
+9BC2:00          BRK
+9BC3:00          BRK
+9BC4:00          BRK
+9BC5:00          BRK
+9BC6:00          BRK
+9BC7:00          BRK
+9BC8:00          BRK
+9BC9:00          BRK
+9BCA:00          BRK
+9BCB:00          BRK
+9BCC:00          BRK
+9BCD:00          BRK
+9BCE:00          BRK
+9BCF:00          BRK
+9BD0:00          BRK
+9BD1:00          BRK
+9BD2:00          BRK
+9BD3:00          BRK
+9BD4:00          BRK
+9BD5:00          BRK
+9BD6:00          BRK
+9BD7:00          BRK
+9BD8:00          BRK
+9BD9:00          BRK
+9BDA:00          BRK
+9BDB:00          BRK
+9BDC:00          BRK
+9BDD:00          BRK
+9BDE:00          BRK
+9BDF:00          BRK
+9BE0:00          BRK
+9BE1:00          BRK
+9BE2:00          BRK
+9BE3:00          BRK
+9BE4:00          BRK
+9BE5:00          BRK
+9BE6:00          BRK
+9BE7:00          BRK
+9BE8:00          BRK
+9BE9:00          BRK
+9BEA:00          BRK
+9BEB:00          BRK
+9BEC:00          BRK
+9BED:00          BRK
+9BEE:00          BRK
+9BEF:00          BRK
+9BF0:00          BRK
+9BF1:00          BRK
+9BF2:00          BRK
+9BF3:00          BRK
+9BF4:00          BRK
+9BF5:00          BRK
+9BF6:00          BRK
+9BF7:00          BRK
+9BF8:00          BRK
+9BF9:00          BRK
+9BFA:00          BRK
+9BFB:00          BRK
+9BFC:00          BRK
+9BFD:00          BRK
+9BFE:00          BRK
+9BFF:00          BRK
+9C00:00          BRK
+9C01:00          BRK
+9C02:00          BRK
+9C03:00          BRK
+9C04:00          BRK
+9C05:00          BRK
+9C06:00          BRK
+9C07:00          BRK
+9C08:00          BRK
+9C09:00          BRK
+9C0A:00          BRK
+9C0B:00          BRK
+9C0C:00          BRK
+9C0D:00          BRK
+9C0E:00          BRK
+9C0F:00          BRK
+9C10:00          BRK
+9C11:00          BRK
+9C12:00          BRK
+9C13:00          BRK
+9C14:00          BRK
+9C15:00          BRK
+9C16:00          BRK
+9C17:00          BRK
+9C18:00          BRK
+9C19:00          BRK
+9C1A:00          BRK
+9C1B:00          BRK
+9C1C:00          BRK
+9C1D:00          BRK
+9C1E:00          BRK
+9C1F:00          BRK
+9C20:00          BRK
+9C21:00          BRK
+9C22:00          BRK
+9C23:00          BRK
+9C24:00          BRK
+9C25:00          BRK
+9C26:00          BRK
+9C27:00          BRK
+9C28:00          BRK
+9C29:00          BRK
+9C2A:00          BRK
+9C2B:00          BRK
+9C2C:00          BRK
+9C2D:00          BRK
+9C2E:00          BRK
+9C2F:00          BRK
+9C30:00          BRK
+9C31:00          BRK
+9C32:00          BRK
+9C33:00          BRK
+9C34:00          BRK
+9C35:00          BRK
+9C36:00          BRK
+9C37:00          BRK
+9C38:00          BRK
+9C39:00          BRK
+9C3A:00          BRK
+9C3B:00          BRK
+9C3C:00          BRK
+9C3D:00          BRK
+9C3E:00          BRK
+9C3F:00          BRK
+9C40:00          BRK
+9C41:00          BRK
+9C42:00          BRK
+9C43:00          BRK
+9C44:00          BRK
+9C45:00          BRK
+9C46:00          BRK
+9C47:00          BRK
+9C48:00          BRK
+9C49:00          BRK
+9C4A:00          BRK
+9C4B:00          BRK
+9C4C:00          BRK
+9C4D:00          BRK
+9C4E:00          BRK
+9C4F:00          BRK
+9C50:00          BRK
+9C51:00          BRK
+9C52:00          BRK
+9C53:00          BRK
+9C54:00          BRK
+9C55:00          BRK
+9C56:00          BRK
+9C57:00          BRK
+9C58:00          BRK
+9C59:00          BRK
+9C5A:00          BRK
+9C5B:00          BRK
+9C5C:00          BRK
+9C5D:00          BRK
+9C5E:00          BRK
+9C5F:00          BRK
+9C60:00          BRK
+9C61:00          BRK
+9C62:00          BRK
+9C63:00          BRK
+9C64:00          BRK
+9C65:00          BRK
+9C66:00          BRK
+9C67:00          BRK
+9C68:00          BRK
+9C69:00          BRK
+9C6A:00          BRK
+9C6B:00          BRK
+9C6C:00          BRK
+9C6D:00          BRK
+9C6E:00          BRK
+9C6F:00          BRK
+9C70:00          BRK
+9C71:00          BRK
+9C72:00          BRK
+9C73:00          BRK
+9C74:00          BRK
+9C75:00          BRK
+9C76:00          BRK
+9C77:00          BRK
+9C78:00          BRK
+9C79:00          BRK
+9C7A:00          BRK
+9C7B:00          BRK
+9C7C:00          BRK
+9C7D:00          BRK
+9C7E:00          BRK
+9C7F:00          BRK
+9C80:00          BRK
+9C81:00          BRK
+9C82:00          BRK
+9C83:00          BRK
+9C84:00          BRK
+9C85:00          BRK
+9C86:00          BRK
+9C87:00          BRK
+9C88:00          BRK
+9C89:00          BRK
+9C8A:00          BRK
+9C8B:00          BRK
+9C8C:00          BRK
+9C8D:00          BRK
+9C8E:00          BRK
+9C8F:00          BRK
+9C90:00          BRK
+9C91:00          BRK
+9C92:00          BRK
+9C93:00          BRK
+9C94:00          BRK
+9C95:00          BRK
+9C96:00          BRK
+9C97:00          BRK
+9C98:00          BRK
+9C99:00          BRK
+9C9A:00          BRK
+9C9B:00          BRK
+9C9C:00          BRK
+9C9D:00          BRK
+9C9E:00          BRK
+9C9F:00          BRK
+9CA0:00          BRK
+9CA1:00          BRK
+9CA2:00          BRK
+9CA3:00          BRK
+9CA4:00          BRK
+9CA5:00          BRK
+9CA6:16 0E       ASL $0E,X
+9CA8:16 0E       ASL $0E,X
+9CAA:00          BRK
+9CAB:16 0D       ASL $0D,X
+9CAD:07                   ???
+9CAE:69 7A       ADC #$7A
+9CB0:00          BRK
+9CB1:00          BRK
+9CB2:00          BRK
+9CB3:7A                   ???
+9CB4:00          BRK
+9CB5:00          BRK
+9CB6:00          BRK
+9CB7:00          BRK
+9CB8:01 00       ORA ($00,X)
+9CBA:00          BRK
+9CBB:64                   ???
+9CBC:00          BRK
+9CBD:01 00       ORA ($00,X)
+9CBF:64                   ???
+9CC0:00          BRK
+9CC1:00          BRK
+9CC2:00          BRK
+9CC3:02                   ???
+9CC4:00          BRK
+9CC5:00          BRK
+9CC6:00          BRK
+9CC7:00          BRK
+9CC8:00          BRK
+9CC9:00          BRK
+9CCA:00          BRK
+9CCB:04                   ???
+9CCC:60          RTS
+9CCD:01 FF       ORA ($FF,X)
+9CCF:11 00       ORA ($00),Y
+9CD1:00          BRK
+9CD2:00          BRK
+9CD3:00          BRK
+9CD4:D7                   ???
+9CD5:D4                   ???
+9CD6:D3                   ???
+9CD7:C4 B2       CPY $B2
+9CD9:A0 A0       LDY #$A0
+9CDB:A0 A0       LDY #$A0
+9CDD:A0 A0       LDY #$A0
+9CDF:A0 A0       LDY #$A0
+9CE1:A0 A0       LDY #$A0
+9CE3:A0 A0       LDY #$A0
+9CE5:A0 A0       LDY #$A0
+9CE7:A0 A0       LDY #$A0
+9CE9:A0 A0       LDY #$A0
+9CEB:A0 A0       LDY #$A0
+9CED:A0 A0       LDY #$A0
+9CEF:A0 A0       LDY #$A0
+9CF1:A6 9C       LDX $9C
+9CF3:A6 9B       LDX $9B
+9CF5:A6 9A       LDX $9A
+9CF7:00          BRK
+9CF8:00          BRK
+9CF9:00          BRK
+9CFA:00          BRK
+9CFB:00          BRK
+9CFC:00          BRK
+9CFD:00          BRK
+9CFE:00          BRK
+9CFF:00          BRK
+;
+;################################################
+;# FIN DU CODE CHARGE est $9CFF pour le LEVEL 2 #
+;#  mais jamais le code n'accède après $9900    #
+;################################################
+;
+;
