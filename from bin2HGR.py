@@ -100,83 +100,162 @@ class SpriteDataEditor:
     def __init__(self, parent, sprite_data):
         self.window = tk.Toplevel(parent)
         self.window.title("Éditeur de données Sprite")
-        self.sprite_data = list(sprite_data)  # Copie des données
-        self.original_sprite_data = list(sprite_data)  # Stocke une copie des données originales
+        self.sprite_data = list(sprite_data)
+        self.original_sprite_data = list(sprite_data)
+        self.base_address = 0x0000  # Adresse de base en hexadécimal
         self.create_widgets()
+        self.setup_shortcuts()
+        
+    def setup_shortcuts(self):
+        # Raccourcis généraux
+        self.window.bind('<Control-z>', lambda e: self.restore_original_sprite())
+        self.window.bind('<Control-s>', lambda e: self.apply_changes())
+        
+        # Raccourcis pour l'édition
+        self.window.bind('<Delete>', lambda e: self.delete_value())
+        self.window.bind('<Control-m>', lambda e: self.modify_value())
+        self.window.bind('<Control-b>', lambda e: self.add_value_before())
+        self.window.bind('<Control-a>', lambda e: self.add_value_after())
+        
+        # Raccourcis pour le déplacement
+        self.window.bind('<Control-Up>', lambda e: self.move_up())
+        self.window.bind('<Control-Down>', lambda e: self.move_down())
         
     def create_widgets(self):
-        # Frame principal
         main_frame = ttk.Frame(self.window, padding="5")
         main_frame.pack(fill=tk.BOTH, expand=True)
         
+        # Frame pour l'adresse de base
+        address_frame = ttk.Frame(main_frame)
+        address_frame.pack(fill=tk.X, pady=5)
+        ttk.Label(address_frame, text="Adresse de base (hex):").pack(side=tk.LEFT)
+        self.base_address_entry = ttk.Entry(address_frame, width=6)
+        self.base_address_entry.insert(0, f"{self.base_address:04X}")
+        self.base_address_entry.pack(side=tk.LEFT, padx=5)
+        ttk.Button(address_frame, text="Appliquer", command=self.update_base_address).pack(side=tk.LEFT)
+
+        # Label pour afficher le nombre de sélections
+        self.selection_label = ttk.Label(address_frame, text="Sélection: 0")
+        self.selection_label.pack(side=tk.RIGHT, padx=5)
+
         # Frame pour la liste et les boutons de défilement
         list_frame = ttk.Frame(main_frame)
-        list_frame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        list_frame.pack(fill=tk.BOTH, expand=True)
         
-        # Listbox avec scrollbar
-        scrollbar = ttk.Scrollbar(list_frame)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        # Scrollbars
+        self.y_scrollbar = ttk.Scrollbar(list_frame)
+        self.y_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        x_scrollbar = ttk.Scrollbar(list_frame, orient=tk.HORIZONTAL)
+        x_scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
         
-        self.listbox = tk.Listbox(list_frame, width=50, height=20, yscrollcommand=scrollbar.set)
-        self.listbox.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-        scrollbar.config(command=self.listbox.yview)
+        # Listbox avec sélection multiple
+        self.listbox = tk.Listbox(list_frame, 
+                                 width=60,
+                                 height=20,
+                                 selectmode=tk.EXTENDED,
+                                 xscrollcommand=x_scrollbar.set,
+                                 yscrollcommand=self.y_scrollbar.set)
+        self.listbox.pack(fill=tk.BOTH, expand=True)
+        self.listbox.bind('<<ListboxSelect>>', self.update_selection_count)
+        self.y_scrollbar.config(command=self.listbox.yview)
+        x_scrollbar.config(command=self.listbox.xview)
         
-        # Frame pour les boutons d'édition
-        button_frame = ttk.Frame(main_frame)
-        button_frame.pack(side=tk.BOTTOM, padx=5)
+        # Frame pour les contrôles
+        control_frame = ttk.Frame(main_frame)
+        control_frame.pack(fill=tk.X, pady=5)
         
         # Frame pour l'entrée de nouvelle valeur
-        entry_frame = ttk.Frame(button_frame)
+        entry_frame = ttk.Frame(control_frame)
         entry_frame.pack(fill=tk.X, pady=5)
         
-        ttk.Label(entry_frame, text="Nouvelle valeur (hex):").pack(side=tk.BOTTOM)
-        self.new_value = ttk.Entry(entry_frame, width=10)
-        self.new_value.pack(side=tk.BOTTOM, padx=5)
+        ttk.Label(entry_frame, text="Nouvelle valeur (hex):").pack(side=tk.LEFT)
+        self.new_value = ttk.Entry(entry_frame, width=8)
+        self.new_value.pack(side=tk.LEFT, padx=5)
         
-        # Boutons
-        ttk.Button(button_frame, text="Modifier", command=self.modify_value).pack(fill=tk.X, pady=2)
-        ttk.Button(button_frame, text="Ajouter", command=self.add_value).pack(fill=tk.X, pady=2)
-        ttk.Button(button_frame, text="Supprimer", command=self.delete_value).pack(fill=tk.X, pady=2)
-        ttk.Button(button_frame, text="Monter", command=self.move_up).pack(fill=tk.X, pady=2)
-        ttk.Button(button_frame, text="Descendre", command=self.move_down).pack(fill=tk.X, pady=2)
+        # Boutons d'édition avec raccourcis affichés
+        button_frame = ttk.Frame(control_frame)
+        button_frame.pack(fill=tk.X)
         
-        # Bouton Restaurer
-        ttk.Button(button_frame, text="Restaurer d'origine", command=self.restore_original_sprite).pack(fill=tk.X, pady=10)
+        buttons = [
+            ("Modifier (Ctrl+M)", self.modify_value),
+            ("Ajouter avant (Ctrl+B)", self.add_value_before),
+            ("Ajouter après (Ctrl+A)", self.add_value_after),
+            ("Supprimer (Del)", self.delete_value),
+            ("Monter (Ctrl+↑)", self.move_up),
+            ("Descendre (Ctrl+↓)", self.move_down),
+        ]
         
-        # Bouton Appliquer
-        ttk.Button(button_frame, text="Appliquer", command=self.apply_changes).pack(fill=tk.X, pady=10)
+        for text, command in buttons:
+            ttk.Button(button_frame, text=text, command=command).pack(side=tk.LEFT, padx=2)
         
-        # Remplir la listbox
+        # Boutons de contrôle généraux avec raccourcis affichés
+        control_buttons_frame = ttk.Frame(main_frame)
+        control_buttons_frame.pack(fill=tk.X, pady=5)
+        
+        ttk.Button(control_buttons_frame, text="Restaurer d'origine (Ctrl+Z)", 
+                  command=self.restore_original_sprite).pack(side=tk.LEFT, fill=tk.X, expand=True, padx=2)
+        ttk.Button(control_buttons_frame, text="Appliquer (Ctrl+S)", 
+                  command=self.apply_changes).pack(side=tk.LEFT, fill=tk.X, expand=True, padx=2)
+        
         self.refresh_listbox()
-    
+    def update_selection_count(self, event=None):
+        count = len(self.listbox.curselection())
+        self.selection_label.config(text=f"Sélection: {count}/{hex(count)}")
+
     def refresh_listbox(self):
+        position_debut,position_fin=self.y_scrollbar.get()
+        selection = self.listbox.curselection()  # Sauvegarder la sélection actuelle
         self.listbox.delete(0, tk.END)
         for i, value in enumerate(self.sprite_data):
-            self.listbox.insert(tk.END, f"[{i:02d}] 0x{value:02X}")
+            addr = self.base_address + i
+            self.listbox.insert(tk.END, f"0x{addr:04X} : 0x{value:02X}  ({value:3d})")
+        self.listbox.yview_moveto(position_debut)
+        # Restaurer la sélection si possible
+        for idx in selection:
+            if int(idx) < self.listbox.size():
+                self.listbox.selection_set(idx)
+        # Mettre à jour le compteur
+        self.update_selection_count()
+    
+    # Le reste des méthodes reste inchangé...
+    def get_selected_indices(self):
+        return [int(i) for i in self.listbox.curselection()]
     
     def modify_value(self):
-        selection = self.listbox.curselection()
+        selection = self.get_selected_indices()
         if not selection:
-            messagebox.showwarning("Avertissement", "Veuillez sélectionner une valeur à modifier")
+            messagebox.showwarning("Avertissement", "Veuillez sélectionner une ou plusieurs valeurs à modifier")
             return
         
         try:
             new_val = int(self.new_value.get(), 16)
             if 0 <= new_val <= 0xFF:
-                self.sprite_data[selection[0]] = new_val
+                for idx in selection:
+                    self.sprite_data[idx] = new_val
                 self.refresh_listbox()
+                
+                # Maintenir la sélection
+                for idx in selection:
+                    self.listbox.selection_set(idx)
             else:
                 messagebox.showwarning("Erreur", "La valeur doit être entre 0x00 et 0xFF")
         except ValueError:
             messagebox.showwarning("Erreur", "Valeur hexadécimale invalide")
     
-    def add_value(self):
+    def add_value_before(self):
+        self._add_value(offset=0)
+    
+    def add_value_after(self):
+        self._add_value(offset=1)
+    
+    def _add_value(self, offset=0):
         try:
             new_val = int(self.new_value.get(), 16)
             if 0 <= new_val <= 0xFF:
-                selection = self.listbox.curselection()
+                selection = self.get_selected_indices()
                 if selection:
-                    self.sprite_data.insert(selection[0], new_val)
+                    pos = selection[0] + offset
+                    self.sprite_data.insert(pos, new_val)
                 else:
                     self.sprite_data.append(new_val)
                 self.refresh_listbox()
@@ -186,44 +265,63 @@ class SpriteDataEditor:
             messagebox.showwarning("Erreur", "Valeur hexadécimale invalide")
     
     def delete_value(self):
-        selection = self.listbox.curselection()
+        selection = self.get_selected_indices()
         if not selection:
-            messagebox.showwarning("Avertissement", "Veuillez sélectionner une valeur à supprimer")
+            messagebox.showwarning("Avertissement", "Veuillez sélectionner une ou plusieurs valeurs à supprimer")
             return
         
-        self.sprite_data.pop(selection[0])
+        # Supprimer de la fin vers le début pour éviter les problèmes d'index
+        for idx in sorted(selection, reverse=True):
+            self.sprite_data.pop(idx)
         self.refresh_listbox()
     
     def move_up(self):
-        selection = self.listbox.curselection()
+        selection = sorted(self.get_selected_indices())
         if not selection or selection[0] == 0:
             return
         
-        idx = selection[0]
-        self.sprite_data[idx], self.sprite_data[idx-1] = self.sprite_data[idx-1], self.sprite_data[idx]
+        for idx in selection:
+            self.sprite_data[idx], self.sprite_data[idx-1] = self.sprite_data[idx-1], self.sprite_data[idx]
+        
         self.refresh_listbox()
-        self.listbox.selection_set(idx-1)
+        # Maintenir la sélection
+        for idx in selection:
+            self.listbox.selection_set(idx-1)
     
     def move_down(self):
-        selection = self.listbox.curselection()
-        if not selection or selection[0] >= len(self.sprite_data) - 1:
+        selection = sorted(self.get_selected_indices(), reverse=True)
+        if not selection or selection[-1] >= len(self.sprite_data) - 1:
             return
         
-        idx = selection[0]
-        self.sprite_data[idx], self.sprite_data[idx+1] = self.sprite_data[idx+1], self.sprite_data[idx]
+        for idx in selection:
+            self.sprite_data[idx], self.sprite_data[idx+1] = self.sprite_data[idx+1], self.sprite_data[idx]
+        
         self.refresh_listbox()
-        self.listbox.selection_set(idx+1)
+        # Maintenir la sélection
+        for idx in selection:
+            self.listbox.selection_set(idx+1)
     
     def restore_original_sprite(self):
-        """Restaure les données du sprite d'origine."""
-        self.sprite_data = list(self.original_sprite_data)  # Récupère la copie des données d'origine
-        self.refresh_listbox()  # Met à jour l'affichage de la liste
+        self.sprite_data = list(self.original_sprite_data)
+        self.refresh_listbox()
     
     def apply_changes(self):
         global sprite_data
         sprite_data = list(self.sprite_data)
         update_display()
-
+        
+        
+    def update_base_address(self):
+        try:
+            new_address = int(self.base_address_entry.get(), 16)
+            if 0 <= new_address <= 0xFFFF:
+                self.base_address = new_address
+                self.refresh_listbox()
+            else:
+                messagebox.showwarning("Erreur", "L'adresse doit être entre 0x0000 et 0xFFFF")
+        except ValueError:
+            messagebox.showwarning("Erreur", "Adresse hexadécimale invalide")
+    
 def open_sprite_editor():
     SpriteDataEditor(fenetre, sprite_data)
 

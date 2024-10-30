@@ -1400,7 +1400,7 @@
 80A6:00          BRK
 80A7:24
 ; fin des bulles
-; Sprites du nageur 14 lignes * 7 octets = 0x62 par sprites
+; 35 Sprites du nageur 14 lignes * 7 octets = 0x62 par sprites (fin en $8E0D)
 80A8:D5
 80A9:AA          TAX
 80AA:D5 AA       CMP $AA,X
@@ -3831,7 +3831,8 @@
 8E0B:80                   ???
 8E0C:80                   ???
 8E0D:80                   ???
-; ==================================> nageur (36)
+; fin des sprites nageurs
+; ==================================> Une ligne orange 7 octets+une ligne noire 7octets
 8E0E:AA          TAX
 8E0F:D5 AA       CMP $AA,X
 8E11:D5 AA       CMP $AA,X
@@ -3843,6 +3844,7 @@
 8E19:80                   ???
 8E1A:80                   ???
 8E1B:80                   ???
+;
 8E1C:00          BRK
 8E1D:00          BRK
 8E1E:11 10       ORA ($10),Y
@@ -3905,6 +3907,7 @@
 8E6C:21 14       AND ($14,X)
 8E6E:40          RTI
 8E6F:00          BRK
+; Sprites étranges de crocodiles pixelisés? 7octets*9ligne=0x3F octets
 8E70:00          BRK
 8E71:20 44 00    JSR $0044
 8E74:41 24       EOR ($24,X)
@@ -3949,6 +3952,7 @@
 8EAA:10 04       BPL $8EB0
 8EAC:51 00       EOR ($00),Y
 8EAE:02                   ???
+; =======> Croco étrange décalé
 8EAF:00          BRK
 8EB0:00          BRK
 8EB1:11 02       ORA ($02),Y
@@ -3998,6 +4002,7 @@
 8EEA:10 44       BPL $8F30
 8EEC:02                   ???
 8EED:08          PHP
+; =======> Croco étrange décalé
 8EEE:00          BRK
 8EEF:00          BRK
 8EF0:44                   ???
@@ -4045,6 +4050,7 @@
 8F29:10 26       BPL $8F51
 8F2B:12                   ???
 8F2C:00          BRK
+; =======> Croco étrange décalé (3)
 8F2D:11 20       ORA ($20),Y
 8F2F:20 40 10    JSR $1040
 8F32:00          BRK
@@ -4092,6 +4098,7 @@
 8F68:12                   ???
 8F69:18          CLC
 8F6A:49 00       EOR #$00
+; =======> Croco étrange décalé (4)
 8F6C:44                   ???
 8F6D:00          BRK
 8F6E:01 01       ORA ($01,X)
@@ -4142,6 +4149,7 @@
 8FA5:00          BRK
 8FA6:20 08 62    JSR $6208
 8FA9:24 02       BIT $02
+; =======> Croco étrange décalé (5)
 8FAB:10 02       BPL $8FAF
 8FAD:04                   ???
 8FAE:04                   ???
@@ -4193,6 +4201,7 @@
 8FE7:02                   ???
 8FE8:00          BRK
 8FE9:00          BRK
+; =======> Croco étrange décalé (6)
 8FEA:20 08 11    JSR $1108
 8FED:20 00 10    JSR $1000
 8FF0:00          BRK
@@ -4233,6 +4242,7 @@
 9025:41 08       EOR ($08,X)
 9027:00          BRK
 9028:00          BRK
+; =======> Croco étrange décalé (7)
 9029:00          BRK
 902A:21 44       AND ($44,X)
 902C:00          BRK
@@ -4280,6 +4290,7 @@
 9065:22                   ???
 9066:00          BRK
 9067:00          BRK
+; =======> Croco étrange décalé (8)
 9068:00          BRK
 9069:04                   ???
 906A:11 02       ORA ($02),Y
@@ -4331,6 +4342,7 @@
 90A2:41 10       EOR ($10,X)
 90A4:08          PHP
 90A5:01 00       ORA ($00,X)
+; =======> Croco étrange décalé (9)
 90A7:00          BRK
 90A8:10 44       BPL $90EE
 90AA:08          PHP
@@ -4345,7 +4357,8 @@
 90B6:00          BRK
 90B7:41 08       EOR ($08,X)
 90B9:11 10       ORA ($10),Y
-90BB:09 00       ORA #$00
+90BB:09
+90BC:00
 90BD:00          BRK
 90BE:08          PHP
 90BF:22                   ???
@@ -4378,6 +4391,7 @@
 90E1:42                   ???
 90E2:20 04 00    JSR $0004
 90E5:00          BRK
+; =======> Croco étrange décalé (10)
 90E6:40          RTI
 90E7:10 22       BPL $910B
 90E9:40          RTI
@@ -4410,6 +4424,7 @@
 910C:00          BRK
 910D:41 00       EOR ($00,X)
 910F:00          BRK
+; =======> Croco étrange décalé (11)
 9110:40          RTI
 9111:40          RTI
 9112:08          PHP
@@ -4457,6 +4472,7 @@
 914C:04                   ???
 914D:02                   ???
 914E:00          BRK
+; =======> Croco étrange décalé (12)
 914F:00          BRK
 9150:02                   ???
 9151:22                   ???
@@ -4509,6 +4525,7 @@
 918A:00          BRK
 918B:10 08       BPL $9195
 918D:00          BRK
+; Sprites Végétations inférieur level 2 avec 16lignes*4octets=0x40 octets par sprite
 918E:9D CA 95    STA $95CA,X
 9191:AE E0 A0    LDX $A0E0
 9194:90 A4       BCC $913A
@@ -4541,6 +4558,7 @@
 91C9:80                   ???
 91CA:C5 8A       CMP $8A
 91CC:C5 A2       CMP $A2
+; ==================================> Sprite Végétations inférieur (2)
 91CE:F5 A8       SBC $A8,X
 91D0:D6 B8       DEC $B8,X
 91D2:81 83       STA ($83,X)
@@ -4552,7 +4570,8 @@
 91DD:9E                   ???
 91DE:B3                   ???
 91DF:B4 EE       LDY $EE,X
-91E1:CD B1 B4    CMP $B4B1
+91E1:CD
+91E2:B1 B4
 91E4:A2 C6       LDX #$C6
 91E6:B2                   ???
 91E7:E4 8C       CPX $8C
@@ -4579,6 +4598,7 @@
 9209:80                   ???
 920A:95 AA       STA $AA,X
 920C:94 8A       STY $8A,X
+; ==================================> Sprite Végétations inférieur (3)
 920E:D5 A3       CMP $A3,X
 9210:D9 E2 84    CMP $84E2,Y
 9213:8C 84 C2    STY $C284
@@ -4614,6 +4634,7 @@
 924A:D4                   ???
 924B:A8          TAY
 924C:D1 A8       CMP ($A8),Y
+; ==================================> Sprite Végétations inférieur (4)
 924E:D7                   ???
 924F:8E E5 8A    STX $8AE5
 9252:92                   ???
@@ -4648,6 +4669,7 @@
 9289:80                   ???
 928A:D1 A2       CMP ($A2),Y
 928C:C5 A2       CMP $A2
+; ==================================> Sprite Végétations inférieur (5)
 928E:DC                   ???
 928F:BA          TSX
 9290:94 AB       STY $AB,X
@@ -4690,6 +4712,7 @@
 92C9:80                   ???
 92CA:C5 8A       CMP $8A
 92CC:95 8A       STA $8A,X
+; ==================================> Sprite Végétations inférieur (6)
 92CE:F1 EA       SBC ($EA),Y
 92D0:D1 AC       CMP ($AC),Y
 92D2:A1 82       LDA ($82,X)
@@ -4729,6 +4752,7 @@
 930A:94 AA       STY $AA,X
 930C:D4                   ???
 930D:A8          TAY
+; ==================================> Sprite Végétations inférieur (7)
 930E:C5 AB       CMP $AB
 9310:C7                   ???
 9311:B2                   ???
@@ -4770,6 +4794,7 @@
 9349:80                   ???
 934A:D1 A8       CMP ($A8),Y
 934C:D1 A2       CMP ($A2),Y
+; ==================================> Sprite Végétations inférieur (8)
 934E:95 AE       STA $AE,X
 9350:9D CA 90    STA $90CA,X
 9353:A4 E0       LDY $E0
@@ -4804,6 +4829,7 @@
 9389:80                   ???
 938A:C5 A2       CMP $A2
 938C:C5 8A       CMP $8A
+; ==================================> Sprite Végétations inférieur (9)
 938E:D6 B8       DEC $B8,X
 9390:F5 A8       SBC $A8,X
 9392:C1 90       CMP ($90,X)
@@ -4839,6 +4865,7 @@
 93C9:80                   ???
 93CA:94 8A       STY $8A,X
 93CC:95 AA       STA $AA,X
+; ==================================> Sprite Végétations inférieur (10)
 93CE:D9 E2 D5    CMP $D5E2,Y
 93D1:A3                   ???
 93D2:84 C2       STY $C2
@@ -4874,6 +4901,7 @@
 940A:D1 A8       CMP ($A8),Y
 940C:D4                   ???
 940D:A8          TAY
+; ==================================> Sprite Végétations inférieur (11)
 940E:E5 8A       SBC $8A
 9410:D7                   ???
 9411:8E 90 88    STX $8890
@@ -4909,6 +4937,7 @@
 9449:80                   ???
 944A:C5 A2       CMP $A2
 944C:D1 A2       CMP ($A2),Y
+; ==================================> Sprite Végétations inférieur (12)
 944E:94 AB       STY $AB,X
 9450:DC                   ???
 9451:BA          TSX
@@ -4950,6 +4979,7 @@
 9489:80                   ???
 948A:95 8A       STA $8A,X
 948C:C5 8A       CMP $8A
+; ==================================> Sprite Végétations inférieur (13)
 948E:D1 AC       CMP ($AC),Y
 9490:F1 EA       SBC ($EA),Y
 9492:86 82       STX $82
@@ -4995,6 +5025,7 @@
 94CA:D4                   ???
 94CB:A8          TAY
 94CC:94 AA       STY $AA,X
+; ==================================> Sprite Végétations inférieur (14)
 94CE:C7                   ???
 94CF:B2                   ???
 94D0:C5 AB       CMP $AB
@@ -5035,6 +5066,8 @@
 9509:80                   ???
 950A:D1 A2       CMP ($A2),Y
 950C:D1 A8       CMP ($A8),Y
+;fin des sprites de la végétation inférieure sous-marine
+; Sprites des vagues 6lignes*4octets soit 0x18 octets par sprite
 950E:D5 AA       CMP $AA,X
 9510:D5 AA       CMP $AA,X
 9512:C5 82       CMP $82
@@ -5225,6 +5258,8 @@
 9658:D5 A2       CMP $A2,X
 965A:D5 AA       CMP $AA,X
 965C:95 AA       STA $AA,X
+; fin des sprites vagues
+; 14 Sprites des crocodiles avec 9lignes*7octets=0x3F soit 0x372octets
 965E:87                   ???
 965F:F0 80       BEQ $95E1
 9661:80                   ???
@@ -5756,6 +5791,7 @@
 994D:80                   ???
 994E:80                   ???
 994F:BE 80 80    LDX $8080,Y
+;
 9952:80                   ???
 9953:80                   ???
 9954:80                   ???
@@ -5803,6 +5839,7 @@
 998D:80                   ???
 998E:F8          SED
 998F:81 80       STA ($80,X)
+;
 9991:80                   ???
 9992:80                   ???
 9993:80                   ???
@@ -5850,6 +5887,7 @@
 99CC:80                   ???
 99CD:E0 87       CPX #$87
 99CF:80                   ???
+; =====================================>Fin des 14 sprites croco
 99D0:02                   ???
 99D1:BB                   ???
 99D2:5A                   ???

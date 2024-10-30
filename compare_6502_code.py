@@ -110,9 +110,9 @@ def print_differences(differences: List[Tuple[int, List[int]]]) -> None:
 # Exemple d'utilisation
 if __name__ == "__main__":
     try:
-        file1 = "jungle_hunt_level1_7700_96FF_from_applewin.txt"  # Remplacez par votre chemin de fichier
+        file1 = "level3.txt"  # Remplacez par votre chemin de fichier
         #file2 = "junglehunt_A00_to_1eff_and_6000_to_7fff (annoté).asm"  # Remplacez par votre chemin de fich
-        file2 = "junglehunt full code (annoté).txt"
+        file2 = "JungleHunt-level3 code.txt"
         differences = compare_6502_files(file1, file2)
         print_differences(differences)
     except Exception as e:
